@@ -8,9 +8,11 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import Spinner from '../../components/ui/Spinner.jsx'
+import { useAuth } from '../../hooks/useAuth.js'
 import { useDataVersion } from '../../hooks/useDataVersion.js'
 import { useLoad } from '../../hooks/useLoad.js'
 import { useNow } from '../../hooks/useNow.js'
+import { useRealtimeSync } from '../../hooks/useRealtimeSync.js'
 import { listCategories } from '../../services/categories/categoriesService.js'
 import { deleteTask, listTasks, setTaskStatus } from '../../services/tasks/tasksService.js'
 import { isSameDay } from '../../utils/dates.js'
@@ -39,6 +41,7 @@ function matchesDue(task, filter, now) {
 }
 
 export default function Tasks() {
+  const { user } = useAuth()
   const now = useNow()
   const { version } = useDataVersion()
   const [params, setParams] = useSearchParams()
@@ -50,6 +53,25 @@ export default function Tasks() {
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [busy, setBusy] = useState(false)
   const [actionError, setActionError] = useState('')
+
+  // Setup realtime sync for tasks
+  useRealtimeSync(
+    'tasks',
+    { filter: `user_id=eq.${user.id}` },
+    (updated) => {
+      tasks.data = (tasks.data || []).map((task) =>
+        task.id === updated.id ? updated : task
+      )
+    },
+    (deleted) => {
+      tasks.data = (tasks.data || []).filter((task) => task.id !== deleted.id)
+    },
+    (inserted) => {
+      if (!tasks.data?.some((t) => t.id === inserted.id)) {
+        tasks.data = [inserted, ...(tasks.data || [])]
+      }
+    }
+  )
 
   const requestedTaskId = params.get('tarefa')
   const requestedTask = (tasks.data || []).find((task) => task.id === requestedTaskId) || null

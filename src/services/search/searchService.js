@@ -20,8 +20,8 @@ export async function searchAll(rawTerm) {
     run(
       supabase
         .from('notes')
-        .select('id, title, content, linked_date, updated_at')
-        .or(`title.ilike.${pattern},content.ilike.${pattern}`)
+        .select('id, title, linked_date, updated_at')
+        .ilike('title', pattern)
         .order('updated_at', { ascending: false })
         .limit(LIMIT)
     ),
@@ -29,7 +29,7 @@ export async function searchAll(rawTerm) {
       supabase
         .from('tasks')
         .select('id, title, status, due_at')
-        .or(`title.ilike.${pattern},description.ilike.${pattern}`)
+        .ilike('title', pattern)
         .order('created_at', { ascending: false })
         .limit(LIMIT)
     ),
@@ -37,7 +37,7 @@ export async function searchAll(rawTerm) {
       supabase
         .from('events')
         .select('id, title, start_at')
-        .or(`title.ilike.${pattern},description.ilike.${pattern}`)
+        .ilike('title', pattern)
         .order('start_at', { ascending: false })
         .limit(LIMIT)
     ),
@@ -45,7 +45,7 @@ export async function searchAll(rawTerm) {
       supabase
         .from('stored_files')
         .select('id, original_name, size_bytes, category_id, extension')
-        .or(`original_name.ilike.${pattern},description.ilike.${pattern}`)
+        .ilike('original_name', pattern)
         .order('updated_at', { ascending: false })
         .limit(LIMIT)
     ),

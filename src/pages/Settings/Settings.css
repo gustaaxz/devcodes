@@ -86,3 +86,15 @@
     flex-shrink: 1;
   }
 }
+
+
+.settings__export-buttons {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.settings__value {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

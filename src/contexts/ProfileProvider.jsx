@@ -9,7 +9,7 @@ export function ProfileProvider({ children }) {
   const userId = user.id
   const [state, setState] = useState({
     status: 'loading',
-    displayName: '',
+    fullName: '',
     preferences: { ...DEFAULT_PREFERENCES, theme: readCachedTheme() }
   })
   const stateRef = useRef(state)
@@ -25,7 +25,7 @@ export function ProfileProvider({ children }) {
         if (!active) return
         setState({
           status: 'ready',
-          displayName: profile?.display_name || '',
+          fullName: profile?.full_name || '',
           preferences: normalizePreferences(profile?.preferences)
         })
       })
@@ -57,10 +57,10 @@ export function ProfileProvider({ children }) {
     [userId]
   )
 
-  const updateDisplayName = useCallback(
+  const updateFullName = useCallback(
     async (name) => {
-      const saved = await saveProfile(userId, { display_name: name.trim() || null })
-      setState((current) => ({ ...current, displayName: saved.display_name || '' }))
+      const saved = await saveProfile(userId, { full_name: name.trim() || null })
+      setState((current) => ({ ...current, fullName: saved.full_name || '' }))
     },
     [userId]
   )
@@ -68,12 +68,12 @@ export function ProfileProvider({ children }) {
   const value = useMemo(
     () => ({
       status: state.status,
-      displayName: state.displayName,
+      fullName: state.fullName,
       preferences: state.preferences,
       updatePreferences,
-      updateDisplayName
+      updateFullName
     }),
-    [state, updatePreferences, updateDisplayName]
+    [state, updatePreferences, updateFullName]
   )
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>

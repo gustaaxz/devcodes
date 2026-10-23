@@ -6,6 +6,7 @@ import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import Spinner from '../ui/Spinner.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
+import { useDataVersion } from '../../hooks/useDataVersion.js'
 import { createTask, updateTask } from '../../services/tasks/tasksService.js'
 import { toDateTimeInput } from '../../utils/dates.js'
 import { PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from '../../utils/labels.js'
@@ -27,6 +28,7 @@ function buildInitialValues(task) {
 
 export default function TaskModal({ task, categories, onClose, onSaved }) {
   const { user } = useAuth()
+  const { bump } = useDataVersion()
   const [values, setValues] = useState(() => buildInitialValues(task))
   const [titleError, setTitleError] = useState('')
   const [formError, setFormError] = useState('')
@@ -65,6 +67,7 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
     try {
       if (task) await updateTask(task.id, payload)
       else await createTask(payload)
+      bump()
       onSaved()
     } catch (error) {
       setFormError(friendlyError(error, 'Não foi possível salvar a tarefa.'))

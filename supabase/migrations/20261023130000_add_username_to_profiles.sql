@@ -1,4 +1,7 @@
--- Add username field to profiles table
+-- Add username field and rename display_name to full_name in profiles table
+alter table public.profiles
+  rename column display_name to full_name;
+
 alter table public.profiles
   add column if not exists username text unique;
 
@@ -27,12 +30,12 @@ begin
 end;
 $$ language plpgsql security definer set search_path = public, auth;
 
--- Update handle_new_user function to capture username from metadata
+-- Update handle_new_user function to capture username and full_name from metadata
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, display_name, username)
-  values (new.id, nullif(trim(coalesce(new.raw_user_meta_data ->> 'display_name', '')), ''), lower(nullif(trim(coalesce(new.raw_user_meta_data ->> 'username', '')), '')));
+  insert into public.profiles (id, full_name, username)
+  values (new.id, nullif(trim(coalesce(new.raw_user_meta_data ->> 'full_name', '')), ''), lower(nullif(trim(coalesce(new.raw_user_meta_data ->> 'username', '')), '')));
   return new;
 end;
 $$ language plpgsql security definer set search_path = public;

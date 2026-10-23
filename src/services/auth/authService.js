@@ -4,12 +4,12 @@ function getRedirectUrl(path) {
   return `${window.location.origin}${path}`
 }
 
-export async function signUp({ displayName, email, password, username }) {
+export async function signUp({ full_name, email, password, username }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { display_name: displayName, username: username?.toLowerCase() },
+      data: { full_name, username: username?.toLowerCase() },
       emailRedirectTo: getRedirectUrl('/')
     }
   })

@@ -7,6 +7,8 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
+import { useDataVersion } from '../../hooks/useDataVersion.js'
+import { useRealtimeSync } from '../../hooks/useRealtimeSync.js'
 import { createNote } from '../../services/notes/notesService.js'
 import { toDateKey } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
@@ -23,6 +25,7 @@ function compareNotes(view) {
 
 export default function NotesWorkspace({ initialNotes, categories }) {
   const { user } = useAuth()
+  const { bump } = useDataVersion()
   const [params, setParams] = useSearchParams()
   const [notes, setNotes] = useState(initialNotes)
   const [selectedId, setSelectedId] = useState(null)
@@ -69,10 +72,35 @@ export default function NotesWorkspace({ initialNotes, categories }) {
         setNotes((current) => [note, ...current])
         setSelectedId(note.id)
         setView(note.linked_date ? 'dated' : 'general')
+        bump()
       })
       .catch((createError) => setError(friendlyError(createError, 'Não foi possível criar a anotação.')))
     setParams({}, { replace: true })
   }, [params, setParams])
+
+  // Setup realtime sync for notes
+  useRealtimeSync(
+    'notes',
+    { filter: `user_id=eq.${user.id}` },
+    (updated) => {
+      setNotes((current) =>
+        current.map((note) =>
+          note.id === updated.id ? { ...note, ...updated } : note
+        )
+      )
+    },
+    (deleted) => {
+      setNotes((current) => current.filter((note) => note.id !== deleted.id))
+    },
+    (inserted) => {
+      // Only add if it doesn't already exist
+      setNotes((current) =>
+        current.some((n) => n.id === inserted.id)
+          ? current
+          : [inserted, ...current]
+      )
+    }
+  )
 
   const tagOptions = useMemo(() => {
     const names = new Set()
@@ -146,6 +174,7 @@ export default function NotesWorkspace({ initialNotes, categories }) {
       const note = await createNote({ user_id: user.id, linked_date: activeView === 'dated' ? toDateKey(new Date()) : null })
       setNotes((current) => [note, ...current])
       setSelectedId(note.id)
+      bump()
     } catch (createError) {
       setError(friendlyError(createError, 'Não foi possível criar a anotação.'))
     } finally {

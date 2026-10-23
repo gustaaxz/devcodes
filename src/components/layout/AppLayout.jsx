@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar.jsx'
 import Topbar from './Topbar.jsx'
 import FullScreenMessage from './FullScreenMessage.jsx'
+import ShortcutsModal from '../ui/ShortcutsModal.jsx'
 import Spinner from '../ui/Spinner.jsx'
 import { DataVersionProvider } from '../../contexts/DataVersionProvider.jsx'
 import { ProfileProvider } from '../../contexts/ProfileProvider.jsx'
 import { useMediaQuery } from '../../hooks/useMediaQuery.js'
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts.js'
 import { useProfile } from '../../hooks/useProfile.js'
 import { getPageTitle } from '../../utils/navigation.js'
 import './AppLayout.css'
@@ -16,7 +18,21 @@ function AppFrame() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [showShortcuts, setShowShortcuts] = useState(false)
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+
+  useKeyboardShortcuts({
+    openSearch: () => {
+      // Focar no SearchBox (será implementado)
+      const searchInput = document.querySelector('input[aria-label="Pesquisa global"]')
+      if (searchInput) searchInput.focus()
+    },
+    newNote: () => navigate('/anotacoes?nova=1'),
+    newTask: () => navigate('/tarefas'),
+    newEvent: () => navigate('/calendario'),
+    showShortcuts: () => setShowShortcuts(true)
+  })
 
   if (status === 'loading') {
     return (
@@ -41,6 +57,7 @@ function AppFrame() {
           <Outlet />
         </main>
       </div>
+      {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
     </div>
   )
 }

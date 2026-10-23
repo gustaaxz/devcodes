@@ -13,8 +13,8 @@ security definer
 set search_path = ''
 as $$
 begin
-  insert into public.profiles (id, display_name)
-  values (new.id, nullif(trim(coalesce(new.raw_user_meta_data ->> 'display_name', '')), ''));
+  insert into public.profiles (id, full_name)
+  values (new.id, nullif(trim(coalesce(new.raw_user_meta_data ->> 'full_name', '')), ''));
 
   insert into public.programming_categories (user_id, name, slug, position)
   values

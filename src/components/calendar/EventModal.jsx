@@ -6,6 +6,7 @@ import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import Spinner from '../ui/Spinner.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
+import { useDataVersion } from '../../hooks/useDataVersion.js'
 import { createEvent, updateEvent } from '../../services/events/eventsService.js'
 import { combineDateTime, isAllDayEvent, toDateKey, toDateTimeInput, toTimeInput } from '../../utils/dates.js'
 import { EVENT_STATUS_OPTIONS, PRIORITY_OPTIONS } from '../../utils/labels.js'
@@ -42,6 +43,7 @@ function buildInitialValues(event, defaultDateKey) {
 
 export default function EventModal({ event, defaultDateKey, categories, onClose, onSaved }) {
   const { user } = useAuth()
+  const { bump } = useDataVersion()
   const [values, setValues] = useState(() => buildInitialValues(event, defaultDateKey))
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
@@ -89,6 +91,7 @@ export default function EventModal({ event, defaultDateKey, categories, onClose,
     try {
       if (event) await updateEvent(event.id, payload)
       else await createEvent(payload)
+      bump()
       onSaved()
     } catch (error) {
       setFormError(friendlyError(error, 'Não foi possível salvar o evento.'))

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { KeyRound, LogOut, Settings2 } from 'lucide-react'
+import { Download, KeyRound, LogOut, Settings2 } from 'lucide-react'
 import CategoryManagerModal from '../../components/programming-library/CategoryManagerModal.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
@@ -11,6 +11,7 @@ import { useLoad } from '../../hooks/useLoad.js'
 import { useProfile } from '../../hooks/useProfile.js'
 import { listFiles } from '../../services/files/filesService.js'
 import { listProgrammingCategories } from '../../services/programming-categories/programmingCategoriesService.js'
+import { exportNotesAsCSV, exportNotesAsJSON_Download, exportTasksAsCSV, exportTasksAsJSON_Download, exportEventsAsCSV, exportEventsAsJSON_Download } from '../../services/export/exportService.js'
 import { friendlyError } from '../../utils/errors.js'
 import './Settings.css'
 
@@ -69,9 +70,9 @@ function Row({ label, hint, children }) {
 
 export default function Settings() {
   const { user, signOut } = useAuth()
-  const { displayName, preferences, updatePreferences, updateDisplayName } = useProfile()
+  const { fullName, preferences, updatePreferences, updateFullName } = useProfile()
   const library = useLoad(loadLibrarySnapshot)
-  const [nameDraft, setNameDraft] = useState(displayName)
+  const [nameDraft, setNameDraft] = useState(fullName)
   const [savingName, setSavingName] = useState(false)
   const [notice, setNotice] = useState(null)
   const [managing, setManaging] = useState(false)
@@ -91,7 +92,7 @@ export default function Settings() {
     setNotice(null)
     setSavingName(true)
     try {
-      await updateDisplayName(nameDraft)
+      await updateFullName(nameDraft)
       setNotice({ variant: 'success', text: 'Nome atualizado.' })
     } catch (error) {
       setNotice({ variant: 'error', text: friendlyError(error, 'Não foi possível atualizar o nome.') })
@@ -189,6 +190,69 @@ export default function Settings() {
           </button>
         </Row>
         {library.error && <Alert variant="error">{library.error}</Alert>}
+      </Section>
+
+      <Section title="Exportar dados" description="Faça backup dos seus dados em CSV ou JSON.">
+        <Row label="Anotações">
+          <div className="settings__export-buttons">
+            <button
+              type="button"
+              className="button button--secondary button--small"
+              onClick={() => exportNotesAsCSV()}
+            >
+              <Download size={14} />
+              CSV
+            </button>
+            <button
+              type="button"
+              className="button button--secondary button--small"
+              onClick={() => exportNotesAsJSON_Download()}
+            >
+              <Download size={14} />
+              JSON
+            </button>
+          </div>
+        </Row>
+        <Row label="Tarefas">
+          <div className="settings__export-buttons">
+            <button
+              type="button"
+              className="button button--secondary button--small"
+              onClick={() => exportTasksAsCSV()}
+            >
+              <Download size={14} />
+              CSV
+            </button>
+            <button
+              type="button"
+              className="button button--secondary button--small"
+              onClick={() => exportTasksAsJSON_Download()}
+            >
+              <Download size={14} />
+              JSON
+            </button>
+          </div>
+        </Row>
+        <Row label="Eventos">
+          <div className="settings__export-buttons">
+            <button
+              type="button"
+              className="button button--secondary button--small"
+              onClick={() => exportEventsAsCSV()}
+            >
+              <Download size={14} />
+              CSV
+            </button>
+            <button
+              type="button"
+              className="button button--secondary button--small"
+              onClick={() => exportEventsAsJSON_Download()}
+            >
+              <Download size={14} />
+              JSON
+            </button>
+          </div>
+        </Row>
       </Section>
 
       <Section title="Conta">

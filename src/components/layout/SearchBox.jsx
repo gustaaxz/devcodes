@@ -8,7 +8,7 @@ import { friendlyError } from '../../utils/errors.js'
 import { formatBytes } from '../../utils/files.js'
 import './SearchBox.css'
 
-const MIN_TERM_LENGTH = 2
+const MIN_TERM_LENGTH = 3
 const DEBOUNCE_MS = 300
 
 function buildGroups(results) {

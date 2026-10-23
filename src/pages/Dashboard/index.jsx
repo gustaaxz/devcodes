@@ -56,7 +56,7 @@ function EventRow({ event, showDate }) {
 
 export default function Dashboard() {
   const { version } = useDataVersion()
-  const { displayName } = useProfile()
+  const { fullName } = useProfile()
   const now = useNow()
   const { data, loading, error, reload } = useLoad(loadDashboard, version)
 
@@ -75,7 +75,7 @@ export default function Dashboard() {
     )
   }
 
-  const firstName = displayName.trim().split(/\s+/)[0]
+  const firstName = fullName.trim().split(/\s+/)[0]
 
   return (
     <div className="dashboard">

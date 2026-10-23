@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowLeft, Bold, Copy, Heading2, Italic, List, Pin, Star, Trash2 } from 'lucide-react'
+import { ArrowLeft, Bold, Copy, Heading2, Italic, List, Pin, Star, Trash2, History } from 'lucide-react'
 import TextField from '../ui/TextField.jsx'
 import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import ConfirmDialog from '../ui/ConfirmDialog.jsx'
+import NoteVersionsModal from './NoteVersionsModal.jsx'
 import MarkdownPreview from './MarkdownPreview.jsx'
 import TagInput from './TagInput.jsx'
 import { deleteNote, duplicateNote, setNoteTags, updateNote } from '../../services/notes/notesService.js'
@@ -44,6 +45,7 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
   const [mode, setMode] = useState('edit')
   const [actionError, setActionError] = useState('')
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [showVersions, setShowVersions] = useState(false)
   const [busy, setBusy] = useState(false)
 
   const draftRef = useRef(draft)
@@ -210,6 +212,14 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
         <div className="page-toolbar__spacer" />
         <button
           type="button"
+          className="icon-button"
+          onClick={() => setShowVersions(true)}
+          aria-label="Ver histórico de versões"
+        >
+          <History size={18} />
+        </button>
+        <button
+          type="button"
           className={`icon-button${note.is_favorite ? ' icon-button--active' : ''}`}
           onClick={() => toggleFlag('is_favorite')}
           aria-label={note.is_favorite ? 'Remover dos favoritos' : 'Favoritar'}
@@ -328,6 +338,14 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
           error={actionError}
           onConfirm={handleDelete}
           onCancel={() => setConfirmingDelete(false)}
+        />
+      )}
+
+      {showVersions && (
+        <NoteVersionsModal
+          noteId={note.id}
+          onClose={() => setShowVersions(false)}
+          onRestored={onChanged}
         />
       )}
     </section>

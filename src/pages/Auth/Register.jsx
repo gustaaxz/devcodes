@@ -11,7 +11,7 @@ const MIN_PASSWORD_LENGTH = 8
 
 export default function Register() {
   const { signUp } = useAuth()
-  const [displayName, setDisplayName] = useState('')
+  const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,7 +23,7 @@ export default function Register() {
 
   function validate() {
     const next = {}
-    if (!displayName.trim()) next.displayName = 'Informe seu nome.'
+    if (!fullName.trim()) next.fullName = 'Informe seu nome completo.'
     if (!username.trim()) next.username = 'Informe um nome de usuário.'
     if (!/^[a-z0-9_-]{3,20}$/.test(username.trim())) {
       next.username = 'Nome de usuário deve ter 3-20 caracteres (letras, números, - e _ apenas).'
@@ -43,7 +43,7 @@ export default function Register() {
     setSubmitting(true)
     try {
       const data = await signUp({ 
-        displayName: displayName.trim(), 
+        full_name: fullName.trim(), 
         email: email.trim(), 
         password,
         username: username.trim()
@@ -89,16 +89,16 @@ export default function Register() {
       <form className="auth__form" onSubmit={handleSubmit} noValidate>
         {formError && <Alert variant="error">{formError}</Alert>}
         <TextField
-          label="Nome"
+          label="Nome completo"
           autoComplete="name"
-          value={displayName}
-          onChange={(event) => setDisplayName(event.target.value)}
-          error={errors.displayName}
+          value={fullName}
+          onChange={(event) => setFullName(event.target.value)}
+          error={errors.fullName}
         />
         <TextField
           label="Nome de usuário"
           autoComplete="username"
-          placeholder="minhasenha_123"
+          placeholder="seu_usuario"
           value={username}
           onChange={(event) => setUsername(event.target.value.toLowerCase())}
           error={errors.username}

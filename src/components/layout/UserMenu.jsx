@@ -6,7 +6,7 @@ import './UserMenu.css'
 
 export default function UserMenu() {
   const { user, signOut } = useAuth()
-  const { displayName: profileName } = useProfile()
+  const { fullName: profileName } = useProfile()
   const [open, setOpen] = useState(false)
   const [error, setError] = useState('')
   const containerRef = useRef(null)
@@ -36,7 +36,7 @@ export default function UserMenu() {
     }
   }
 
-  const displayName = profileName || user?.user_metadata?.display_name || 'Usuário'
+  const displayName = profileName || user?.user_metadata?.full_name || 'Usuário'
 
   return (
     <div className="user-menu" ref={containerRef}>
