@@ -1,0 +1,28 @@
+.markdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.markdown h1 {
+  font-size: 1.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.25rem;
+}
+
+.markdown h3 {
+  font-size: 1.0625rem;
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: var(--space-6);
+}
+
+.markdown__empty {
+  color: var(--color-text-muted);
+}

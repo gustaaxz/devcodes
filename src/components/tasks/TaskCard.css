@@ -1,0 +1,108 @@
+.task-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-md);
+}
+
+.task-card--overdue {
+  border-left-color: var(--color-danger);
+}
+
+.task-card--soon {
+  border-left-color: var(--color-warning);
+}
+
+.task-card--done {
+  opacity: 0.7;
+}
+
+.task-card__check {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.task-card__check:hover {
+  border-color: var(--color-accent);
+}
+
+.task-card__check--done {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.task-card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.task-card__title {
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+.task-card__title--done {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.task-card__description {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.task-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.task-card__due {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.task-card__due--overdue {
+  color: var(--color-danger);
+}
+
+.task-card__due--soon {
+  color: var(--color-warning);
+}
+
+.task-card__status {
+  align-self: flex-start;
+  height: 30px;
+  padding: 0 var(--space-2);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+}
+
+.task-card__actions {
+  display: flex;
+  flex-shrink: 0;
+}
