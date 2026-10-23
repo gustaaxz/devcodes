@@ -4,7 +4,7 @@ import './CategoryTabs.css'
 export default function CategoryTabs({ categories, counts, activeId, onSelect, onAdd, onManage }) {
   return (
     <div className="category-tabs">
-      <div className="category-tabs__list" role="tablist" aria-label="Linguagens e tecnologias">
+      <div className="category-tabs__list" role="tablist" aria-label="Categorias e tecnologias">
         {categories.map((category) => (
           <button
             key={category.id}

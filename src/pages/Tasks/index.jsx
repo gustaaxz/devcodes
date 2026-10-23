@@ -80,10 +80,15 @@ export default function Tasks() {
 
   async function changeStatus(task, status) {
     setActionError('')
+    const previousTasks = tasks.data
+    // Atualização otimista
+    tasks.data = (tasks.data || []).map((t) => (t.id === task.id ? { ...t, status } : t))
     try {
       await setTaskStatus(task.id, status)
       tasks.reload()
     } catch (error) {
+      // Revert ao status anterior se falhar
+      tasks.data = previousTasks
       setActionError(friendlyError(error, 'Não foi possível atualizar a tarefa.'))
     }
   }

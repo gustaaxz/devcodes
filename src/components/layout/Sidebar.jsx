@@ -1,9 +1,10 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Code2, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react'
 import { navigationItems } from '../../utils/navigation.js'
 import './Sidebar.css'
 
 export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleCollapse, onCloseMobile }) {
+  const navigate = useNavigate()
   const isCollapsed = collapsed && !isMobile
   const classes = [
     'sidebar',
@@ -19,12 +20,18 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleColla
       {isMobile && mobileOpen && <div className="sidebar-overlay" onClick={onCloseMobile} />}
       <aside className={classes} aria-label="Navegação principal">
         <div className="sidebar__header">
-          <div className="sidebar__brand">
+          <button
+            type="button"
+            className="sidebar__brand"
+            onClick={() => navigate('/')}
+            title="Ir para o Dashboard"
+            aria-label="DevCodes - Ir para o Dashboard"
+          >
             <span className="sidebar__logo">
               <Code2 size={20} strokeWidth={2.25} />
             </span>
             {!isCollapsed && <span className="sidebar__name">DevCodes</span>}
-          </div>
+          </button>
           {isMobile && (
             <button type="button" className="icon-button" onClick={onCloseMobile} aria-label="Fechar menu">
               <X size={18} />
