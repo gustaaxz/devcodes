@@ -5,6 +5,7 @@ import TextAreaField from '../ui/TextAreaField.jsx'
 import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import Spinner from '../ui/Spinner.jsx'
+import { useAuth } from '../../hooks/useAuth.js'
 import { createEvent, updateEvent } from '../../services/events/eventsService.js'
 import { combineDateTime, isAllDayEvent, toDateKey, toDateTimeInput, toTimeInput } from '../../utils/dates.js'
 import { EVENT_STATUS_OPTIONS, PRIORITY_OPTIONS } from '../../utils/labels.js'
@@ -40,6 +41,7 @@ function buildInitialValues(event, defaultDateKey) {
 }
 
 export default function EventModal({ event, defaultDateKey, categories, onClose, onSaved }) {
+  const { user } = useAuth()
   const [values, setValues] = useState(() => buildInitialValues(event, defaultDateKey))
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
@@ -72,6 +74,7 @@ export default function EventModal({ event, defaultDateKey, categories, onClose,
     const start = combineDateTime(values.date, values.startTime)
     const end = values.endTime ? combineDateTime(values.date, values.endTime) : null
     const payload = {
+      user_id: user.id,
       title: values.title.trim(),
       description: values.description.trim() || null,
       category_id: values.categoryId || null,

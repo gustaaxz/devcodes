@@ -126,7 +126,7 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
   }
 
   async function handleCreateCategory(name) {
-    const created = await createProgrammingCategory(name, categories)
+    const created = await createProgrammingCategory(user.id, name, categories)
     await refresh()
     selectCategory(created.id)
     setCreatingCategory(false)

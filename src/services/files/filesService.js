@@ -35,6 +35,7 @@ export async function uploadFile({ userId, categoryId, file }) {
     .from('stored_files')
     .insert({
       id,
+      user_id: userId,
       category_id: categoryId,
       original_name: file.name,
       storage_key: storageKey,

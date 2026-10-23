@@ -6,6 +6,7 @@ import NoteList from '../../components/notes/NoteList.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
 import Alert from '../../components/ui/Alert.jsx'
+import { useAuth } from '../../hooks/useAuth.js'
 import { createNote } from '../../services/notes/notesService.js'
 import { toDateKey } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
@@ -21,6 +22,7 @@ function compareNotes(view) {
 }
 
 export default function NotesWorkspace({ initialNotes, categories }) {
+  const { user } = useAuth()
   const [params, setParams] = useSearchParams()
   const [notes, setNotes] = useState(initialNotes)
   const [selectedId, setSelectedId] = useState(null)
@@ -62,7 +64,7 @@ export default function NotesWorkspace({ initialNotes, categories }) {
     if (handledNewRef.current) return
     handledNewRef.current = true
     const date = params.get('data')
-    createNote({ linked_date: DATE_PATTERN.test(date || '') ? date : null })
+    createNote({ user_id: user.id, linked_date: DATE_PATTERN.test(date || '') ? date : null })
       .then((note) => {
         setNotes((current) => [note, ...current])
         setSelectedId(note.id)
@@ -141,7 +143,7 @@ export default function NotesWorkspace({ initialNotes, categories }) {
     setError('')
     setCreating(true)
     try {
-      const note = await createNote({ linked_date: activeView === 'dated' ? toDateKey(new Date()) : null })
+      const note = await createNote({ user_id: user.id, linked_date: activeView === 'dated' ? toDateKey(new Date()) : null })
       setNotes((current) => [note, ...current])
       setSelectedId(note.id)
     } catch (createError) {

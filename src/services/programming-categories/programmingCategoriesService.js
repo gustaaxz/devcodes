@@ -24,11 +24,11 @@ function buildUniqueSlug(name, existing) {
   return slug
 }
 
-export async function createProgrammingCategory(name, existing) {
+export async function createProgrammingCategory(userId, name, existing) {
   const position = existing.reduce((max, category) => Math.max(max, category.position), -1) + 1
   const { data, error } = await supabase
     .from('programming_categories')
-    .insert({ name: name.trim(), slug: buildUniqueSlug(name, existing), position })
+    .insert({ user_id: userId, name: name.trim(), slug: buildUniqueSlug(name, existing), position })
     .select('*')
     .single()
   if (error) throw error

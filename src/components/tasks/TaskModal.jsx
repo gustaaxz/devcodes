@@ -5,6 +5,7 @@ import TextAreaField from '../ui/TextAreaField.jsx'
 import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import Spinner from '../ui/Spinner.jsx'
+import { useAuth } from '../../hooks/useAuth.js'
 import { createTask, updateTask } from '../../services/tasks/tasksService.js'
 import { toDateTimeInput } from '../../utils/dates.js'
 import { PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from '../../utils/labels.js'
@@ -25,6 +26,7 @@ function buildInitialValues(task) {
 }
 
 export default function TaskModal({ task, categories, onClose, onSaved }) {
+  const { user } = useAuth()
   const [values, setValues] = useState(() => buildInitialValues(task))
   const [titleError, setTitleError] = useState('')
   const [formError, setFormError] = useState('')
@@ -49,6 +51,7 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
     }
 
     const payload = {
+      user_id: user.id,
       title: values.title.trim(),
       description: values.description.trim() || null,
       category_id: values.categoryId || null,
