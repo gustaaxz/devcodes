@@ -26,6 +26,15 @@ function buildUniqueSlug(name, existing) {
 
 export async function createProgrammingCategory(userId, name, existing) {
   const position = existing.reduce((max, category) => Math.max(max, category.position), -1) + 1
+  
+  // Check for duplicate category names (case-insensitive)
+  const duplicateName = existing.find((cat) => cat.name.toLowerCase() === name.trim().toLowerCase())
+  if (duplicateName) {
+    const error = new Error('Já existe uma categoria com esse nome.')
+    error.code = 'DUPLICATE_CATEGORY_NAME'
+    throw error
+  }
+  
   const { data, error } = await supabase
     .from('programming_categories')
     .insert({ user_id: userId, name: name.trim(), slug: buildUniqueSlug(name, existing), position })
@@ -35,7 +44,15 @@ export async function createProgrammingCategory(userId, name, existing) {
   return data
 }
 
-export async function renameProgrammingCategory(id, name) {
+export async function renameProgrammingCategory(id, name, existing) {
+  // Check for duplicate category names (case-insensitive)
+  const duplicateName = existing.find((cat) => cat.id !== id && cat.name.toLowerCase() === name.trim().toLowerCase())
+  if (duplicateName) {
+    const error = new Error('Já existe outra categoria com esse nome.')
+    error.code = 'DUPLICATE_CATEGORY_NAME'
+    throw error
+  }
+  
   const { error } = await supabase.from('programming_categories').update({ name: name.trim() }).eq('id', id)
   if (error) throw error
 }

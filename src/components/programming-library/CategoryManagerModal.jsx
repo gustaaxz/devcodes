@@ -32,9 +32,18 @@ export default function CategoryManagerModal({ categories, files, onClose, onCha
   }
 
   async function handleRename(name) {
-    await renameProgrammingCategory(renameTarget.id, name)
-    setRenameTarget(null)
-    await onChanged()
+    setError('')
+    try {
+      await renameProgrammingCategory(renameTarget.id, name, categories)
+      setRenameTarget(null)
+      await onChanged()
+    } catch (renameError) {
+      if (renameError.code === 'DUPLICATE_CATEGORY_NAME') {
+        setError(renameError.message)
+      } else {
+        setError(friendlyError(renameError, 'Não foi possível renomear a categoria.'))
+      }
+    }
   }
 
   async function handleDeleted() {

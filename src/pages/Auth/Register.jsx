@@ -12,6 +12,7 @@ const MIN_PASSWORD_LENGTH = 8
 export default function Register() {
   const { signUp } = useAuth()
   const [displayName, setDisplayName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
@@ -23,6 +24,10 @@ export default function Register() {
   function validate() {
     const next = {}
     if (!displayName.trim()) next.displayName = 'Informe seu nome.'
+    if (!username.trim()) next.username = 'Informe um nome de usuário.'
+    if (!/^[a-z0-9_-]{3,20}$/.test(username.trim())) {
+      next.username = 'Nome de usuário deve ter 3-20 caracteres (letras, números, - e _ apenas).'
+    }
     if (password.length < MIN_PASSWORD_LENGTH) next.password = `A senha deve ter pelo menos ${MIN_PASSWORD_LENGTH} caracteres.`
     if (confirmation !== password) next.confirmation = 'As senhas não coincidem.'
     return next
@@ -37,7 +42,12 @@ export default function Register() {
 
     setSubmitting(true)
     try {
-      const data = await signUp({ displayName: displayName.trim(), email: email.trim(), password })
+      const data = await signUp({ 
+        displayName: displayName.trim(), 
+        email: email.trim(), 
+        password,
+        username: username.trim()
+      })
       if (!data.session) setConfirmationSent(true)
     } catch (authError) {
       setFormError(translateAuthError(authError))
@@ -84,6 +94,14 @@ export default function Register() {
           value={displayName}
           onChange={(event) => setDisplayName(event.target.value)}
           error={errors.displayName}
+        />
+        <TextField
+          label="Nome de usuário"
+          autoComplete="username"
+          placeholder="minhasenha_123"
+          value={username}
+          onChange={(event) => setUsername(event.target.value.toLowerCase())}
+          error={errors.username}
         />
         <TextField
           label="E-mail"

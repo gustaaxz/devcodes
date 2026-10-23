@@ -9,7 +9,7 @@ import { translateAuthError } from '../../utils/authErrors.js'
 
 export default function Login() {
   const { signIn, sessionExpired } = useAuth()
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -19,7 +19,7 @@ export default function Login() {
     setError('')
     setSubmitting(true)
     try {
-      await signIn({ email: email.trim(), password })
+      await signIn({ email: identifier.trim(), password })
     } catch (authError) {
       setError(translateAuthError(authError))
       setSubmitting(false)
@@ -48,11 +48,11 @@ export default function Login() {
         {sessionExpired && <Alert variant="info">Sua sessão expirou. Entre novamente.</Alert>}
         {error && <Alert variant="error">{error}</Alert>}
         <TextField
-          label="E-mail"
-          type="email"
-          autoComplete="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          label="E-mail ou nome de usuário"
+          autoComplete="username"
+          placeholder="seu_usuario ou seu@email.com"
+          value={identifier}
+          onChange={(event) => setIdentifier(event.target.value)}
           required
         />
         <TextField

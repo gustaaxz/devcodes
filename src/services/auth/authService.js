@@ -4,12 +4,12 @@ function getRedirectUrl(path) {
   return `${window.location.origin}${path}`
 }
 
-export async function signUp({ displayName, email, password }) {
+export async function signUp({ displayName, email, password, username }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { display_name: displayName },
+      data: { display_name: displayName, username: username?.toLowerCase() },
       emailRedirectTo: getRedirectUrl('/')
     }
   })
@@ -18,7 +18,22 @@ export async function signUp({ displayName, email, password }) {
 }
 
 export async function signIn({ email, password }) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  // Resolve username to email if needed
+  let authEmail = email
+  
+  // Try to resolve username to email if input doesn't contain @
+  if (!email.includes('@')) {
+    try {
+      const { data, error } = await supabase.rpc('get_auth_email', { identifier: email })
+      if (!error && data) {
+        authEmail = data
+      }
+    } catch (e) {
+      // If RPC fails, fall back to using the input as-is
+    }
+  }
+  
+  const { data, error } = await supabase.auth.signInWithPassword({ email: authEmail, password })
   if (error) throw error
   return data
 }

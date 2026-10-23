@@ -126,10 +126,20 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
   }
 
   async function handleCreateCategory(name) {
-    const created = await createProgrammingCategory(user.id, name, categories)
-    await refresh()
-    selectCategory(created.id)
-    setCreatingCategory(false)
+    setError('')
+    try {
+      const created = await createProgrammingCategory(user.id, name, categories)
+      await refresh()
+      selectCategory(created.id)
+      setCreatingCategory(false)
+    } catch (createError) {
+      if (createError.code === 'DUPLICATE_CATEGORY_NAME') {
+        setError(createError.message)
+        setCreatingCategory(true)
+      } else {
+        setError(friendlyError(createError, 'Não foi possível criar a categoria.'))
+      }
+    }
   }
 
   async function handleToggleFavorite(file) {
