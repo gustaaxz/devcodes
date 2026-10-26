@@ -1,0 +1,136 @@
+.share-modal__tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-4);
+}
+
+.share-modal__tab {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.share-modal__tab--active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* ── User tab ───────────────────────────────────────── */
+.share-modal__user-form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+
+.share-modal__user-form .field {
+  flex: 1;
+}
+
+.share-modal__list {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.share-modal__list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-hover);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+}
+
+.share-modal__list-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.share-modal__list-item-label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.share-modal__list-item-meta {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+/* ── Public link tab ────────────────────────────────── */
+.share-modal__link-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.share-modal__link-box {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.share-modal__link-url {
+  flex: 1;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.share-modal__copy-btn {
+  flex-shrink: 0;
+}
+
+.share-modal__copied {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.share-modal__options {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.share-modal__options .field {
+  flex: 1;
+  min-width: 140px;
+}
+
+.share-modal__empty {
+  text-align: center;
+  padding: var(--space-6) 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.share-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
