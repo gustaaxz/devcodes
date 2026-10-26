@@ -4,6 +4,44 @@ Registro técnico de todas as implementações, decisões e outcomes.
 
 ---
 
+## 2026-10-26 - Canonical Documentation Alignment & SpecFirst Consolidation
+
+**Implementador:** Antigravity AI  
+**Fase:** Governança e Estabilização  
+**Status:** Complete  
+
+### O Que Foi Feito
+
+1. **Preenchimento de Documentos Nucleares Vazios**
+   - `docs/architecture.md`: Preenchido integralmente com arquitetura SPA + Supabase BaaS, diagrama de camadas, fluxo de dados unidirecional e regras de dependência.
+   - `docs/coding-standards.md`: Substituídos os placeholders genéricos de template por padrões oficiais (JavaScript ES2024, React 19 com componentes funcionais e hooks, Oxlint, CSS Variables, serviços desacoplados em `src/services/<dominio>/`).
+   - `docs/TESTING.md`: Definidos comandos oficiais (`npm run lint`, `npm test` via Vitest, `npm run build`, `supabase/tests/rls_isolation.sql`).
+   - `docs/backlog.md`: Estruturado com melhorias planejadas das Fases 5 e 6 de `docs/PENDING_FEATURES.md`.
+   - `docs/operations.md`: Criado cheat sheet operacional rápido com comandos diários e variáveis de ambiente.
+
+2. **Consolidação de Logs e Rastreabilidade**
+   - `docs/deployment-log.md`: Substituídas as entradas residuais do template de maio/2026 pelo histórico técnico consolidado de deploys do DevCodes.
+   - `docs/README.md`: Atualizado o catálogo geral com os 28 arquivos, corrigindo links com caminhos relativos e padronizados.
+   - `AGENTS.md`: Corrigidas referências a `docs/TESTING.md`, `docs/security.md`, `docs/implementation-plan.md` e versão do React (19).
+   - `docs/deploy.md` e `docs/implementation-plan.md`: Corrigidos links e alinhada versão do React.
+
+### Decisões Tomadas
+
+1. **Unificação da Arquitetura no architecture.md**
+   - Decisão: Consolidar a arquitetura técnica descrita em `FEATURES.md` e `domains.md` diretamente em `docs/architecture.md`.
+   - Razão: Atender à Regra Mandatória 1 do `AGENTS.md` ("Sempre leia `docs/architecture.md` antes de implementar") sem inconsistências.
+
+2. **Stack Tecnológica Oficial: React 19 + JavaScript**
+   - Decisão: Manter a documentação fiel ao `package.json` (`react: ^19.3.1`, sem TypeScript).
+   - Razão: Evitar que novos agentes tentem gerar código em TypeScript ou com dependências não utilizadas.
+
+### Testes Executados
+
+- ✅ Validação estática de links e referências cruzadas entre `AGENTS.md`, `docs/README.md` e `docs/*`.
+- ✅ Sem quebras de links absolutos com casing incorreto.
+
+---
+
 ## 2026-10-23 - SpecFirst Integration + Phase 4 Start
 
 **Implementador:** Kiro AI  
