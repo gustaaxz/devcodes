@@ -7,6 +7,8 @@ import EventModal from '../../components/calendar/EventModal.jsx'
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import Spinner from '../../components/ui/Spinner.jsx'
+import ShareModal from '../../components/sharing/ShareModal.jsx'
+import { useAuth } from '../../hooks/useAuth.js'
 import { useDataVersion } from '../../hooks/useDataVersion.js'
 import { useLoad } from '../../hooks/useLoad.js'
 import { useProfile } from '../../hooks/useProfile.js'
@@ -28,6 +30,7 @@ function groupBy(items, getKey) {
 }
 
 export default function Calendar() {
+  const { user } = useAuth()
   const [params, setParams] = useSearchParams()
   const { preferences } = useProfile()
   const { version } = useDataVersion()
@@ -42,6 +45,7 @@ export default function Calendar() {
   })
   const [selectedKey, setSelectedKey] = useState(initialKey)
   const [modal, setModal] = useState(null)
+  const [shareTarget, setShareTarget] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
@@ -156,6 +160,7 @@ export default function Calendar() {
         notes={notesByDay[selectedKey] || []}
         onCreateEvent={() => setModal({ event: null })}
         onEditEvent={(event) => setModal({ event })}
+        onShareEvent={(event) => setShareTarget(event)}
         onDeleteEvent={(event) => {
           setDeleteError('')
           setDeleteTarget(event)
@@ -180,6 +185,15 @@ export default function Calendar() {
           error={deleteError}
           onConfirm={handleConfirmDelete}
           onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
+      {shareTarget && (
+        <ShareModal
+          resourceId={shareTarget.id}
+          resourceType="event"
+          ownerId={user.id}
+          onClose={() => setShareTarget(null)}
         />
       )}
     </div>

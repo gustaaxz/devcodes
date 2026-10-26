@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
-import { CheckSquare, Pencil, Plus, StickyNote, Trash2 } from 'lucide-react'
+import { CheckSquare, Pencil, Plus, Share2, StickyNote, Trash2 } from 'lucide-react'
 import Badge from '../ui/Badge.jsx'
 import { formatLongDate, formatTime, fromDateKey, isAllDayEvent } from '../../utils/dates.js'
 import { EVENT_STATUS_OPTIONS, PRIORITY_OPTIONS, TASK_STATUS_OPTIONS, getLabel } from '../../utils/labels.js'
 import './DayPanel.css'
 
-export default function DayPanel({ dateKey, events, tasks, notes, onCreateEvent, onEditEvent, onDeleteEvent }) {
+export default function DayPanel({ dateKey, events, tasks, notes, onCreateEvent, onEditEvent, onDeleteEvent, onShareEvent }) {
   return (
     <aside className="day-panel card">
       <div className="day-panel__header">
@@ -38,11 +38,17 @@ export default function DayPanel({ dateKey, events, tasks, notes, onCreateEvent,
                 {event.description && <p>{event.description}</p>}
                 <div className="day-panel__badges">
                   {event.categories && <Badge color={event.categories.color}>{event.categories.name}</Badge>}
+                  {event.is_shared && <Badge variant="accent">Compartilhado</Badge>}
                   <Badge variant={event.priority}>{getLabel(PRIORITY_OPTIONS, event.priority)}</Badge>
                   <Badge>{getLabel(EVENT_STATUS_OPTIONS, event.status)}</Badge>
                 </div>
               </div>
               <div className="day-panel__actions">
+                {onShareEvent && (
+                  <button type="button" className="icon-button" onClick={() => onShareEvent(event)} aria-label="Compartilhar evento">
+                    <Share2 size={16} />
+                  </button>
+                )}
                 <button type="button" className="icon-button" onClick={() => onEditEvent(event)} aria-label="Editar evento">
                   <Pencil size={16} />
                 </button>
