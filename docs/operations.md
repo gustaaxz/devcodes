@@ -1,58 +1,74 @@
-# Operations
+# Operations - DevCodes
 
-## Por que este arquivo existe
+## 1. Visão Geral
 
-Este documento explica como rodar, configurar, manter e publicar o projeto. Ele deve permitir que alguem opere o sistema sem depender de memoria oral.
+Este documento é o guia rápido de operação, manutenção e execução do **DevCodes**. Ele fornece os comandos e verificações essenciais para operar o sistema no dia a dia.
 
-## Natureza de Template
+Para o passo a passo completo de primeiro setup e configuração do Supabase, consulte [docs/SETUP.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/SETUP.md).  
+Para detalhes sobre a publicação em produção, consulte [docs/deploy.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/deploy.md).
 
-Este arquivo e um template. No primeiro chat de escopo, revise e ajuste ambiente local, variaveis, URLs, seeds, backup, checks e checklist de deploy ao projeto real.
+---
 
-## Ambiente Local
+## 2. Execução Local
 
-1. Instalar runtime: `[Node, Python, Docker, etc.]`
-2. Instalar dependencias: `[comando]`
-3. Criar arquivo de ambiente a partir de `[arquivo exemplo]`
-4. Rodar projeto: `[comando]`
+### 2.1. Requisitos
+- **Node.js:** Versão 20.19.0 ou superior (verifique com `node -v`).
+- **NPM:** Gerenciador de pacotes padrão.
 
-## Variaveis de Ambiente
-
-| Variavel | Obrigatoria | Descricao |
-| --- | --- | --- |
-| `[VARIAVEL]` | Sim/Nao | `[descricao]` |
-
-## URLs Locais
-
-- App: `[URL]`
-- Admin/API/Docs: `[URL]`
-
-## Seeds, Fixtures ou Dados Iniciais
-
-Explique se existe comando para popular dados.
+### 2.2. Comandos Operacionais Diários
 
 ```bash
-[comando_seed]
+# 1. Instalar dependências
+npm install
+
+# 2. Configurar variáveis de ambiente (criar .env baseado no .env.example)
+cp .env.example .env
+
+# 3. Iniciar servidor de desenvolvimento local
+npm run dev
+
+# 4. Validar qualidade de código (linter rápido)
+npm run lint
+
+# 5. Executar suíte de testes unitários
+npm test
+
+# 6. Gerar build de produção para validação
+npm run build
 ```
 
-## Backup e Restauracao
+---
 
-Explique o que precisa ser copiado para restaurar o projeto.
+## 3. Variáveis de Ambiente Obrigatórias
 
-- Banco: `[estrategia]`
-- Uploads/assets: `[estrategia]`
-- Configuracao: `[estrategia]`
+Definidas no arquivo `.env` na raiz do projeto (nunca comitado no Git):
 
-## Checks de Qualidade
+| Variável | Obrigatória | Descrição | Exemplo |
+| :--- | :---: | :--- | :--- |
+| `VITE_SUPABASE_URL` | Sim | URL HTTPS do projeto Supabase | `https://xyzcompany.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Sim | Chave pública anônima do Supabase | Token JWT iniciando com `eyJ...` |
 
-```bash
-[comando_lint]
-[comando_typecheck]
-[comando_test]
-[comando_build]
-```
+---
 
-## Checklist de Deploy
+## 4. Banco de Dados e Migrações
 
-- `[item de deploy]`
-- `[item de seguranca]`
-- `[item de verificacao]`
+- **Local das Migrações:** `supabase/migrations/`
+- **Ordem de Aplicação:** Ordem cronológica dos nomes dos arquivos (`YYYYMMDDHHMMSS_*.sql`).
+- **Comandos via Supabase CLI:**
+  ```bash
+  # Vincular ao projeto remoto
+  npx supabase link --project-ref <PROJECT_REF>
+
+  # Aplicar migrações pendentes no banco
+  npx supabase db push
+  ```
+- **Auditoria de Políticas RLS:** Execute o script `supabase/tests/rls_isolation.sql` no SQL Editor do painel do Supabase para certificar que o isolamento entre contas está íntegro.
+
+---
+
+## 5. Checklist de Deploy e Produção
+
+- [ ] Variáveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` cadastradas no painel da Vercel.
+- [ ] Configuração de URL e Redirect URLs do Supabase Auth apontando para o domínio de produção.
+- [ ] Todas as migrações aplicadas no banco antes do deploy.
+- [ ] Build e testes passando localmente sem erros (`npm test && npm run build`).
