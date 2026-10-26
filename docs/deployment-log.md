@@ -21,7 +21,7 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
   - Atualização do catálogo e links em [docs/README.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/README.md) e alinhamento com [AGENTS.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/AGENTS.md).
 - **Arquivos modificados:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/TESTING.md`, `docs/backlog.md`, `docs/operations.md`, `docs/deployment-log.md`, `docs/README.md`, `AGENTS.md`.
 - **Resultados dos testes:** Revisão e validação estática de todos os arquivos de documentação.
-- **Riscos/Débito técnico:** A tabela `note_versions` (migração `20261023150000_add_note_versions.sql`) necessita ser executada no Supabase remoto via `npx supabase db push`.
+- **Riscos/Débito técnico:** Nenhum conhecido. Todas as migrações até `20261023150000_add_note_versions.sql` estão aplicadas e ativas no Supabase remoto.
 
 ---
 
