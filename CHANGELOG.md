@@ -7,7 +7,8 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 ### Added
 - Suporte a exportação de dados (CSV, JSON) para notas, tarefas e eventos
 - Integração SpecFirst para governança de IA
-- Documentação técnica completa em `docs/`
+- Alinhamento canônico da documentação (`docs/architecture.md`, `docs/coding-standards.md`, `docs/TESTING.md`, `docs/backlog.md`, `docs/operations.md`, `docs/deployment-log.md`) com stack real (React 19, Supabase BaaS, Oxlint, Vitest)
+- Correção de links e padronização no `AGENTS.md` e `docs/README.md`
 
 ### Verified
 - Tema escuro/claro já implementado com CSS variables
