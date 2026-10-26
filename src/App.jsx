@@ -16,6 +16,7 @@ import ProgrammingLibrary from './pages/ProgrammingLibrary/index.jsx'
 import RecentFiles from './pages/RecentFiles/index.jsx'
 import Favorites from './pages/Favorites/index.jsx'
 import Settings from './pages/Settings/index.jsx'
+import SharedResource from './pages/SharedResource/index.jsx'
 
 export default function App() {
   const { status } = useAuth()
@@ -30,6 +31,8 @@ export default function App() {
         <Route path="recuperar-senha" element={<ForgotPassword />} />
       </Route>
       <Route path="redefinir-senha" element={<ResetPassword />} />
+      <Route path="shared/:share_token" element={<SharedResource />} />
+      <Route path="compartilhado/:token" element={<SharedResource />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route index element={<Dashboard />} />
