@@ -1,125 +1,58 @@
-# Deployment Log
+# Deployment Log - DevCodes
 
-## Por que este arquivo existe
+## 1. Visão Geral
 
-Este documento registra o historico tecnico do que foi efetivamente entregue no projeto. Ele preserva o rastro operacional entre plano, implementacao, testes e riscos residuais.
+Este documento registra o histórico técnico das entregas e deploys efetuados no **DevCodes**, mapeando cada entrega à sua respectiva fase, arquivos alterados e validações executadas.
 
-Use este arquivo para responder: "o que mudou de fato no projeto, quando, por qual issue e com quais validacoes?".
+Para o registro detalhado de implementação com timestamps e decisões técnicas em nível de código, consulte também [implementation-log.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/implementation-log.md) e [CHANGELOG.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/CHANGELOG.md).
 
-## Natureza de Template
+---
 
-Este arquivo e um template. No primeiro chat de escopo, revise se o projeto usara log tecnico local; mantenha, ajuste ou solicite aprovacao humana para remover conforme a governanca desejada.
+## 2. Entradas de Deploys e Entregas
 
-## Diferenca para Decision Log
+### [2026-10-26] - Alinhamento e Governança Canônica da Pasta docs
+- **Fase:** Fase 4 - Governança e Estabilização
+- **O que foi feito:**
+  - Preenchimento e consolidação de [docs/architecture.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/architecture.md) com a arquitetura real do DevCodes (React 19, Supabase BaaS, camadas e fluxo unidirecional).
+  - Preenchimento de [docs/coding-standards.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/coding-standards.md) eliminando placeholders genéricos e formalizando JavaScript (ES2024), React 19, Oxlint e isolamento de serviços.
+  - Atualização de [docs/TESTING.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/TESTING.md) com os comandos oficiais (`npm run lint`, `npm test` via Vitest, `npm run build`, testes de isolamento RLS).
+  - Estruturação de [docs/backlog.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/backlog.md) com as melhorias das Fases 5 e 6 de [docs/PENDING_FEATURES.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/PENDING_FEATURES.md).
+  - Atualização de [docs/operations.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/operations.md) com comandos operacionais rápidos e referências cruzadas para [docs/SETUP.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/SETUP.md) e [docs/deploy.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/deploy.md).
+  - Atualização do catálogo e links em [docs/README.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/README.md) e alinhamento com [AGENTS.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/AGENTS.md).
+- **Arquivos modificados:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/TESTING.md`, `docs/backlog.md`, `docs/operations.md`, `docs/deployment-log.md`, `docs/README.md`, `AGENTS.md`.
+- **Resultados dos testes:** Revisão e validação estática de todos os arquivos de documentação.
+- **Riscos/Débito técnico:** A tabela `note_versions` (migração `20261023150000_add_note_versions.sql`) necessita ser executada no Supabase remoto via `npx supabase db push`.
 
-- `docs/decision-log.md` registra decisoes duradouras de arquitetura, produto, modelo, seguranca ou operacao.
-- `docs/deployment-log.md` registra entregas tecnicas realizadas.
-- `docs/issues.md` registra o estado vivo do trabalho planejado.
+---
 
-Uma entrega pode aparecer no Deployment Log sem gerar decisao arquitetural. Uma decisao arquitetural pode existir antes de qualquer entrega tecnica.
+### [2026-10-23] - Entrega: Fase 4 - Exportação de Dados e Governança SpecFirst
+- **Fase:** Fase 4 - Colaboração e Produtividade Avançada
+- **O que foi feito:**
+  - Implementação de `exportService.js` com exportação de dados em formatos CSV e JSON para notas, tarefas e eventos com timestamp automático.
+  - UI de exportação integrada em Settings > Exportar Dados.
+  - Adoção da governança documental SpecFirst com `AGENTS.md` e sincronização de rastreabilidade.
+- **Arquivos modificados:** `src/services/export/exportService.js`, `src/components/settings/`, `AGENTS.md`, `implementation-log.md`, `CHANGELOG.md`.
+- **Resultados dos testes:** Build sem erros (`npm run build`), exportação e downloads validados.
 
-## Regras
+---
 
-- Toda tarefa concluida deve gerar uma entrada neste arquivo.
-- Entradas devem ser cronologicas, com a mais recente no topo.
-- Cada entrada deve referenciar issue, fase ou contexto de origem.
-- Checks nao executados devem ser registrados com motivo.
-- Riscos e debitos tecnicos devem ser explicitos.
+### [2026-10-23] - Entrega: Fase 3 - Sincronização Realtime, Versões e Atalhos Globais
+- **Fase:** Fase 3 - Recursos Essenciais
+- **O que foi feito:**
+  - Hook `useKeyboardShortcuts` globalizado com atalhos de navegação e modal de ajuda.
+  - Histórico de versões de notas com tabela `note_versions`, trigger no PostgreSQL e modal `NoteVersionsModal`.
+  - Sincronização em tempo real via canais do Supabase Realtime integrados a Notes e Tasks.
+- **Arquivos modificados:** `src/hooks/useKeyboardShortcuts.js`, `src/hooks/useRealtime.js`, `src/components/notes/NoteVersionsModal.jsx`, `supabase/migrations/20261023150000_add_note_versions.sql`.
+- **Resultados dos testes:** Testes manuais entre abas com propagação instantânea de eventos.
 
-## Template de Entrada
+---
 
-```md
-## [AAAA-MM-DD] - Entrega: ISSUE-000 ([titulo curto])
-
-- **Fase:** [fase do docs/implementation-plan.md]
-- **O que foi feito:** [resumo objetivo da entrega]
-- **Arquivos modificados:** `[caminho]`, `[caminho]`
-- **Resultados dos testes:** [comandos executados e resultado]
-- **Docs atualizados:** `[caminho]`, `[caminho]`
-- **Riscos/Debito tecnico:** [risco, pendencia ou "Nenhum conhecido"]
-```
-
-## Entradas
-
-## [2026-05-24] - Entrega: ISSUE-001 (Kickoff visual obrigatorio)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Adicionada regra para projetos com UI: quando `docs/design-guidelines.md` ainda estiver generico e o humano nao fornecer preferencias visuais, a IA deve perguntar sobre marca, referencias, estilo, densidade, publico, acessibilidade e restricoes antes de implementar telas, componentes ou estilos.
-- **Arquivos modificados:** `README.md`, `docs/design-guidelines.md`, `docs/ai-workflow.md`, `docs/implementation-governance.md`, `docs/deployment-log.md`, `docs/issues.md`, `docs/implementation-plan.md`
-- **Resultados dos testes:** Revisao documental por leitura e busca textual. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `docs/design-guidelines.md`, `docs/ai-workflow.md`, `docs/implementation-governance.md`, `docs/deployment-log.md`, `docs/issues.md`, `docs/implementation-plan.md`
-- **Riscos/Debito tecnico:** Nenhum conhecido.
-
-## [2026-05-24] - Entrega: ISSUE-001 (Baseline de design guidelines)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Evoluido `docs/design-guidelines.md` de um esqueleto para um template prescritivo com baseline de cores, tipografia, espacamento, layout, elevacao, shapes, componentes, conteudo visual, estados e acessibilidade. O objetivo e garantir consistencia minima de design mesmo antes de existir uma marca ou design system especifico.
-- **Arquivos modificados:** `docs/design-guidelines.md`, `docs/deployment-log.md`, `docs/issues.md`, `docs/implementation-plan.md`
-- **Resultados dos testes:** Revisao documental por leitura. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `docs/design-guidelines.md`, `docs/deployment-log.md`, `docs/issues.md`, `docs/implementation-plan.md`
-- **Riscos/Debito tecnico:** O baseline usa tokens genericos e deve ser substituido por tokens reais quando o projeto tiver marca, identidade visual ou design system definido.
-
-## [2026-05-24] - Entrega: ISSUE-001 (Governanca humano-navegador)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Reequilibrada a autonomia da IA para o modelo humano navegador e IA piloto. Adicionada exigencia de aprovacao humana para decisoes de escopo, arquitetura, seguranca, modelo de dados e remocao de documentos. Padronizada a secao `Natureza de Template` em `AGENTS.md`, `CLAUDE.md`, `README.md` e todos os arquivos em `docs/*`, explicando que cada arquivo deve ser revisado e ajustado ao escopo real do projeto.
-- **Arquivos modificados:** `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/*`
-- **Resultados dos testes:** Revisao documental por busca textual para confirmar `Natureza de Template` em todos os arquivos de `docs/*` e verificacao de referencias a aprovacao humana. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/*`
-- **Riscos/Debito tecnico:** Os documentos continuam majoritariamente em ASCII sem acentuacao; pode ser padronizado em revisao editorial futura.
-
-## [2026-05-22] - Entrega: ISSUE-001 (Adaptacao inicial completa)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Reforcado que o primeiro chat de escopo deve adaptar o framework inteiro ao projeto real, incluindo `AGENTS.md`, `README.md`, adaptadores e todos os arquivos em `docs/*`. Documentada a possibilidade de remover arquivos que nao se aplicam, com limpeza obrigatoria de referencias cruzadas.
-- **Arquivos modificados:** `README.md`, `AGENTS.md`, `docs/ai-workflow.md`, `docs/README.md`, `docs/implementation-governance.md`, `docs/deployment-log.md`
-- **Resultados dos testes:** Revisao documental por leitura e busca textual. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `AGENTS.md`, `docs/ai-workflow.md`, `docs/README.md`, `docs/implementation-governance.md`, `docs/deployment-log.md`
-- **Riscos/Debito tecnico:** Nenhum conhecido.
-
-## [2026-05-20] - Entrega: ISSUE-001 (Diretrizes de design)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Criado `docs/design-guidelines.md` como documento canonico para direcao visual, tokens, layout, componentes, estados, acessibilidade e diretrizes de IA para UI. Referenciado em README, AGENTS, indice de docs e workflow de IA.
-- **Arquivos modificados:** `README.md`, `AGENTS.md`, `docs/README.md`, `docs/ai-workflow.md`, `docs/design-guidelines.md`, `docs/deployment-log.md`
-- **Resultados dos testes:** Revisao documental por leitura e busca textual. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `AGENTS.md`, `docs/README.md`, `docs/ai-workflow.md`, `docs/design-guidelines.md`, `docs/deployment-log.md`
-- **Riscos/Debito tecnico:** O documento e um template generico; projetos com marca existente devem preencher tokens e componentes reais antes de implementar UI.
-
-## [2026-05-20] - Entrega: ISSUE-001 (Adaptadores de ferramenta)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Adicionada compatibilidade explicita com Claude Code e outras ferramentas por meio de adaptadores operacionais. Criado `CLAUDE.md`, documentado o padrao em `docs/tooling-adapters.md` e atualizado README, AGENTS e indice de docs.
-- **Arquivos modificados:** `CLAUDE.md`, `README.md`, `AGENTS.md`, `docs/README.md`, `docs/tooling-adapters.md`, `docs/deployment-log.md`
-- **Resultados dos testes:** Revisao documental por leitura e busca textual. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `AGENTS.md`, `docs/README.md`, `docs/tooling-adapters.md`, `docs/deployment-log.md`
-- **Riscos/Debito tecnico:** Outros adaptadores, como `.cursorrules`, foram documentados como receita mas nao criados para evitar arquivos especificos de ferramenta sem necessidade confirmada.
-
-## [2026-05-20] - Entrega: ISSUE-001 (Fluxo Spec-First com IA)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Adicionado ao README o conceito de usar a IA para adaptar o SpecFirst ao escopo do projeto antes de gerar codigo. Reforcado em `docs/ai-workflow.md` que a inicializacao do projeto exige documentacao especifica aprovada antes da implementacao.
-- **Arquivos modificados:** `README.md`, `docs/ai-workflow.md`, `docs/deployment-log.md`
-- **Resultados dos testes:** Revisao documental por leitura e busca textual. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `docs/ai-workflow.md`, `docs/deployment-log.md`
-- **Riscos/Debito tecnico:** Nenhum conhecido.
-
-## [2026-05-20] - Entrega: ISSUE-001 (Posicionamento do SpecFirst no README)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Adicionada ao README a categorizacao do SpecFirst como framework documental, template Markdown e kit de governanca para IA, com uma definicao curta para orientar novos usuarios.
-- **Arquivos modificados:** `README.md`, `docs/deployment-log.md`
-- **Resultados dos testes:** Revisao documental por leitura. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `docs/deployment-log.md`
-- **Riscos/Debito tecnico:** Nenhum conhecido.
-
-## [2026-05-20] - Entrega: ISSUE-001 (Governanca documental SpecFirst)
-
-- **Fase:** Fase 0 - Fundacao documental
-- **O que foi feito:** Adicionada governanca obrigatoria de progresso para agentes de IA, com sincronizacao entre `docs/issues.md`, `docs/implementation-plan.md` e `docs/deployment-log.md`. Incluido Prompt Mestre de kickoff no README e diferenciados Decision Log, Deployment Log e historico vivo de issues.
-- **Arquivos modificados:** `AGENTS.md`, `README.md`, `docs/ai-workflow.md`, `docs/implementation-governance.md`, `docs/issues.md`, `docs/implementation-plan.md`, `docs/README.md`, `docs/decision-log.md`, `docs/deployment-log.md`
-- **Resultados dos testes:** Revisao documental por leitura e busca textual. Nao ha suite automatizada neste repositorio documental.
-- **Docs atualizados:** `README.md`, `AGENTS.md`, `docs/ai-workflow.md`, `docs/implementation-governance.md`, `docs/issues.md`, `docs/implementation-plan.md`, `docs/README.md`, `docs/decision-log.md`, `docs/deployment-log.md`
-- **Riscos/Debito tecnico:** Os documentos ainda usam majoritariamente ASCII sem acentuacao, exceto `README.md`; pode ser padronizado em uma revisao editorial futura.
-
-_Registre novas entregas acima desta linha._
+### [2026-10-23] - Entrega: Fases 1 e 2 - Fundação, Auth e Otimização
+- **Fase:** Fases 1 e 2 - Fundação & UX
+- **O que foi feito:**
+  - Autenticação com suporte a `username` ou e-mail com função RPC e validação de duplicatas.
+  - Recálculo automático de contadores do dashboard via hook `useDataVersion`.
+  - Otimização da busca global (indexação por palavras-chave com limite mínimo de caracteres).
+  - Tema escuro e claro persistido no banco e localStorage.
+- **Arquivos modificados:** `src/services/auth/authService.js`, `src/contexts/ProfileProvider.jsx`, `src/components/layout/SearchBox.jsx`, `supabase/migrations/20261023130000_add_username_to_profiles.sql`.
+- **Resultados dos testes:** Validação de login, alternância visual de temas e tempos de resposta na busca.
