@@ -10,6 +10,21 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 
 ## 2. Entradas de Deploys e Entregas
 
+### [2026-10-26] - Entrega: Fase 4 - Compartilhamento de Notas e Eventos (#13)
+- **Fase:** Fase 4 - Colaboração e Produtividade Avançada
+- **O que foi feito:**
+  - Migração de banco de dados [20261026120000_add_sharing.sql](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/supabase/migrations/20261026120000_add_sharing.sql) aplicada e validada com sucesso no Supabase remoto.
+  - Criação das tabelas `note_shares`, `event_shares` e `share_access_logs` com Row Level Security (RLS).
+  - Funções RPC com `security definer`: `get_user_id_by_email`, `get_shared_note` e `get_shared_event`.
+  - Serviço `shareService.js` com geração de link público, compartilhamento direto por e-mail e clonagem de anotações compartilhadas.
+  - Componente `ShareModal.jsx` integrado nas interfaces de anotações (`NoteEditor.jsx`) e eventos (`DayPanel.jsx` / `Calendar/index.jsx`).
+  - Rota pública `/shared/:share_token` (`SharedResource/index.jsx`) com visualização somente-leitura e botão "Copiar para Minha Biblioteca".
+- **Arquivos modificados:** `supabase/migrations/20261026120000_add_sharing.sql`, `src/services/sharing/*`, `src/components/sharing/*`, `src/pages/SharedResource/*`, `src/components/notes/*`, `src/components/calendar/*`, `src/pages/Calendar/*`, `src/App.jsx`.
+- **Resultados dos testes:** 41 testes unitários passando (`npm test`), 0 erros de linting (`npm run lint`), build de produção aprovado (`npm run build`), verificação de conectividade com as 3 novas tabelas e 2 RPCs com status 200 OK.
+- **Riscos/Débito técnico:** Nenhum. Tabelas, RLS e RPCs ativas no Supabase.
+
+---
+
 ### [2026-10-26] - Alinhamento e Governança Canônica da Pasta docs
 - **Fase:** Fase 4 - Governança e Estabilização
 - **O que foi feito:**
