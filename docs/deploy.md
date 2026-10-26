@@ -8,7 +8,7 @@ Este documento define a estratégia de build, configuração de ambiente e publi
 
 ## Arquitetura de Deploy
 
-- **Frontend:** Single Page Application (SPA) construída com Vite + React 18, hospedada e distribuída globalmente na **Vercel**.
+- **Frontend:** Single Page Application (SPA) construída com Vite + React 19, hospedada e distribuída globalmente na **Vercel**.
 - **Backend / BaaS:** **Supabase** gerenciado (PostgreSQL 15+, Auth, Storage S3-compatible, Realtime WebSocket e Edge Functions).
 
 ---
