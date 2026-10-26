@@ -5,7 +5,7 @@
 Este documento organiza as fases de desenvolvimento do DevCodes, conectando o roadmap de funcionalidades ao estado real de entrega.
 
 **Status Geral:** 15/26 melhorias implementadas (57%)  
-**Referência Detalhada:** [PENDING_FEATURES.md](file:///c:/Users/gustavo_hatschbach/Desktop/DevCodes/docs/PENDING_FEATURES.md)
+**Referência Detalhada:** [PENDING_FEATURES.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/PENDING_FEATURES.md)
 
 ---
 
@@ -60,4 +60,4 @@ Este documento organiza as fases de desenvolvimento do DevCodes, conectando o ro
 
 ## Regras de Atualização
 
-- Ao concluir uma melhoria, marque o item como `[x]` aqui, atualize [issues.md](file:///c:/Users/gustavo_hatschbach/Desktop/DevCodes/docs/issues.md), registre a entrega em `CHANGELOG.md` e em `implementation-log.md`.
+- Ao concluir uma melhoria, marque o item como `[x]` aqui, atualize [issues.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/issues.md), registre a entrega em `CHANGELOG.md` e em `implementation-log.md`.
