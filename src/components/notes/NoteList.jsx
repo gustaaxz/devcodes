@@ -1,4 +1,4 @@
-import { Pin, Star } from 'lucide-react'
+import { Pin, Share2, Star } from 'lucide-react'
 import { formatShortDate, fromDateKey } from '../../utils/dates.js'
 import './NoteList.css'
 
@@ -23,6 +23,7 @@ export default function NoteList({ notes, selectedId, onSelect }) {
             <span className="note-list__top">
               <strong>{note.title || 'Sem título'}</strong>
               <span className="note-list__icons">
+                {note.is_shared && <Share2 size={13} title="Compartilhado" />}
                 {note.is_pinned && <Pin size={13} />}
                 {note.is_favorite && <Star size={13} />}
               </span>

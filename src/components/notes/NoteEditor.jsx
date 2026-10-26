@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowLeft, Bold, Copy, Heading2, Italic, List, Pin, Star, Trash2, History } from 'lucide-react'
+import { ArrowLeft, Bold, Copy, Heading2, Italic, List, Pin, Share2, Star, Trash2, History } from 'lucide-react'
 import TextField from '../ui/TextField.jsx'
 import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import ConfirmDialog from '../ui/ConfirmDialog.jsx'
 import NoteVersionsModal from './NoteVersionsModal.jsx'
+import ShareModal from '../sharing/ShareModal.jsx'
 import MarkdownPreview from './MarkdownPreview.jsx'
 import TagInput from './TagInput.jsx'
 import { deleteNote, duplicateNote, setNoteTags, updateNote } from '../../services/notes/notesService.js'
+import { useAuth } from '../../hooks/useAuth.js'
 import { formatDateTime } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
 import './NoteEditor.css'
@@ -40,12 +42,14 @@ function toPayload(draft) {
 }
 
 export default function NoteEditor({ note, categories, tagSuggestions, onChanged, onDeleted, onDuplicated, onBack }) {
+  const { user } = useAuth()
   const [draft, setDraft] = useState(() => buildDraft(note))
   const [saveState, setSaveState] = useState('saved')
   const [mode, setMode] = useState('edit')
   const [actionError, setActionError] = useState('')
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [showVersions, setShowVersions] = useState(false)
+  const [showShare, setShowShare] = useState(false)
   const [busy, setBusy] = useState(false)
 
   const draftRef = useRef(draft)
@@ -213,6 +217,14 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
         <button
           type="button"
           className="icon-button"
+          onClick={() => setShowShare(true)}
+          aria-label="Compartilhar anotação"
+        >
+          <Share2 size={18} />
+        </button>
+        <button
+          type="button"
+          className="icon-button"
           onClick={() => setShowVersions(true)}
           aria-label="Ver histórico de versões"
         >
@@ -346,6 +358,15 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
           noteId={note.id}
           onClose={() => setShowVersions(false)}
           onRestored={onChanged}
+        />
+      )}
+
+      {showShare && (
+        <ShareModal
+          resourceId={note.id}
+          resourceType="note"
+          ownerId={user.id}
+          onClose={() => setShowShare(false)}
         />
       )}
     </section>
