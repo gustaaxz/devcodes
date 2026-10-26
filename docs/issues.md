@@ -8,20 +8,6 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ## Próximas Issues em Foco (Fase 4)
 
-### ISSUE-013 - Compartilhamento de Notas e Eventos
-**Tipo:** Feature  
-**Status:** Planejada  
-**Fase:** Fase 4  
-
-**Objetivo:** Permitir compartilhamento de notas e eventos entre usuários cadastrados e geração de links públicos com controle de permissões.
-
-**Critérios de aceite:**
-- Criação das tabelas `note_shares` e `event_shares` com RLS ativado.
-- Componente `ShareModal` com controle de permissões (Visualizar / Editar) e expiração opcional.
-- Rota pública `/shared/:share_token` para leitura anônima ou cópia direta para a conta do usuário.
-
----
-
 ### ISSUE-015 - Notificações e Lembretes de Tarefas
 **Tipo:** Feature  
 **Status:** Planejada  
@@ -50,6 +36,8 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 ---
 
 ## Issues Concluídas Recentemente
+
+- **ISSUE-013 - Compartilhamento de Notas e Eventos:** Concluída com tabelas `note_shares`, `event_shares`, `share_access_logs`, modal `ShareModal`, rota pública `/shared/:share_token`, `shareService.js` e testes unitários.
 
 - **ISSUE-016 - Sincronização em Tempo Real:** Concluída via Supabase Realtime Channels e hooks reativos.
 - **ISSUE-014 - Histórico de Versões de Notas:** Concluída com tabela `note_versions` e `NoteVersionsModal`.

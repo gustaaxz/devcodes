@@ -4,6 +4,39 @@ Registro técnico de todas as implementações, decisões e outcomes.
 
 ---
 
+## 2026-10-26 - ISSUE-013: Compartilhamento de Notas e Eventos (Fase 4)
+
+**Implementador:** Antigravity AI  
+**Fase:** Fase 4 — Colaboração e Produtividade Avançada  
+**Status:** Complete  
+
+### O Que Foi Feito
+
+1. **Schema e Banco de Dados (Supabase / PostgreSQL)**
+   - Criada migration `supabase/migrations/20261026120000_add_sharing.sql`.
+   - Tabelas `note_shares`, `event_shares` e `share_access_logs`.
+   - Políticas RLS rigorosas: proprietário gerencia compartilhamentos próprios, usuários compartilhados leem seus registros, leitura segura de links públicos.
+   - Políticas RLS complementares para notas e eventos compartilhados (`notes_select_shared`, `notes_update_shared`, `events_select_shared`, `events_update_shared`).
+   - Funções RPC com `security definer`: `get_user_id_by_email` para busca segura de usuários por e-mail e `get_shared_note` / `get_shared_event` com logging automático de acessos.
+
+2. **Camada de Serviço (`src/services/sharing/shareService.js`)**
+   - Métodos: `generateNotePublicLink`, `shareNoteWithUser`, `listNoteShares`, `revokeNoteShare`, `getSharedNote`.
+   - Métodos equivalentes para eventos: `generateEventPublicLink`, `shareEventWithUser`, `listEventShares`, `revokeEventShare`, `getSharedEvent`.
+   - Métodos de agregação e portabilidade: `getSharedWithMe()` e `copySharedNoteToLibrary()`.
+
+3. **Interface do Usuário**
+   - Componente `ShareModal.jsx` e `ShareModal.css`: abas "Usuários" (compartilhar por e-mail com permissão e expiração) e "Link Público" (geração de link, cópia para clipboard, revogação).
+   - Botão de compartilhamento integrado na toolbar do `NoteEditor.jsx`.
+   - Botão de compartilhamento adicionado nas ações de eventos do `DayPanel.jsx` do calendário.
+   - Ícone/badge de compartilhado no `NoteList.jsx` e `DayPanel.jsx`.
+   - Página pública `/shared/:share_token` e `/compartilhado/:token` (`src/pages/SharedResource/index.jsx`): exibição em modo somente-leitura com preview formatado em markdown, dados do autor e botão "Copiar para Minha Biblioteca".
+
+4. **Testes Unitários e Qualidade**
+   - Criado `src/services/sharing/shareService.test.js` com testes unitários cobrindo validação de compartilhamento com o próprio usuário, e-mail inexistente, expiração e cópia de notas.
+   - Execução de `npm test` (41 testes passando) e `npm run lint` (0 erros).
+
+---
+
 ## 2026-10-26 - Canonical Documentation Alignment & SpecFirst Consolidation
 
 **Implementador:** Antigravity AI  

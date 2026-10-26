@@ -30,10 +30,10 @@ Este documento organiza as fases de desenvolvimento do DevCodes, conectando o ro
 ---
 
 ### Fase 4 — Colaboração e Produtividade Avançada
-**Status:** 🟡 Em andamento (2/5 concluídas)
+**Status:** 🟡 Em andamento (3/5 concluídas)
 - [x] #16: Sincronização em tempo real entre abas e dispositivos (Supabase Realtime)
 - [x] #14: Histórico de versões de notas (entregue)
-- [ ] **#13:** Compartilhamento de notas e eventos (links públicos e permissões)
+- [x] #13: Compartilhamento de notas e eventos (links públicos e permissões)
 - [ ] **#15:** Notificações e lembretes de tarefas in-app
 - [ ] **#17:** Exportação e importação de dados em massa (JSON / Markdown)
 

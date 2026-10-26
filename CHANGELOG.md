@@ -5,6 +5,13 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 ## [Unreleased] - Phase 4 em Progresso
 
 ### Added
+- **Compartilhamento de Notas e Eventos (#13)**
+  - Tabelas `note_shares`, `event_shares` e `share_access_logs` com isolamento e permissões via RLS
+  - Componente modal `ShareModal` com abas para compartilhamento por email de usuário e geração de links públicos
+  - Controle de permissões (Visualizar / Editar) e expiração opcional
+  - Página pública `/shared/:share_token` (e `/compartilhado/:token`) com renderização de markdown e botão "Copiar para Minha Biblioteca"
+  - Integração no `NoteEditor`, `NoteList` e `DayPanel` do calendário
+  - Testes unitários para `shareService`
 - Suporte a exportação de dados (CSV, JSON) para notas, tarefas e eventos
 - Integração SpecFirst para governança de IA
 - Alinhamento canônico da documentação (`docs/architecture.md`, `docs/coding-standards.md`, `docs/TESTING.md`, `docs/backlog.md`, `docs/operations.md`, `docs/deployment-log.md`) com stack real (React 19, Supabase BaaS, Oxlint, Vitest)
