@@ -15,8 +15,8 @@
 ## Regras Obrigatórias para Agentes de IA
 
 1. **Sempre leia `docs/architecture.md` antes de implementar** - Garante decisões de design corretas
-2. **Nunca modifique dados sem RLS policies** - Protege privacidade dos usuários
-3. **Todas as features devem ter testes unitários** - Manutenibilidade e confiabilidade
+2. **Nunca modifique dados sem RLS policies** - Protege privacidade dos usuários (consulte `docs/security.md`)
+3. **Todas as features devem ter testes unitários** - Manutenibilidade e confiabilidade (consulte `docs/TESTING.md`)
 4. **Commits precisam de descrição clara** - Rastreabilidade técnica
 5. **Atualize `CHANGELOG.md` e `implementation-log.md` após cada entrega** - Sincroniza progresso
 6. **Verificar `docs/coding-standards.md` para estilo de código** - Consistência do projeto
@@ -28,7 +28,7 @@
 ### 1. Recebimento de Tarefa
 - Leia a issue/tarefa em `docs/issues.md` ou `docs/backlog.md`
 - Consulte `docs/architecture.md` para contexto
-- Verifique dependências em `implementation-plan.md`
+- Verifique dependências em `docs/implementation-plan.md`
 
 ### 2. Planejamento
 - Escreva um pequeno plano de execução
@@ -37,17 +37,17 @@
 
 ### 3. Implementação
 - Siga `docs/coding-standards.md`
-- Use RLS policies para dados sensíveis (em `docs/rls-policies.md`)
+- Use RLS policies para dados sensíveis (em `docs/security.md`)
 - Faça commit com mensagem descritiva
 
 ### 4. Validação
-- Execute testes em `docs/testing.md`
+- Execute testes em `docs/TESTING.md` (`npm test`, `npm run lint`)
 - Verifique `docs/definition-of-done.md`
 - Atualize documentação
 
 ### 5. Registro de Entrega
 - Registre em `CHANGELOG.md` com versão e data
-- Atualize `implementation-log.md` com timestamp e decisões
+- Atualize `implementation-log.md` e `docs/deployment-log.md` com timestamp e decisões
 - Marque issue como resolvida
 
 ---
@@ -56,16 +56,17 @@
 
 | Arquivo | Propósito |
 |---------|-----------|
-| `docs/architecture.md` | Decisões arquiteturais, stack, estrutura |
-| `docs/coding-standards.md` | Estilo, convenções, padrões |
+| `docs/architecture.md` | Decisões arquiteturais, stack, estrutura e fluxo |
+| `docs/coding-standards.md` | Estilo, convenções, padrões React 19 / JavaScript |
 | `docs/definition-of-done.md` | Checklist para considerar tarefa pronta |
-| `docs/rls-policies.md` | Políticas de segurança Supabase |
-| `docs/issues.md` | Tarefas planejadas e status |
-| `docs/backlog.md` | Ideias futuras não planejadas |
-| `docs/decision-log.md` | Histórico de decisões importantes |
-| `docs/testing.md` | Estratégia e tipos de testes |
-| `implementation-plan.md` | Roadmap das 26 melhorias |
+| `docs/security.md` | Políticas de segurança Supabase e RLS |
+| `docs/issues.md` | Tarefas planejadas e status imediato |
+| `docs/backlog.md` | Ideias futuras e melhorias planejadas |
+| `docs/decision-log.md` | Histórico de decisões importantes (ADRs) |
+| `docs/TESTING.md` | Estratégia e tipos de testes |
+| `docs/implementation-plan.md` | Roadmap das 26 melhorias (Fases 1 a 6) |
 | `implementation-log.md` | Log técnico com timestamps e outcomes |
+| `docs/deployment-log.md` | Registro de deploys e histórico de entregas |
 | `CHANGELOG.md` | Versões e mudanças públicas |
 
 ---
@@ -75,13 +76,13 @@
 Uma tarefa é considerada **pronta** quando:
 
 - [ ] Código implementado e revisado
-- [ ] Testes escritos e passando
+- [ ] Testes escritos e passando (`npm test`)
 - [ ] `docs/coding-standards.md` seguido
 - [ ] RLS policies verificadas (se aplica)
 - [ ] CHANGELOG.md atualizado
 - [ ] implementation-log.md registrado
 - [ ] Commits com mensagens claras
-- [ ] Sem console errors/warnings
+- [ ] Sem console errors/warnings (`npm run lint`)
 - [ ] Funciona em dark e light mode
 
 ---
@@ -100,8 +101,8 @@ Quando uma tarefa termina, o agente DEVE:
 
 ## Stack Técnico (Referência Rápida)
 
-- **Frontend:** React 18 + Vite + React Router
-- **Backend:** Supabase (PostgreSQL + Auth + Realtime + Storage)
+- **Frontend:** React 19 + Vite + React Router
+- **Backend:** Supabase (PostgreSQL 15+ + Auth + Realtime + Storage)
 - **Banco:** PostgreSQL com RLS policies
 - **Estilo:** CSS Variables + Tema escuro/claro
 - **Deploy:** Vercel (configurado em `vercel.json`)
@@ -114,12 +115,12 @@ Leia `docs/architecture.md` para detalhes completos.
 
 1. Clone este repositório
 2. Leia `docs/architecture.md` para entender decisões
-3. Leia `implementation-plan.md` para ver roadmap
+3. Leia `docs/implementation-plan.md` para ver roadmap
 4. Consulte `docs/issues.md` para tarefa atual
 5. Siga o Fluxo de Trabalho acima
 
 ---
 
-**Versão:** 1.0  
-**Atualizado:** 2026-10-23  
+**Versão:** 1.1  
+**Atualizado:** 2026-10-26  
 **Mantido por:** Agentes de IA + Humanos
