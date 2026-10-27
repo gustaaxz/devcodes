@@ -43,7 +43,8 @@ Este documento organiza as fases de desenvolvimento do DevCodes, conectando o ro
 **Status:** ⏳ Planejada (0/4 concluídas)
 - [ ] **#18:** Tags e organização avançada, incluindo ampliação segura dos tipos de arquivo aceitos pela Biblioteca de Código
   - Documentos: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf` (`.doc`/`.docx` já são aceitos)
-  - Imagens: `.png`, `.jpg`, `.jpeg`, `.webp` e `.svg`
+  - Preview dentro do sistema para PDFs (`.pdf`, aceito atualmente sem preview) e imagens `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp`, além de outros formatos de imagem aprovados para o catálogo
+  - Validar o conteúdo e renderizar SVGs com segurança; manter download do original e fallback para formatos sem preview
   - Código, configuração e dados: `.vue`, `.svelte`, `.swift`, `.dart`, `.ipynb`, `.toml`, `.ini`, `.conf`, `.tf`, `.hcl`, `.gradle`, `.properties`, `.csv`, `.log`, `.rst` e `.adoc`
   - Dotfiles de projeto selecionados (`Dockerfile`, `.gitignore`, `.dockerignore`, `.editorconfig`, `.env.example`), com validação de MIME/conteúdo e testes; `.env` permanece bloqueado
 - [ ] **#19:** Sincronização com Google Calendar e iCalendar
