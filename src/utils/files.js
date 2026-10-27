@@ -85,7 +85,7 @@ const SPECIAL_FILE_TYPES = {
 }
 
 export const ACCEPTED_EXTENSIONS = Object.keys(FILE_TYPES)
-export const ACCEPT_ATTRIBUTE = [...ACCEPTED_EXTENSIONS.map((extension) => `.${extension}`), ...Object.keys(SPECIAL_FILE_TYPES)].join(',')
+export const ACCEPT_ATTRIBUTE = [...ACCEPTED_EXTENSIONS.map((extension) => `.${extension}`), 'text/plain', ...Object.keys(SPECIAL_FILE_TYPES)].join(',')
 
 export function getExtension(name) {
   const normalized = name.toLowerCase()
@@ -149,9 +149,19 @@ function isZipFile(bytes) {
 }
 
 function isSafeSvg(source) {
-  return /<svg(?:\s|>)/i.test(source) && !/<(?:script|foreignObject|iframe|object|embed)\b/i.test(source) &&
-    !/\son[a-z]+\s*=/i.test(source) && !/(?:href|src)\s*=\s*["']\s*(?:https?:|data:|javascript:|\/\/)/i.test(source) &&
-    !/url\(\s*["']?\s*(?:https?:|data:|\/\/)/i.test(source) && !/<!DOCTYPE|<!ENTITY/i.test(source)
+  if (!/<svg(?:\s|>)/i.test(source) || /<(?:script|foreignObject|iframe|object|embed)\b/i.test(source)) return false
+  if (/\son[a-z]+\s*=/i.test(source) || /<!DOCTYPE|<!ENTITY|@import/i.test(source)) return false
+
+  const references = source.matchAll(/(?:href|src)\s*=\s*(["'])(.*?)\1/gi)
+  for (const [, , value] of references) {
+    if (!value.startsWith('#')) return false
+  }
+
+  const cssUrls = source.matchAll(/url\(\s*(["']?)(.*?)\1\s*\)/gi)
+  for (const [, , value] of cssUrls) {
+    if (!value.startsWith('#')) return false
+  }
+  return true
 }
 
 function hasImageSignature(extension, bytes) {
