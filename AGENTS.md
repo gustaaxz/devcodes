@@ -8,7 +8,7 @@
 
 **Solução:** DevCodes unifica calendário, tarefas, anotações e código em uma plataforma web única com sincronização em tempo real via Supabase.
 
-**Status:** 16/26 melhorias implementadas (62%)
+**Status:** 18/26 melhorias implementadas (69%). Fase 4 concluída; teste de isolamento RLS da #15 aprovado no Supabase.
 
 ---
 
@@ -122,5 +122,5 @@ Leia `docs/architecture.md` para detalhes completos.
 ---
 
 **Versão:** 1.1  
-**Atualizado:** 2026-10-26  
+**Atualizado:** 2026-10-27  
 **Mantido por:** Agentes de IA + Humanos
