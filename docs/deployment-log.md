@@ -10,6 +10,21 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 
 ## 2. Entradas de Deploys e Entregas
 
+### [2026-10-27] - Fase 5 #19: Google Calendar e iCalendar (código local)
+- **O que foi feito:** Import/export `.ics`, feed iCalendar público revogável e integração Google por Edge Functions com OAuth PKCE, sync bidirecional e histórico.
+- **Segurança:** Refresh token criptografado no servidor; estados OAuth e metadados de feed isolados; URL de feed usa token aleatório e hash persistido.
+- **Validação local:** 68 testes passando; lint sem erros (11 avisos preexistentes); Edge Functions sem erros de parsing Oxlint; build aprovado com aviso de bundle acima de 500 kB.
+- **Estado remoto:** O usuário confirmou a aplicação de `20261027130000_calendar_integration.sql`. O usuário confirmou que o teste `google_calendar_rls.sql` passou. Configuração de secrets, deploy das funções e OAuth real seguem pendentes.
+
+### [2026-10-27] - Fase 5 #18: confirmação da migration
+- **Estado remoto:** Usuário confirmou a aplicação de `20261027120000_phase5_tags.sql`. O teste RLS atualizado, incluindo vínculo de tags de tarefas e limpeza de órfãs, aguarda execução.
+
+### [2026-10-27] - Fase 5 #18: tags universais (implementação local)
+- **O que foi feito:** Tags coloridas associadas a notas, tarefas e arquivos; página `/tags` para busca, filtros, favoritos, renomeação, exclusão e mesclagem; sugestões baseadas no título/conteúdo; exportação/importação de tags em notas e tarefas.
+- **Integridade:** Migration com tabela `task_tags`, RLS e triggers que limpam tags órfãs inclusive quando associações são removidas por cascata, mantendo tags favoritas.
+- **Validação local:** 60 testes aprovados, lint sem erros (11 avisos preexistentes) e build aprovado com aviso do bundle acima de 500 kB.
+- **Estado remoto na época do registro:** Migration e teste SQL ainda pendentes de aplicação/execução pelo SQL Editor.
+
 ### [2026-10-27] - Fase 5 iniciada: Biblioteca de Código (#18, parcial)
 - **O que foi feito:** Expansão do catálogo de arquivos e preview interno de PDF e imagens com validação de conteúdo.
 - **Segurança:** SVGs são exibidos em contexto de imagem; uploads validam assinaturas e rejeitam SVG com scripts, atributos de evento e referências externas. Arquivos continuam no bucket privado acessados por URL assinada.
