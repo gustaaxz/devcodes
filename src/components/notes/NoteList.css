@@ -66,6 +66,8 @@
 
 .note-list__tag {
   padding: 0 var(--space-2);
+  border: 1px solid color-mix(in srgb, var(--tag-color, var(--color-accent)) 36%, transparent);
   border-radius: 999px;
-  background: var(--color-surface-hover);
+  background: color-mix(in srgb, var(--tag-color, var(--color-accent)) 14%, var(--color-bg));
+  color: var(--color-text);
 }
