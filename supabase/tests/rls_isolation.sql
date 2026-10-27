@@ -74,7 +74,9 @@ values (auth.uid(), true, 15);
 insert into public.task_reminders (user_id, task_id, remind_at, offset_minutes)
 values (auth.uid(), current_setting('test.a_task')::uuid, now() + interval '1 hour', 60);
 insert into public.events (title, start_at) values ('Evento A', now());
-insert into public.tags (name) values ('tag-a');
+insert into public.tags (name, is_favorite) values ('tag-a', false), ('tag-favorite', true);
+insert into public.task_tags (task_id, tag_id)
+select current_setting('test.a_task')::uuid, id from public.tags where user_id = auth.uid() and name in ('tag-a', 'tag-favorite');
 insert into public.stored_files (category_id, original_name, storage_key, extension, mime_type, size_bytes)
 values (
   current_setting('test.a_prog_category')::uuid,
@@ -92,7 +94,8 @@ begin
     or (select count(*) from public.task_reminders) <> 1
     or (select count(*) from public.reminder_preferences) <> 1
     or (select count(*) from public.events) <> 1
-    or (select count(*) from public.tags) <> 1
+    or (select count(*) from public.tags) <> 2
+    or (select count(*) from public.task_tags) <> 2
     or (select count(*) from public.stored_files) <> 1
     or (select count(*) from public.programming_categories) <> 10
     or (select count(*) from public.profiles) <> 1 then
@@ -166,6 +169,7 @@ begin
     or (select count(*) from public.reminder_preferences) <> 0
     or (select count(*) from public.events) <> 0
     or (select count(*) from public.tags) <> 0
+    or (select count(*) from public.task_tags) <> 0
     or (select count(*) from public.stored_files) <> 0 then
     raise exception 'FALHA: usuario B enxerga registros do usuario A';
   end if;
@@ -200,6 +204,9 @@ begin
   update public.tasks set title = 'invadida';
   get diagnostics v_count = row_count;
   if v_count <> 0 then raise exception 'FALHA: B atualizou tarefa de A'; end if;
+  update public.task_tags set tag_id = gen_random_uuid();
+  get diagnostics v_count = row_count;
+  if v_count <> 0 then raise exception 'FALHA: B alterou tag de tarefa de A'; end if;
   delete from public.events;
   get diagnostics v_count = row_count;
   if v_count <> 0 then raise exception 'FALHA: B excluiu evento de A'; end if;
@@ -218,6 +225,7 @@ end $$;
 do $$
 declare
   v_note uuid;
+  v_tag uuid;
 begin
   begin
     insert into public.notes (user_id, title) values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'invasao');
@@ -242,6 +250,14 @@ begin
   end;
 
   insert into public.notes (title) values ('Nota B') returning id into v_note;
+  insert into public.tags (name) values ('tag-b') returning id into v_tag;
+  begin
+    insert into public.task_tags (task_id, tag_id)
+    values (current_setting('test.a_task')::uuid, v_tag);
+    raise exception 'FALHA: B associou tag propria a tarefa de A';
+  exception when insufficient_privilege then
+    null;
+  end;
   begin
     insert into public.note_tags (note_id, tag_id)
     select v_note, id from (select id from public.tags limit 1) t;
@@ -281,6 +297,19 @@ begin
 end $$;
 
 reset role;
+
+delete from public.tasks where id = current_setting('test.a_task')::uuid;
+
+do $$
+begin
+  if exists (select 1 from public.tags where name = 'tag-a') then
+    raise exception 'FALHA: tag sem associações nao foi limpa após exclusao do recurso';
+  end if;
+  if not exists (select 1 from public.tags where name = 'tag-favorite' and is_favorite) then
+    raise exception 'FALHA: limpeza removeu tag favorita sem associações';
+  end if;
+  raise notice 'OK: tags órfãs removidas e favoritas preservadas';
+end $$;
 
 select 'OK: todos os testes de isolamento passaram' as resultado;
 
