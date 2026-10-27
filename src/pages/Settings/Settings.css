@@ -115,7 +115,7 @@
   align-items: center;
   gap: var(--space-2);
   min-height: 40px;
-  color: var(--color-text-primary);
+  color: var(--color-text);
   font-size: 0.875rem;
   white-space: nowrap;
 }
@@ -150,6 +150,27 @@
 .settings__value {
   font-size: 0.875rem;
   color: var(--color-text-muted);
+}
+
+.settings__section {
+  gap: var(--space-5);
+  padding: clamp(var(--space-5), 3vw, var(--space-8));
+  border-radius: var(--radius-lg);
+}
+
+.settings__section header h2 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.settings__section header p,
+.settings__row-text span {
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.settings__row {
+  padding-top: var(--space-5);
 }
 
 @media (max-width: 600px) {
