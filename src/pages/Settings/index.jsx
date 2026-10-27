@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Download, KeyRound, LogOut, Settings2 } from 'lucide-react'
 import CategoryManagerModal from '../../components/programming-library/CategoryManagerModal.jsx'
 import DataImportPanel from '../../components/settings/DataImportPanel.jsx'
+import GoogleCalendarIntegration from '../../components/settings/GoogleCalendarIntegration.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
 import Spinner from '../../components/ui/Spinner.jsx'
@@ -189,6 +190,8 @@ export default function Settings() {
         </Row>
       </Section>
 
+      <GoogleCalendarIntegration userId={user.id} />
+
       <Section title="Lembretes de tarefas" description="Receba avisos dentro do DevCodes para tarefas com prazo. Os lembretes são verificados enquanto o aplicativo está aberto.">
         <Row label="Notificações no aplicativo" hint="Exibe um aviso na central quando o lembrete vence.">
           <Segmented
@@ -247,6 +250,14 @@ export default function Settings() {
           </button>
         </Row>
         {library.error && <Alert variant="error">{library.error}</Alert>}
+      </Section>
+
+      <Section title="Organização por tags" description="Crie tags com cores, veja onde são usadas, favorite-as e mescle duplicatas.">
+        <Row label="Tags universais" hint="As tags organizam anotações, tarefas e arquivos da biblioteca.">
+          <Link to="/tags" className="button button--secondary">
+            Gerenciar tags
+          </Link>
+        </Row>
       </Section>
 
       <Section title="Exportar dados" description="Faça backup dos seus dados em CSV ou JSON.">
