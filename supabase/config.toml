@@ -1,0 +1,5 @@
+[functions.google-calendar-oauth-callback]
+verify_jwt = false
+
+[functions.ical-feed]
+verify_jwt = false
