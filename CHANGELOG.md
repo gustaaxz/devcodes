@@ -7,6 +7,11 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 ### Planned
 - **Fase 5:** continuar com #20 e #21 após a validação remota de #18 e configuração/deploy de #19.
 
+### Sistema visual
+- Unificados os temas claro/escuro, tipografia Inter, escala de espaçamento, superfícies, sombras e estados de foco/hover.
+- Navegação agrupada com estado ativo destacado, recolhimento persistido, fechamento por Escape no mobile e áreas de toque mais confortáveis.
+- Corrigidos tokens de cor ausentes e ajustadas legibilidade e responsividade do dashboard, tarefas, calendário, notas, arquivos e configurações.
+
 ### Fase 5 (#18) — entrega local em andamento
 - Conectadas tags coloridas a notas, tarefas e arquivos, com gerenciamento, favoritos, filtros por recurso, busca e mesclagem em `/tags`.
 - Adicionadas sugestões de tags existentes com base no título e conteúdo dos recursos e limpeza automática de tags órfãs, preservando tags favoritas.
