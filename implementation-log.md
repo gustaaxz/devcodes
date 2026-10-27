@@ -1,5 +1,63 @@
 # Implementation Log
 
+## 2026-10-27 - Ajuste do fixture apos a segunda execucao remota
+- **Confirmacao:** O usuario aplicou `20261027170000_phase6_audit_cascade_fix.sql`; a nova execucao do teste avancou ate a exclusao da conta B.
+- **Causa da falha seguinte:** A trigger legada `capture_change_log()` registra exclusoes de tarefas e falha quando a tarefa e removida pela cascata da conta.
+- **Ajuste:** O teste exclui explicitamente a tarefa B enquanto o usuario ainda existe e depois valida a cascata de `audit_log` ao excluir B. A trilha legada nao foi alterada.
+- **Resultado:** O usuario executou novamente `supabase/tests/phase6_audit_rls.sql` e confirmou que o marcador de sucesso esperado foi retornado.
+- **Status:** Auditoria (#23) validada no Supabase; resta habilitar/verificar MFA TOTP nas configuracoes de Auth.
+
+## 2026-10-27 - Correcao da auditoria na exclusao de conta
+- **Causa:** Ao excluir o usuario B do fixture, deletes em cascata podiam executar a trigger de auditoria enquanto a linha pai de `auth.users` ainda estava visivel, causando violacao de FK ao inserir um novo log.
+- **Correcao:** A trigger ignora deletes aninhados de cascata; o teste tambem confirma que os logs do usuario excluido somem e os do usuario A permanecem.
+- **Aplicacao remota:** Pendente aplicar `supabase/migrations/20261027170000_phase6_audit_cascade_fix.sql` e repetir `supabase/tests/phase6_audit_rls.sql`.
+
+## 2026-10-27 - Ajuste do teste RLS da auditoria
+- As contagens em `supabase/tests/phase6_audit_rls.sql` agora filtram pelos IDs temporarios criados pelo proprio teste, para evitar falsos erros causados por registros preexistentes.
+
+## 2026-10-27 — Fase 6 concluída localmente (#22–#26)
+- **Decisão:** MFA usa fatores TOTP do Supabase Auth e requer AAL2 quando há fator verificado. Auditoria usa migration própria, RLS e registra apenas operação/campos alterados, sem snapshots. A preferência PT-BR/EN-US e a conclusão do onboarding ficam em `profiles.preferences` sob RLS já existente.
+- **Implementado:** Cadastro, verificação e remoção TOTP; auditoria para perfis, tarefas, notas, eventos, arquivos, categorias, tags e compartilhamentos; localização de strings JSX, atributos acessíveis, datas, navegação e controles; tour de cinco etapas; suíte E2E com backend Supabase mockado.
+- **Validação local:** `npm test` — 21 arquivos e 83 testes passaram; `npm run test:e2e` — 10 testes passaram; `npm run i18n:check` — 0 de 511 textos JSX sem tradução; `npm run lint` — sem erros (avisos existentes em arquivos de outras áreas); `npm run build` passou com o aviso do bundle principal acima de 500 kB.
+- **Correções encontradas na validação:** normalização de caminhos Windows no plugin Babel; ajuste de import/export do componente localizado; encerramento Vite via global setup/teardown do Playwright; correção de variável `section` na Sidebar.
+- **Estado remoto:** O usuário confirmou que a migration `supabase/migrations/20261027160000_phase6_audit_log.sql` foi aplicada com sucesso. Falta executar `supabase/tests/phase6_audit_rls.sql` e habilitar/verificar MFA TOTP nas configurações de Auth.
+- **Bloqueador desta execução:** Não há CLI/token Supabase disponível. A automação do navegador encerrou por bloqueio da política de URL no Firefox; portanto, o SQL de teste ainda não foi executado por mim.
+
+## 2026-10-27 - Supabase confirmou agendamento de backups
+
+**Confirmação do usuário:** Execução de `supabase/setup/schedule_backups.sql` retornou `schedule 1`; o job diário `devcodes-daily-backups` foi criado com ID 1.
+**Próxima validação operacional:** Confirmar secrets e deploy de `create-backup`; depois executar um backup manual e verificar o primeiro histórico/job run.
+
+## 2026-10-27 - Continuação da Fase 5: restauração e histórico
+
+**Implementado:** Backups agora podem ser descompactados e convertidos para o fluxo de importação existente. A confirmação restaura de forma aditiva notas, tarefas e eventos, recria tags/categorias por nome e atribui IDs novos. O histórico de Configurações combina backups com logs do Google Calendar e exibe alterações recentes por tipo de recurso.
+**Cobertura:** Adicionados testes para agregações de analytics e conversão/restauração de snapshots. `npm test`: 17 arquivos, 71 testes aprovados. `npm run lint`: sem erros, 11 avisos preexistentes em outros arquivos. `npm run build`: aprovado; permanece o aviso de bundle acima de 500 kB.
+**Limites:** A restauração não repõe binários da Biblioteca, versões de notas, perfil ou credenciais. RLS remoto, migration/deploy e cron continuam pendentes de configuração Supabase. Não foi possível acessar a sessão SQL Editor nesta execução por bloqueio da política de URL do navegador.
+
+## 2026-10-27 - Fase 5 #20: métricas de sequência e tendência
+
+**Implementado:** Analytics agora mostra sequência ativa atual e recorde no período, dia da semana com mais atividade e variação percentual dos últimos sete dias contra os sete anteriores.
+**Validação:** `npm test` passou (17 arquivos, 71 testes); `npm run lint` sem erros, 11 avisos preexistentes em módulos não relacionados; `npm run build` aprovado com aviso de bundle acima de 500 kB.
+
+## 2026-10-27 - Correção do setup pg_cron
+
+**Problema:** O script de agendamento consultava `cron.job` antes de ativar `pg_cron`, resultando em `42P01` quando a extensão estava ausente.
+**Correção:** O script agora instala/verifica `pg_cron` e `pg_net` antes de remover ou criar o job e documenta a ativação pelo Dashboard quando o projeto restringir `CREATE EXTENSION`.
+
+## 2026-10-27 - Revalidação solicitada: testes locais e RLS de backups
+
+**Resultado local:** `npm test` passou com 15 arquivos e 68 testes.
+**Teste RLS preparado:** Adicionei `supabase/tests/backups_rls.sql` para validar políticas da migration de backups, isolamento A/B e leitura do bucket privado.
+**Estado remoto:** Não executei o SQL no Supabase. A sessão Firefox aberta foi bloqueada pela política de URL do navegador antes de qualquer interação; não contornei o bloqueio. Execute o arquivo no SQL Editor para confirmar o resultado remoto.
+
+## 2026-10-27 - Fase 5 #20/#21: análise de produtividade e backups
+
+**Implementado:** Página `/analytics` com período de 30/90 dias, métricas de tarefas concluídas/em aberto, anotações, arquivos, dias ativos, categorias e melhor dia. Criados migration e Edge Function para snapshots gzip, retenção configurável, Storage privado, histórico de execução e log de alterações em notas, tarefas, eventos e metadados de arquivos; Configurações recebeu o gerenciador de backups.
+**Decisões:** Consultas da análise filtram explicitamente pelo usuário autenticado. Operações privilegiadas de backup ficam na Edge Function. A retenção é aplicada durante uma execução de backup. A interface informa que o backup diário depende de agendador externo.
+**Atualização:** Adicionado fluxo de restauração aditivo de notas, tarefas e eventos a partir de snapshots gzip, com confirmação antes da importação. IDs são regenerados e registros existentes não são substituídos. Também foi criado `supabase/setup/schedule_backups.sql` para agendar a Edge Function diariamente via `pg_cron`/`pg_net`, usando segredos do Vault.
+**Pendências:** Aplicar `20261027140000_phase5_backups_audit.sql`, publicar `create-backup`, configurar `BACKUP_CRON_SECRET` e o cron, validar RLS e testar manualmente. Snapshots preservam metadados dos arquivos, não os bytes do bucket, e a restauração não reconstitui arquivos, versões de notas, perfil ou preferências. OAuth/deploy Google (#19) e teste RLS de tags (#18) continuam como pendências externas.
+**Validação:** Não rodei testes, lint ou build nesta etapa.
+
 Registro técnico de todas as implementações, decisões e outcomes.
 
 ## 2026-10-27 10:32 BRT - Redesign da página de tags

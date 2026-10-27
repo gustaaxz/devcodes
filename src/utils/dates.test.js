@@ -5,6 +5,8 @@ import {
   combineDateTime,
   fromDateKey,
   getWeekdays,
+  formatDateTime,
+  formatMonthYear,
   isAllDayEvent,
   isSameDay,
   toDateKey,
@@ -41,6 +43,12 @@ describe('datas', () => {
     expect(getWeekdays(0)[0]).toBe('Dom')
     expect(getWeekdays(1)[0]).toBe('Seg')
     expect(getWeekdays(1)[6]).toBe('Dom')
+  })
+
+  it('formata nomes e datas em inglês quando solicitado', () => {
+    expect(getWeekdays(0, 'en-US')[0]).toBe('Sun')
+    expect(formatMonthYear(new Date(2026, 9, 1), 'en-US')).toBe('October 2026')
+    expect(formatDateTime(new Date(2026, 9, 27, 14, 5), 'en-US')).toContain('10/27')
   })
 
   it('navega entre meses atravessando o ano', () => {

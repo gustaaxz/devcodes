@@ -1,6 +1,8 @@
 import { CalendarClock, Check, Pencil, Trash2 } from 'lucide-react'
+import { useLocale } from '../../hooks/useLocale.js'
 import Badge from '../ui/Badge.jsx'
 import { formatDateTime } from '../../utils/dates.js'
+import { translateText } from '../../utils/i18n.js'
 import { PRIORITY_OPTIONS, TASK_STATUS_OPTIONS, getLabel } from '../../utils/labels.js'
 import { getDueState } from '../../utils/tasks.js'
 import './TaskCard.css'
@@ -11,8 +13,10 @@ const DUE_LABELS = {
 }
 
 export default function TaskCard({ task, now, showStatusSelect = false, onToggleDone, onEdit, onDelete, onStatusChange }) {
+  const locale = useLocale()
   const dueState = getDueState(task, now)
   const done = task.status === 'done'
+  const priorityLabel = translateText(locale, getLabel(PRIORITY_OPTIONS, task.priority))
 
   return (
     <article className={`task-card task-card--${dueState}`}>
@@ -30,7 +34,7 @@ export default function TaskCard({ task, now, showStatusSelect = false, onToggle
         {task.description && <p className="task-card__description">{task.description}</p>}
         <div className="task-card__badges">
           {task.categories && <Badge color={task.categories.color}>{task.categories.name}</Badge>}
-          <Badge variant={task.priority}>{getLabel(PRIORITY_OPTIONS, task.priority)}</Badge>
+          <Badge variant={task.priority}>{priorityLabel}</Badge>
           {task.due_at && (
             <span className={`task-card__due task-card__due--${dueState}`}>
               <CalendarClock size={13} />
@@ -38,7 +42,7 @@ export default function TaskCard({ task, now, showStatusSelect = false, onToggle
             </span>
           )}
           {DUE_LABELS[dueState] && (
-            <Badge variant={dueState === 'overdue' ? 'danger' : 'warning'}>{DUE_LABELS[dueState]}</Badge>
+            <Badge variant={dueState === 'overdue' ? 'danger' : 'warning'}>{translateText(locale, DUE_LABELS[dueState])}</Badge>
           )}
         </div>
         {task.tags?.length > 0 && (
@@ -59,7 +63,7 @@ export default function TaskCard({ task, now, showStatusSelect = false, onToggle
           >
             {TASK_STATUS_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.label}
+                {translateText(locale, option.label)}
               </option>
             ))}
           </select>

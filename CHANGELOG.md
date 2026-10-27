@@ -1,11 +1,32 @@
 # Changelog
 
+### Correcao de auditoria da Fase 6
+- Corrigida a trigger para ignorar deletes disparados por cascata durante a exclusao de uma conta, evitando inserir logs que referenciem um usuario removido.
+- O usuario confirmou a aplicacao da migration corretiva e aprovou `supabase/tests/phase6_audit_rls.sql`; o fixture remove a tarefa B antes da conta para nao acionar a trigger legada `change_log` durante a cascata.
+
+### Ajuste de validacao da Fase 6
+- O teste RLS de auditoria conta apenas os registros temporarios criados pelo proprio script, evitando interferencia de dados preexistentes.
+
 Todas as mudanças notáveis do DevCodes são documentadas aqui.
 
-## [Unreleased] - Fase 4 Concluída
+### Fase 6 — segurança, qualidade e polimento (implementação local)
+- Adicionado gerenciamento TOTP pelo Supabase Auth, com desafio de AAL2 quando a conta tem um fator verificado.
+- Adicionada trilha `audit_log` independente, com RLS e registro de operação/campos alterados sem cópia dos conteúdos.
+- Traduzida a interface estática PT-BR/EN-US, incluindo atributos acessíveis e formatação de datas; a preferência de idioma fica no perfil.
+- Adicionada checagem automatizada de cobertura i18n e suíte Playwright com 10 fluxos autenticados/públicos usando Supabase mockado.
+- Adicionado tour inicial pelo painel, tarefas, anotações, biblioteca e analytics; conclusão salva nas preferências do perfil.
+- O usuário confirmou a aplicação das migrations de auditoria e a aprovação de `supabase/tests/phase6_audit_rls.sql`. MFA TOTP ainda precisa estar habilitado nas configurações de Auth do Supabase.
 
-### Planned
-- **Fase 5:** continuar com #20 e #21 após a validação remota de #18 e configuração/deploy de #19.
+## [Unreleased] - Fase 5 em andamento
+
+### Fase 5 (#20 e #21) — implementação local
+- Adicionada página de produtividade com métricas de tarefas, anotações e arquivos por período, atividade por categoria, sequência atual/recorde e variação semanal.
+- Adicionado gerenciador de backups com execução manual, retenção configurável, histórico e download de snapshots gzip no Storage privado.
+- Histórico reúne execuções de backup e sincronizações Google Calendar; trilha de alterações recentes tem filtro por tipo de recurso.
+- Restauração aditiva de notas, tarefas e eventos a partir de snapshots gzip, com confirmação e criação de IDs novos.
+- Adicionada migration com RLS para backups, preferências, histórico de sincronização e log de alterações; triggers registram mudanças em notas, tarefas, eventos e metadados de arquivos.
+- Criada Edge Function para snapshots e limpeza por retenção. A migration/função ainda precisam ser publicadas; o job pg_cron diário foi criado no Supabase com ID 1.
+- Adicionado SQL de configuração que instala/verifica pg_cron e pg_net e agenda backups diários via Vault no Supabase.
 
 ### Sistema visual
 - Unificados os temas claro/escuro, tipografia Inter, escala de espaçamento, superfícies, sombras e estados de foco/hover.

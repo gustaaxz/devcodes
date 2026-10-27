@@ -3,12 +3,15 @@ export const THEME_CACHE_KEY = 'devcodes-theme'
 export const DEFAULT_PREFERENCES = {
   theme: 'dark',
   calendar: { weekStart: 0 },
-  library: { layout: 'list', sort: 'recent' }
+  library: { layout: 'list', sort: 'recent' },
+  onboardingCompleted: false,
+  locale: 'pt-BR'
 }
 
 const THEMES = ['dark', 'light']
 const LAYOUTS = ['list', 'grid']
 const SORTS = ['recent', 'modified', 'name', 'size']
+const LOCALES = ['pt-BR', 'en-US']
 
 export function normalizePreferences(raw) {
   const source = raw && typeof raw === 'object' ? raw : {}
@@ -22,7 +25,9 @@ export function normalizePreferences(raw) {
     library: {
       layout: LAYOUTS.includes(library.layout) ? library.layout : DEFAULT_PREFERENCES.library.layout,
       sort: SORTS.includes(library.sort) ? library.sort : DEFAULT_PREFERENCES.library.sort
-    }
+    },
+    onboardingCompleted: source.onboardingCompleted === true,
+    locale: LOCALES.includes(source.locale) ? source.locale : DEFAULT_PREFERENCES.locale
   }
 }
 

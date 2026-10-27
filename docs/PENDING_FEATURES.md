@@ -1,7 +1,7 @@
-# Features Pendentes - DevCodes
+﻿# Features Pendentes - DevCodes
 
 **Última atualização:** 27 de outubro de 2026  
-**Progresso:** 18/26 features implementadas (69%)
+**Progresso:** 19/26 validadas remotamente (73%); a implementação local da Fase 6 está completa (5/5), aguardando configuração de MFA TOTP no Supabase.
 
 ---
 
@@ -11,10 +11,10 @@
 |------|--------|-----------|
 | Fase 1–3 | ✅ Completas | — |
 | Fase 4 | ✅ 5/5 feitas | — |
-| Fase 5 | ⏳ 0/4 feitas | #18, #19, #20, #21 |
-| Fase 6 | ⏳ 0/5 feitas | #22, #23, #24, #25, #26 |
+| Fase 5 | 🔄 Implementada localmente (4/4); validação/publicação pendentes | #18 RLS, #19 OAuth/deploy, #20/#21 validação |
+| Fase 6 | ✅ Implementada localmente (5/5); auditoria validada remotamente | Habilitar/verificar MFA TOTP |
 
-**Total pendente: 9 itens conforme as fases abaixo**
+**Pendências de validação/publicação remota:** consulte os itens marcados em cada fase abaixo.
 
 ---
 
@@ -59,8 +59,8 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 - Pendência para concluir #18: executar `supabase/tests/rls_isolation.sql` atualizado. O usuário confirmou a aplicação de `20261027120000_phase5_tags.sql`; o teste remoto ainda não foi validado.
 - Ampliar os tipos aceitos pela Biblioteca de Código com catálogo centralizado, validação de MIME/assinatura, testes e suporte seguro para preview ou download:
   - Documentos e apresentações: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf`; `.doc` e `.docx` já são aceitos atualmente
-  - Visualização dentro do sistema para PDFs (`.pdf`, já aceitos, mas hoje sem preview) e imagens `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp` e outros formatos de imagem adicionados ao catálogo
-  - Renderização segura de SVG e demais arquivos visuais, com validação de conteúdo e opção de baixar o original; formatos sem preview continuam disponíveis para download
+  - Preview interno de PDF e imagens SVG, PNG, JPEG, WebP, GIF, BMP e AVIF já implementado com URL assinada; o SVG é exibido como imagem e validado contra scripts e referências externas
+  - Formatos sem preview continuam disponíveis para download; arquivos `.env` seguem bloqueados
   - Código, configuração e dados: `.vue`, `.svelte`, `.swift`, `.dart`, `.ipynb`, `.toml`, `.ini`, `.conf`, `.tf`, `.hcl`, `.gradle`, `.properties`, `.csv`, `.log`, `.rst` e `.adoc`
   - Arquivos de projeto sem extensão convencional: `Dockerfile`, `.gitignore`, `.dockerignore`, `.editorconfig` e `.env.example`; arquivos `.env` com possíveis segredos ficam fora da lista
 
@@ -122,99 +122,41 @@ Backup automático diário com restauração, auditoria de mudanças e históric
 
 ---
 
-## Fase 6 — Funcionalidades Avançadas (5 features)
+## Fase 6 — Segurança, qualidade e polimento (5 melhorias)
 
-### #22: Atalhos de Teclado Customizáveis
-**Prioridade:** 🟢 Baixa
+### #22: MFA TOTP via Supabase Auth — implementada localmente
+- Cadastro e remoção de autenticador TOTP nas Configurações.
+- Desafio de segundo fator para sessões AAL1 quando a conta tem um fator verificado.
+- Pendência remota: habilitar MFA TOTP e verificação de fatores nas configurações de Auth do Supabase.
 
-Sistema para reatribuir atalhos de teclado com profiles (VS Code, Vim, etc.) e import/export.
+### #23: Auditoria — implementada localmente
+- Migration corretiva aplicada pelo usuario; `supabase/tests/phase6_audit_rls.sql` retornou sucesso apos ajustar a limpeza do fixture para evitar a trigger legada `change_log`.
+- Migration independente `20261027160000_phase6_audit_log.sql`, com RLS, escrita por triggers e leitura somente dos próprios registros.
+- Registra operação e nomes dos campos alterados sem duplicar texto ou conteúdo dos registros.
+- Aplicação remota e teste RLS confirmados pelo usuário; validação #23 concluída.
 
-**Escopo:**
-- Tabelas: `user_shortcuts` e `shortcut_profiles`
-- Atalhos suportados: `Ctrl+K` (busca), `Ctrl+N` (nota), `Ctrl+T` (tarefa), `Ctrl+E` (evento), `Ctrl+/` (atalhos) + 10-15 opcionais
-- **KeyboardShortcutsPage** em Settings: tabela ação/atalho com edição inline, detecção de conflitos, reset to defaults
-- **ShortcutInput**: captura pressionamento de teclas em tempo real, bloqueia se conflitar
-- **ShortcutProfiles**: profiles pré-definidos (VS Code, Vim, Emacs, Default) + customizados; ativar/deletar/exportar/importar
-- Hook `useKeyboardShortcuts` refatorado para carregar atalhos do banco em vez de hardcoded
-- Serviço `shortcutService.js`: CRUD, validação de combinações, detecção de conflitos, import/export JSON
+### #24: Internacionalização PT-BR/EN-US — implementada localmente
+- Idioma persistido nas preferências do perfil; textos JSX, atributos acessíveis, navegação, controles e datas seguem o idioma selecionado.
+- `npm run i18n:check` verifica se textos JSX têm tradução EN-US.
 
----
+### #25: Testes E2E com Playwright — implementados localmente
+- 10 testes cobrem navegação autenticada, idioma, MFA, formulário de tarefa, login, cadastro, recuperação e rotas públicas.
+- Supabase é mockado; os testes não precisam de credenciais nem alteram um projeto remoto.
 
-### #23: Modo Offline com Sincronização
-**Prioridade:** 🟡 Média
-
-Trabalho offline com sincronização automática ao reconectar, usando Service Workers e IndexedDB.
-
-**Escopo:**
-- **Service Worker** (`public/sw.js`): cache-first para assets, network-first para APIs, background sync
-- **IndexedDB** para persistência local: salvar, recuperar, listar e deletar recursos offline
-- **Sync Queue**: fila de operações pendentes persistida em localStorage, processamento automático ao reconectar
-- **Conflict Resolution**: detecção de mudanças em ambos os lados, estratégia last-write-wins ou notificação ao usuário, merge quando possível
-- **OfflineIndicator** no topbar: "🔴 Offline" / "⚙️ Sincronizando..." / "✓ Tudo sincronizado"
-- Operações suportadas offline: criar/editar/deletar notas, tarefas e eventos; marcar tarefa como concluída; adicionar tags
-- Não suportado offline: upload de arquivos
-- Hook `useOfflineSync`: detectar online/offline, disparar sync, mostrar status
-
----
-
-### #24: Integração com Slack
-**Prioridade:** 🟢 Baixa
-
-Enviar notas/tarefas/eventos para canais do Slack, receber eventos via webhook e criar recursos a partir de reações.
-
-**Escopo:**
-- Tabelas: `slack_connections`, `slack_channels`, `slack_messages_log`
-- **Slack OAuth** com scopes: `chat:write`, `reactions:read`, `commands`
-- **Serviço Slack**: autenticação, envio para canais, formatação de mensagens, webhook para receber eventos
-- **SlackIntegration** em Settings: conectar/desconectar, exibir workspace + canais
-- **SlackShareModal**: seletor de canal, preview da mensagem, campo customizado, enviar
-- Menu "Enviar para Slack" em notas, tarefas e eventos
-- **Webhook** (Edge Function): reações criam recursos (📝 → nota, 🎯 → tarefa)
-- **Resumo diário** opcional: Edge Function envia resumo de tarefas concluídas para Slack
-- Formatação: nota (título + snippet + link), tarefa (título + status + due date + link), evento (título + data/hora + link)
-
----
-
-### #25: API Pública e Webhooks
-**Prioridade:** 🟢 Baixa
-
-API REST pública com autenticação por API key, webhooks customizáveis e documentação OpenAPI/Swagger.
-
-**Escopo:**
-- **Endpoints REST** (`/api/v1/`): CRUD completo para notes, tasks, events, tags; gestão de webhooks e API keys; perfil do usuário
-- Tabelas: `api_keys`, `webhooks`, `webhook_deliveries`
-- **Autenticação**: API key via header `Authorization: Bearer <key>`, rate limiting (1000 req/h por key)
-- **Webhooks**: eventos disparados em create/update/delete de recursos; payload assinado com HMAC-SHA256; retry com exponential backoff
-- **ApiKeysManager** em Settings: gerar/copiar/revogar chaves
-- **WebhooksManager** em Settings: criar/editar/deletar webhooks, enviar payload de teste, ver logs de delivery com retry
-- **Documentação**: OpenAPI/Swagger com exemplos em cURL, JavaScript e Python; hosted em `/docs/api`
-- Rate limiting via PostgreSQL + Redis
-
----
-
-### #26: Multi-Tenancy e Workspaces
-**Prioridade:** 🟢 Baixa
-
-Múltiplos workspaces isolados por usuário com roles de permissão e colaboração.
-
-**Escopo:**
-- Tabelas: `workspaces`, `workspace_members`, `workspace_roles`
-- **Refactor de tabelas existentes**: adicionar `workspace_id` em notes, tasks, events, programming_files, tags
-- **RLS refatorado**: policies consideram workspace_id; Owner (acesso total), Editor (create/edit), Viewer (read-only)
-- **WorkspaceProvider** (contexto global): gerenciar workspace ativo, listar acessíveis
-- **WorkspaceSwitcher** no topbar: dropdown com workspace ativo, criar novo, sair
-- **WorkspaceManager** (`/workspaces`): grid de workspaces com nome, owner, nº membros; entrar/editar/sair/deletar
-- **WorkspaceSettings**: editar nome/descrição/avatar, gerenciar membros com roles, convidar via link ou email
-- **Fluxo de convite**: link único, email, busca por email, notificação, accept/reject
-- **Migração**: criar workspace padrão para cada usuário existente, migrar dados automaticamente
-- Todos os recursos filtrados pelo workspace ativo
-
----
+### #26: Tour de onboarding — implementado localmente
+- Tour de cinco etapas pelo painel, tarefas, anotações, biblioteca e analytics; conclusão persistida nas preferências do perfil.
 
 ## Ordem Sugerida de Implementação
 
 1. **Fase 4**: #13 Compartilhamento → #15 Lembretes → #17 Exportação e Importação de Dados
 2. **Fase 5**: #18 Tags → #20 Analytics → #21 Backup → #19 Google Calendar
-3. **Fase 6**: #23 Offline → #22 Atalhos → #24 Slack → #25 API → #26 Workspaces
+3. **Fase 6**: #22 MFA → #23 Auditoria → #24 i18n → #25 Playwright → #26 Onboarding
 
-**Paralelizáveis:** #13 + #15 | #18 + #20 | #22 + #23 | #24 + #25
+**Validação externa restante da Fase 6:** habilitar/verificar MFA TOTP nas configurações de Auth do Supabase.
+
+
+## Atualização da implementação local — 27/10/2026
+
+- #20 está disponível localmente em /analytics, com métricas agregadas por período/categoria, sequência e variação semanal; testes unitários passam e a validação visual continua pendente.
+- #21 inclui gerenciador, Edge Function, snapshots gzip privados, restauração aditiva, retenção, histórico de execução e log de alterações. Aplicar a migration 20261027140000_phase5_backups_audit.sql, publicar a função e executar o setup pg_cron conforme docs/BACKUP_SETUP.md.
+- Snapshots preservam registros e associações; os bytes dos arquivos da Biblioteca não são copiados. A interface restaura notas, tarefas e eventos de forma aditiva, com IDs novos.

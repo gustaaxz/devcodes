@@ -28,7 +28,7 @@ export async function signIn({ email, password }) {
       if (!error && data) {
         authEmail = data
       }
-    } catch (e) {
+    } catch {
       // If RPC fails, fall back to using the input as-is
     }
   }
@@ -53,4 +53,33 @@ export async function requestPasswordReset(email) {
 export async function updatePassword(password) {
   const { error } = await supabase.auth.updateUser({ password })
   if (error) throw error
+}
+
+export async function listMfaFactors() {
+  const { data, error } = await supabase.auth.mfa.listFactors()
+  if (error) throw error
+  return data
+}
+
+export async function enrollTotpFactor(friendlyName = 'DevCodes') {
+  const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName })
+  if (error) throw error
+  return data
+}
+
+export async function verifyMfaFactor({ factorId, code }) {
+  const { data, error } = await supabase.auth.mfa.challengeAndVerify({ factorId, code })
+  if (error) throw error
+  return data
+}
+
+export async function unenrollMfaFactor(factorId) {
+  const { error } = await supabase.auth.mfa.unenroll({ factorId })
+  if (error) throw error
+}
+
+export async function getMfaAssuranceLevel() {
+  const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+  if (error) throw error
+  return data
 }

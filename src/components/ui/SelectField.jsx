@@ -1,13 +1,16 @@
 import { useId } from 'react'
+import { useLocale } from '../../hooks/useLocale.js'
+import { translateText } from '../../utils/i18n.js'
 import './TextField.css'
 
 export default function SelectField({ label, options, placeholder, error, ...selectProps }) {
   const id = useId()
+  const locale = useLocale()
   return (
     <div className="text-field">
       {label && (
         <label htmlFor={id} className="text-field__label">
-          {label}
+          {typeof label === 'string' ? translateText(locale, label) : label}
         </label>
       )}
       <select
@@ -15,10 +18,10 @@ export default function SelectField({ label, options, placeholder, error, ...sel
         className={`text-field__input text-field__select${error ? ' text-field__input--error' : ''}`}
         {...selectProps}
       >
-        {placeholder !== undefined && <option value="">{placeholder}</option>}
+        {placeholder !== undefined && <option value="">{translateText(locale, placeholder)}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {translateText(locale, option.label)}
           </option>
         ))}
       </select>

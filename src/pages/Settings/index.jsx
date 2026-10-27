@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom'
 import { Download, KeyRound, LogOut, Settings2 } from 'lucide-react'
 import CategoryManagerModal from '../../components/programming-library/CategoryManagerModal.jsx'
 import DataImportPanel from '../../components/settings/DataImportPanel.jsx'
+import BackupManager from '../../components/settings/BackupManager.jsx'
+import AuditLogPanel from '../../components/settings/AuditLogPanel.jsx'
 import GoogleCalendarIntegration from '../../components/settings/GoogleCalendarIntegration.jsx'
+import MfaSettings from '../../components/settings/MfaSettings.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
 import Spinner from '../../components/ui/Spinner.jsx'
@@ -15,6 +18,8 @@ import { listFiles } from '../../services/files/filesService.js'
 import { listProgrammingCategories } from '../../services/programming-categories/programmingCategoriesService.js'
 import { getReminderPreferences, REMINDER_OFFSET_OPTIONS, saveReminderPreferences } from '../../services/reminders/reminderService.js'
 import { exportNotesAsCSV, exportNotesAsJSON_Download, exportTasksAsCSV, exportTasksAsJSON_Download, exportEventsAsCSV, exportEventsAsJSON_Download, exportFullBackupDownload } from '../../services/export/exportService.js'
+import { translate } from '../../utils/i18n.js'
+import { useLocale } from '../../hooks/useLocale.js'
 import { friendlyError } from '../../utils/errors.js'
 import './Settings.css'
 
@@ -31,8 +36,9 @@ async function loadLibrarySnapshot() {
 }
 
 function Segmented({ label, value, options, onChange }) {
+  const locale = useLocale()
   return (
-    <div className="segmented" role="group" aria-label={label}>
+      <div className="segmented" role="group" aria-label={translate(locale, label)}>
       {options.map((option) => (
         <button
           key={option.value}
@@ -40,7 +46,7 @@ function Segmented({ label, value, options, onChange }) {
           className={value === option.value ? 'segmented__item segmented__item--active' : 'segmented__item'}
           onClick={() => onChange(option.value)}
         >
-          {option.label}
+          {translate(locale, option.label)}
         </button>
       ))}
     </div>
@@ -48,11 +54,12 @@ function Segmented({ label, value, options, onChange }) {
 }
 
 function Section({ title, description, children }) {
+  const locale = useLocale()
   return (
     <section className="settings__section card">
       <header>
-        <h2>{title}</h2>
-        {description && <p>{description}</p>}
+        <h2>{translate(locale, title)}</h2>
+        {description && <p>{translate(locale, description)}</p>}
       </header>
       {children}
     </section>
@@ -60,11 +67,12 @@ function Section({ title, description, children }) {
 }
 
 function Row({ label, hint, children }) {
+  const locale = useLocale()
   return (
     <div className="settings__row">
       <div className="settings__row-text">
-        <strong>{label}</strong>
-        {hint && <span>{hint}</span>}
+        <strong>{translate(locale, label)}</strong>
+        {hint && <span>{translate(locale, hint)}</span>}
       </div>
       <div className="settings__row-control">{children}</div>
     </div>
@@ -160,6 +168,17 @@ export default function Settings() {
             {savingName ? <Spinner size={16} /> : 'Salvar nome'}
           </button>
         </form>
+        <Row label={translate(preferences.locale, 'settings.language')} hint={translate(preferences.locale, 'settings.languageHint')}>
+          <SelectField
+            aria-label={translate(preferences.locale, 'settings.language')}
+            options={[
+              { value: 'pt-BR', label: translate(preferences.locale, 'language.pt') },
+              { value: 'en-US', label: translate(preferences.locale, 'language.en') }
+            ]}
+            value={preferences.locale}
+            onChange={(event) => savePreference({ locale: event.target.value })}
+          />
+        </Row>
       </Section>
 
       <Section title="Aparência">
@@ -260,6 +279,10 @@ export default function Settings() {
         </Row>
       </Section>
 
+      <Section title="Auditoria da conta" description="Consulte alterações recentes sem expor o conteúdo dos registros.">
+        <AuditLogPanel />
+      </Section>
+
       <Section title="Exportar dados" description="Faça backup dos seus dados em CSV ou JSON.">
         <Row label="Backup completo" hint="Um arquivo JSON portátil com anotações, tarefas, eventos, categorias e tags de anotações.">
           <button
@@ -337,7 +360,14 @@ export default function Settings() {
         <DataImportPanel />
       </Section>
 
+      <Section title="Backup automático e histórico" description="Crie backups comprimidos, configure a retenção e consulte execuções recentes.">
+        <BackupManager />
+      </Section>
+
       <Section title="Conta">
+        <Row label="Autenticação em duas etapas" hint="Use um app autenticador para proteger o acesso à conta.">
+          <MfaSettings />
+        </Row>
         <Row label="E-mail">
           <span className="settings__value">{user.email}</span>
         </Row>

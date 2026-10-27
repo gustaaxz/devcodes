@@ -1,5 +1,9 @@
 # Security & RLS - DevCodes
 
+## Correcao da auditoria da Fase 6
+
+Depois da migration inicial de auditoria, aplique `20261027170000_phase6_audit_cascade_fix.sql` antes de rodar `supabase/tests/phase6_audit_rls.sql`. A correção ignora deletes aninhados disparados pela exclusão de uma conta para respeitar a FK em `auth.users`; a cascata configurada continua removendo os registros de auditoria da conta.
+
 ## Por que este arquivo existe
 
 Este documento define os padrões mandatórios de segurança, autenticação e proteção de dados do DevCodes.
@@ -16,6 +20,9 @@ No DevCodes, a segurança de dados **não depende da lógica do frontend**. Toda
 > ALTER TABLE public.<tabela> ENABLE ROW LEVEL SECURITY;
 > ```
 > Nenhuma tabela deve existir sem políticas de RLS ativas.
+
+### MFA TOTP
+Supabase Auth gerencia fatores TOTP. Após login, o app exige verificação do fator quando a sessão está em AAL1 e a conta tem um fator verificado; o acesso às rotas protegidas só continua após a sessão chegar a AAL2. O cliente não armazena nem valida os segredos TOTP. Em produção, habilite TOTP e verificação de fatores nas configurações de Auth do projeto Supabase.
 
 ---
 
@@ -34,6 +41,8 @@ WITH CHECK (auth.uid() = user_id);
 Tabelas de associação sem `user_id` próprio (`note_tags`, `task_tags`, `file_tags`) aplicam RLS verificando a propriedade do recurso e da tag relacionada. `task_tags` também valida ambos os lados na política de inserção.
 
 A migration `20261027120000_phase5_tags.sql` instala um trigger `SECURITY DEFINER` com `search_path` fixo para remover tags sem associações após exclusões em qualquer tabela de vínculo. A função não pode ser chamada diretamente por `anon` ou `authenticated`, remove somente tags não favoritas e verifica vínculos em todas as três tabelas.
+
+A trilha de auditoria da Fase 6 usa `public.audit_log`, isolada por usuário com RLS. O cliente autenticado tem apenas `SELECT`; triggers `SECURITY DEFINER` registram operação e nomes dos campos alterados sem copiar conteúdo de notas, descrições ou arquivos. A migration `20261027160000_phase6_audit_log.sql` pode ser aplicada independentemente das migrations de backup. Depois de aplicá-la, rode `supabase/tests/phase6_audit_rls.sql` para verificar o isolamento e o bloqueio de escrita pelo cliente.
 
 Na integração Google (#19), refresh tokens são criptografados com AES-GCM no Edge Function; a chave fica em Supabase Function Secrets. `google_calendar_credentials` e `google_calendar_oauth_states` têm RLS ligado, sem policies para usuários e sem grants a `anon`/`authenticated`. Os estados OAuth expiram em 10 minutos, são vinculados ao usuário autenticado e consumidos uma vez. O feed iCalendar público armazena somente o SHA-256 de um token aleatório; seu link concede leitura dos títulos, descrições e horários até revogação/rotação.
 

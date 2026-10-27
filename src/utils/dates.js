@@ -1,7 +1,12 @@
+import { getActiveLocale } from './localeStore.js'
+
 const WEEKDAY_NAMES = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
-export function getWeekdays(weekStart = 0) {
-  return [...WEEKDAY_NAMES.slice(weekStart), ...WEEKDAY_NAMES.slice(0, weekStart)]
+export function getWeekdays(weekStart = 0, locale = getActiveLocale()) {
+  if (locale === 'pt-BR') return [...WEEKDAY_NAMES.slice(weekStart), ...WEEKDAY_NAMES.slice(0, weekStart)]
+  return Array.from({ length: 7 }, (_, index) => (
+    new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(new Date(2023, 0, 1 + ((weekStart + index) % 7)))
+  ))
 }
 
 function pad(value) {
@@ -50,22 +55,22 @@ export function isAllDayEvent(event) {
   return start.getHours() === 0 && start.getMinutes() === 0 && !event.end_at
 }
 
-export function formatMonthYear(date) {
-  return new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(date)
+export function formatMonthYear(date, locale = getActiveLocale()) {
+  return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date)
 }
 
-export function formatLongDate(date) {
-  return new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }).format(date)
+export function formatLongDate(date, locale = getActiveLocale()) {
+  return new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(date)
 }
 
-export function formatShortDate(date) {
-  return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short' }).format(date)
+export function formatShortDate(date, locale = getActiveLocale()) {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'short' }).format(date)
 }
 
-export function formatDateTime(date) {
-  return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(date)
+export function formatDateTime(date, locale = getActiveLocale()) {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'short', timeStyle: 'short' }).format(date)
 }
 
-export function formatTime(date) {
-  return new Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' }).format(date)
+export function formatTime(date, locale = getActiveLocale()) {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(date)
 }

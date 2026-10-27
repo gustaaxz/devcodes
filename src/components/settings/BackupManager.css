@@ -1,0 +1,21 @@
+.backup-manager { display: grid; gap: 1rem; }
+.backup-manager__controls { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.backup-manager__controls label { display: inline-flex; align-items: center; gap: .45rem; color: var(--color-text); }
+.backup-manager__controls select { min-height: 2.25rem; padding: .3rem .55rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: .4rem; }
+.backup-manager__hint, .backup-manager__list small { color: var(--color-text-muted); font-size: .85rem; }
+.backup-manager h3 { margin: .5rem 0 0; font-size: 1rem; }
+.backup-manager__audit-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: .5rem; }
+.backup-manager__audit-heading label { display: inline-flex; align-items: center; gap: .5rem; color: var(--color-text-muted); font-size: .85rem; }
+.backup-manager__audit-heading select { min-height: 2.2rem; padding: .3rem .55rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: .4rem; }
+.backup-manager__list, .backup-manager__history { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; }
+.backup-manager__list li, .backup-manager__history li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem; border: 1px solid var(--color-border); border-radius: .6rem; }
+.backup-manager__list li > span { display: grid; gap: .2rem; min-width: 0; }
+.backup-manager__list strong { overflow-wrap: anywhere; }
+.backup-manager__actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.backup-manager__history { font-size: .85rem; }
+.backup-manager__history time { color: var(--color-text-muted); }
+.backup-manager__history li > span { display: grid; gap: .2rem; }
+.backup-manager__history li small { color: var(--color-text-muted); }
+.backup-manager__history [data-status="error"] { color: var(--color-danger, #ef4444); }
+.backup-manager__history [data-status="success"] { color: var(--color-success, #22c55e); }
+@media (max-width: 620px) { .backup-manager__controls { align-items: stretch; flex-direction: column; } .backup-manager__audit-heading { align-items: flex-start; flex-direction: column; } .backup-manager__list li, .backup-manager__history li { align-items: flex-start; flex-direction: column; } .backup-manager__actions { width: 100%; } }

@@ -12,7 +12,7 @@ describe('preferencias', () => {
 
   it('preserva valores validos', () => {
     const result = normalizePreferences({ theme: 'light', calendar: { weekStart: 1 }, library: { layout: 'grid', sort: 'name' } })
-    expect(result).toEqual({ theme: 'light', calendar: { weekStart: 1 }, library: { layout: 'grid', sort: 'name' } })
+    expect(result).toEqual({ theme: 'light', calendar: { weekStart: 1 }, library: { layout: 'grid', sort: 'name' }, onboardingCompleted: false, locale: 'pt-BR' })
   })
 
   it('mescla alteracoes parciais sem perder o restante', () => {
@@ -20,5 +20,14 @@ describe('preferencias', () => {
     expect(merged.library).toEqual({ layout: 'grid', sort: 'recent' })
     expect(merged.theme).toBe('dark')
     expect(merged.calendar.weekStart).toBe(0)
+  })
+
+  it('persiste a conclusao do tour como preferencia de perfil', () => {
+    expect(mergePreferences(DEFAULT_PREFERENCES, { onboardingCompleted: true }).onboardingCompleted).toBe(true)
+  })
+
+  it('aceita somente os idiomas suportados', () => {
+    expect(normalizePreferences({ locale: 'en-US' }).locale).toBe('en-US')
+    expect(normalizePreferences({ locale: 'fr-FR' }).locale).toBe('pt-BR')
   })
 })

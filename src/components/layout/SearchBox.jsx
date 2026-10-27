@@ -2,69 +2,73 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, CheckSquare, FileCode2, Folder, Search, StickyNote, Tag } from 'lucide-react'
 import Spinner from '../ui/Spinner.jsx'
+import { useLocale } from '../../hooks/useLocale.js'
 import { countResults, sanitizeTerm, searchAll } from '../../services/search/searchService.js'
 import { formatDateTime, formatShortDate, toDateKey } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
 import { formatBytes } from '../../utils/files.js'
+import { translate } from '../../utils/i18n.js'
 import './SearchBox.css'
 
 const MIN_TERM_LENGTH = 3
 const DEBOUNCE_MS = 300
 
-function buildGroups(results) {
+function buildGroups(results, locale) {
   return [
     {
       key: 'notes',
-      label: 'Anotações',
+      label: translate(locale, 'Anotações'),
       icon: StickyNote,
       items: results.notes.map((note) => ({
         id: note.id,
-        title: note.title || 'Sem título',
-        detail: `Anotação · ${formatShortDate(new Date(note.updated_at))}`,
+        title: note.title || translate(locale, 'Sem título'),
+        detail: translate(locale, 'search.detail.note', { date: formatShortDate(new Date(note.updated_at), locale) }),
         path: `/anotacoes?nota=${note.id}`
       }))
     },
     {
       key: 'tasks',
-      label: 'Tarefas',
+      label: translate(locale, 'Tarefas'),
       icon: CheckSquare,
       items: results.tasks.map((task) => ({
         id: task.id,
         title: task.title,
-        detail: task.due_at ? `Tarefa · prazo ${formatDateTime(new Date(task.due_at))}` : 'Tarefa · sem prazo',
+        detail: task.due_at
+          ? translate(locale, 'search.detail.task', { date: formatDateTime(new Date(task.due_at), locale) })
+          : translate(locale, 'Tarefa · sem prazo'),
         path: `/tarefas?tarefa=${task.id}`
       }))
     },
     {
       key: 'events',
-      label: 'Eventos',
+      label: translate(locale, 'Eventos'),
       icon: CalendarDays,
       items: results.events.map((event) => ({
         id: event.id,
         title: event.title,
-        detail: `Evento · ${formatDateTime(new Date(event.start_at))}`,
+        detail: translate(locale, 'search.detail.event', { date: formatDateTime(new Date(event.start_at), locale) }),
         path: `/calendario?data=${toDateKey(new Date(event.start_at))}&evento=${event.id}`
       }))
     },
     {
       key: 'files',
-      label: 'Arquivos',
+      label: translate(locale, 'Arquivos'),
       icon: FileCode2,
       items: results.files.map((file) => ({
         id: file.id,
         title: file.original_name,
-        detail: `Arquivo · ${formatBytes(file.size_bytes)}`,
+        detail: translate(locale, 'search.detail.file', { size: formatBytes(file.size_bytes) }),
         path: `/biblioteca?arquivo=${file.id}`
       }))
     },
     {
       key: 'categories',
-      label: 'Categorias',
+      label: translate(locale, 'Categorias'),
       icon: Folder,
       items: results.categories.map((category) => ({
         id: `${category.kind}-${category.id}`,
         title: category.name,
-        detail: category.kind === 'programming' ? 'Categoria da biblioteca' : 'Categoria de tarefas e eventos',
+        detail: translate(locale, category.kind === 'programming' ? 'Categoria da biblioteca' : 'Categoria de tarefas e eventos'),
         path:
           category.kind === 'programming'
             ? `/biblioteca?aba=${category.slug}`
@@ -73,12 +77,12 @@ function buildGroups(results) {
     },
     {
       key: 'tags',
-      label: 'Tags',
+      label: translate(locale, 'Tags'),
       icon: Tag,
       items: results.tags.map((tag) => ({
         id: tag.id,
         title: tag.name,
-        detail: 'Tag · organizar e filtrar recursos',
+        detail: translate(locale, 'Tag · organizar e filtrar recursos'),
         path: `/tags?q=${encodeURIComponent(tag.name)}`
       }))
     }
@@ -87,9 +91,10 @@ function buildGroups(results) {
 
 export default function SearchBox({ autoFocus = false, onNavigate }) {
   const navigate = useNavigate()
+  const locale = useLocale()
   const [term, setTerm] = useState('')
   const [open, setOpen] = useState(false)
-  const [state, setState] = useState({ loading: false, error: '', groups: null })
+  const [state, setState] = useState({ loading: false, error: '', results: null })
   const timerRef = useRef(null)
   const requestRef = useRef(0)
   const containerRef = useRef(null)
@@ -111,11 +116,11 @@ export default function SearchBox({ autoFocus = false, onNavigate }) {
     searchAll(value)
       .then((results) => {
         if (requestRef.current !== requestId) return
-        setState({ loading: false, error: '', groups: countResults(results) > 0 ? buildGroups(results) : [] })
+        setState({ loading: false, error: '', results: countResults(results) > 0 ? results : [] })
       })
       .catch((error) => {
         if (requestRef.current !== requestId) return
-        setState({ loading: false, error: friendlyError(error, 'Não foi possível realizar a pesquisa.'), groups: null })
+        setState({ loading: false, error: friendlyError(error, 'Não foi possível realizar a pesquisa.'), results: null })
       })
   }
 
@@ -127,7 +132,7 @@ export default function SearchBox({ autoFocus = false, onNavigate }) {
     requestRef.current += 1
 
     if (sanitizeTerm(value).length < MIN_TERM_LENGTH) {
-      setState({ loading: false, error: '', groups: null })
+      setState({ loading: false, error: '', results: null })
       return
     }
     setState((current) => ({ ...current, loading: true, error: '' }))
@@ -137,12 +142,13 @@ export default function SearchBox({ autoFocus = false, onNavigate }) {
   function handleSelect(path) {
     setOpen(false)
     setTerm('')
-    setState({ loading: false, error: '', groups: null })
+    setState({ loading: false, error: '', results: null })
     navigate(path)
     if (onNavigate) onNavigate()
   }
 
   const showPanel = open && sanitizeTerm(term).length >= MIN_TERM_LENGTH
+  const groups = state.results?.length ? buildGroups(state.results, locale) : state.results
 
   return (
     <div className="search" ref={containerRef}>
@@ -165,11 +171,11 @@ export default function SearchBox({ autoFocus = false, onNavigate }) {
 
       {showPanel && (
         <div className="search__panel" role="listbox">
-          {state.error && <p className="search__message search__message--error">{state.error}</p>}
-          {!state.error && !state.loading && state.groups && state.groups.length === 0 && (
+          {state.error && <p className="search__message search__message--error">{translate(locale, state.error)}</p>}
+          {!state.error && !state.loading && groups && groups.length === 0 && (
             <p className="search__message">Nenhum resultado encontrado.</p>
           )}
-          {!state.error && state.groups && state.groups.map((group) => {
+          {!state.error && groups && groups.map((group) => {
             const Icon = group.icon
             return (
               <section key={group.key} className="search__group">

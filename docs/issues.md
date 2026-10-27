@@ -2,13 +2,16 @@
 
 ## Por que este arquivo existe
 
+### Atualizacao remota da Fase 6
+O usuario confirmou o sucesso de `supabase/tests/phase6_audit_rls.sql` apos aplicar a migration corretiva e ajustar a ordem de limpeza do fixture. A validacao de auditoria terminou; falta habilitar/verificar MFA TOTP no Supabase Auth.
+
 Este documento é a fonte canônica local de tarefas e issues ativas e planejadas do DevCodes, acompanhando o ciclo de vida das 26 melhorias do projeto.
 
 ---
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída; Fase 5 em andamento na **#18 e #19**. A #18 tem catálogo/preview de arquivos e tags universais no código; a migration foi aplicada pelo usuário e falta executar o teste RLS atualizado. A #19 tem import/export iCalendar, feed público revogável e integração Google via Edge Functions no código; migration aplicada pelo usuário; o teste RLS passou; faltam secrets/deploy das funções e validação OAuth com conta Google. Roadmap: `docs/PENDING_FEATURES.md`.
+Fase 4 concluída. A Fase 5 mantém validações/publicações remotas pendentes conforme o roadmap. A Fase 6 está implementada localmente (5/5): MFA TOTP (#22), auditoria independente (#23), i18n PT-BR/EN-US (#24), Playwright E2E (#25) e onboarding (#26). O usuário confirmou a aplicação das migrations de auditoria e a aprovação de `supabase/tests/phase6_audit_rls.sql`; falta habilitar/verificar MFA TOTP no Supabase. Roadmap canônico: `docs/implementation-plan.md`.
 
 ---
 

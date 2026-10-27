@@ -18,6 +18,7 @@ import Favorites from './pages/Favorites/index.jsx'
 import Settings from './pages/Settings/index.jsx'
 import SharedResource from './pages/SharedResource/index.jsx'
 import Tags from './pages/Tags/index.jsx'
+import Analytics from './pages/Analytics/index.jsx'
 import { useGoogleCalendarAutoSync } from './hooks/useGoogleCalendarAutoSync.js'
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="arquivos-recentes" element={<RecentFiles />} />
           <Route path="favoritos" element={<Favorites />} />
           <Route path="tags" element={<Tags />} />
+          <Route path="analytics" element={<Analytics />} />
           <Route path="configuracoes" element={<Settings />} />
         </Route>
       </Route>

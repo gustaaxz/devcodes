@@ -2,9 +2,10 @@ import { Fragment, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Code2, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react'
 import { navigationItems } from '../../utils/navigation.js'
+import { translate } from '../../utils/i18n.js'
 import './Sidebar.css'
 
-export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleCollapse, onCloseMobile }) {
+export default function Sidebar({ collapsed, isMobile, mobileOpen, locale = 'pt-BR', onToggleCollapse, onCloseMobile }) {
   const navigate = useNavigate()
   const isCollapsed = collapsed && !isMobile
   useEffect(() => {
@@ -59,21 +60,21 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleColla
         </div>
 
         <nav className="sidebar__nav" id="primary-navigation" aria-label="Seções">
-          {navigationItems.map(({ path, label, icon: Icon, section }, index) => {
+          {navigationItems.map(({ path, labelKey, icon: Icon, section, sectionKey }, index) => {
             const showSection = !isCollapsed && (index === 0 || section !== navigationItems[index - 1].section)
 
             return (
               <Fragment key={path}>
-                {showSection && <span className="sidebar__section-label">{section}</span>}
+                {showSection && <span className="sidebar__section-label">{translate(locale, sectionKey)}</span>}
                 <NavLink
                   to={path}
                   end={path === '/'}
-                  title={isCollapsed ? label : undefined}
+                  title={isCollapsed ? translate(locale, labelKey) : undefined}
                   onClick={isMobile ? onCloseMobile : undefined}
                   className={({ isActive }) => `sidebar__link${isActive ? ' sidebar__link--active' : ''}`}
                 >
                   <Icon size={19} strokeWidth={1.9} />
-                  {!isCollapsed && <span>{label}</span>}
+                  {!isCollapsed && <span>{translate(locale, labelKey)}</span>}
                 </NavLink>
               </Fragment>
             )
@@ -86,13 +87,13 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleColla
               type="button"
               className="sidebar__link sidebar__collapse"
               onClick={onToggleCollapse}
-              title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+              title={translate(locale, isCollapsed ? 'nav.expand' : 'nav.collapse')}
               aria-expanded={!isCollapsed}
               aria-controls="primary-navigation"
-              aria-label={isCollapsed ? 'Expandir navegação' : 'Recolher navegação'}
+              aria-label={translate(locale, isCollapsed ? 'nav.expand' : 'nav.collapse')}
             >
               {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-              {!isCollapsed && <span>Recolher</span>}
+              {!isCollapsed && <span>{translate(locale, 'nav.collapse')}</span>}
             </button>
           </div>
         )}
