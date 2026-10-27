@@ -107,3 +107,26 @@
     justify-content: space-between;
   }
 }
+
+.file-item {
+  min-height: 76px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.file-item:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.file-item__meta,
+.file-item__description {
+  font-size: 0.8125rem;
+}
+
+.file-item__tag {
+  padding: 3px var(--space-2);
+  font-size: 0.75rem;
+}
