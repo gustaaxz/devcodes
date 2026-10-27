@@ -78,8 +78,8 @@ function buildGroups(results) {
       items: results.tags.map((tag) => ({
         id: tag.id,
         title: tag.name,
-        detail: 'Tag de anotações',
-        path: `/anotacoes?tag=${encodeURIComponent(tag.name)}`
+        detail: 'Tag · organizar e filtrar recursos',
+        path: `/tags?q=${encodeURIComponent(tag.name)}`
       }))
     }
   ].filter((group) => group.items.length > 0)
