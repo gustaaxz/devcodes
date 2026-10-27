@@ -48,7 +48,7 @@ export default function Tasks() {
   const tasks = useLoad(listTasks, version)
   const categories = useLoad(listCategories)
   const [view, setView] = useState('list')
-  const [filters, setFilters] = useState(() => ({ status: '', category: params.get('categoria') || '', priority: '', due: '' }))
+  const [filters, setFilters] = useState(() => ({ status: '', category: params.get('categoria') || '', priority: '', due: '', tag: params.get('tag') || '' }))
   const [modal, setModal] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -60,7 +60,7 @@ export default function Tasks() {
     { filter: `user_id=eq.${user.id}` },
     (updated) => {
       tasks.data = (tasks.data || []).map((task) =>
-        task.id === updated.id ? updated : task
+        task.id === updated.id ? { ...task, ...updated } : task
       )
     },
     (deleted) => {
@@ -68,7 +68,7 @@ export default function Tasks() {
     },
     (inserted) => {
       if (!tasks.data?.some((t) => t.id === inserted.id)) {
-        tasks.data = [inserted, ...(tasks.data || [])]
+        tasks.data = [{ ...inserted, tags: [] }, ...(tasks.data || [])]
       }
     }
   )
@@ -92,6 +92,7 @@ export default function Tasks() {
       .filter((task) => !filters.category || task.category_id === filters.category)
       .filter((task) => !filters.priority || task.priority === filters.priority)
       .filter((task) => matchesDue(task, filters.due, now))
+      .filter((task) => !filters.tag || task.tags?.some((tag) => tag.name === filters.tag))
       .sort(compareTasks)
   }, [tasks.data, filters, now])
 
@@ -209,6 +210,13 @@ export default function Tasks() {
           options={DUE_FILTER_OPTIONS}
           value={filters.due}
           onChange={(e) => setFilter('due', e.target.value)}
+        />
+        <SelectField
+          aria-label="Filtrar por tag"
+          placeholder="Todas as tags"
+          options={[...new Set((tasks.data || []).flatMap((task) => (task.tags || []).map((tag) => tag.name)))].sort((a, b) => a.localeCompare(b, 'pt-BR')).map((name) => ({ value: name, label: name }))}
+          value={filters.tag}
+          onChange={(e) => setFilter('tag', e.target.value)}
         />
       </div>
 
