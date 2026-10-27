@@ -4,6 +4,89 @@ Registro técnico de todas as implementações, decisões e outcomes.
 
 ---
 
+## 2026-10-27 - ISSUE-015: Correção de categorias padrão no cadastro
+
+**Fase:** Fase 4 — Colaboração e Produtividade Avançada  
+**Status:** Concluída; migrations corretivas aplicadas no remoto pelo usuário e teste RLS aprovado
+
+### Diagnóstico e Correção
+
+- O teste no SQL Editor falhou porque `20261023130000_add_username_to_profiles.sql` substituiu `handle_new_user()` e removeu a criação das categorias padrão.
+- Criada a migration `20261027100000_restore_signup_defaults.sql`, que preserva `full_name` e `username`, restaura as 10 categorias de programação e 6 acadêmicas para novos cadastros e repõe os padrões apenas para contas existentes sem categorias.
+- O diagnóstico da API confirmou que o schema remoto tem `display_name` e `username`, mas ainda não tem `full_name`. Criada `20261027110000_align_profile_schema.sql` para renomear a coluna legada ou criar a nova quando necessário.
+- Alinhado `profileService` ao campo `full_name` consumido por `ProfileProvider`, com testes de leitura e gravação do perfil.
+- Atualizados os metadados dos usuários temporários no teste para refletir os campos atuais do perfil.
+
+### Validação
+
+- `npm test`: 52 testes passando, incluindo 2 testes do serviço de perfil.
+- `npm run lint`: sem avisos novos; os avisos permanecem em arquivos não relacionados.
+- `npm run build`: aprovado; Vite mantém o aviso de bundle acima de 500 kB.
+- A API REST do Supabase respondeu HTTP 200 às consultas anônimas de `task_reminders` e `reminder_preferences`, com zero linhas visíveis; isso não comprova isolamento entre dois usuários autenticados.
+- A API também confirmou `display_name` e `username` no perfil remoto e retornou erro para `full_name`.
+- Após a aplicação da migration de alinhamento, o teste passou pelo cadastro e pelas verificações das tabelas da aplicação, chegando ao bloco de Storage.
+- A execução foi bloqueada pelo trigger oficial `storage.protect_delete()`. Removidas do teste todas as mutações SQL diretas em `storage.objects`; agora ele verifica RLS ativo e presença das quatro políticas, deixando operações de arquivo para a Storage API.
+- O usuário executou a versão ajustada de `supabase/tests/rls_isolation.sql`; resultado confirmado: `OK: todos os testes de isolamento passaram`.
+- O teste SQL valida isolamento entre dois usuários nas tabelas da aplicação, vínculo de lembrete à tarefa proprietária, políticas Storage configuradas e bloqueio de acesso anônimo. Operações runtime em arquivos devem ser validadas pela Storage API.
+
+---
+
+## 2026-10-27 - ISSUE-017: Exportação e Importação de Dados
+
+**Fase:** Fase 4 — Colaboração e Produtividade Avançada  
+**Status:** Concluída  
+
+### O Que Foi Feito
+
+- Criado backup JSON completo e portátil para notas, tarefas e eventos, preservando nomes de categorias e tags de notas sem exportar IDs ou `user_id`.
+- Exportações individuais CSV/JSON agora filtram explicitamente pelo usuário autenticado; valores CSV com vírgulas, aspas e quebras de linha são escapados corretamente.
+- Adicionada importação de backups JSON e CSV/JSON individuais exportados pelo DevCodes, com limite de 10 MB/500 registros, validação por linha, prévia e confirmação.
+- Importações ignoram IDs recebidos, atribuem `user_id` da sessão, recriam categorias por nome e acrescentam dados sem substituir registros existentes.
+- Adicionados testes do parser para backups, CSV com aspas/quebras de linha, IDs de terceiros e linhas inválidas.
+- Alinhados `docs/issues.md`, `docs/implementation-plan.md` e `docs/PENDING_FEATURES.md`; #17 agora representa exportação/importação.
+
+### Validação
+
+- `npm test`: 50 testes passando.
+- `npm run lint`: sem avisos novos; avisos anteriores permanecem em arquivos não relacionados.
+- `npm run build`: aprovado; Vite reporta bundle acima de 500 kB.
+- Sem alterações de schema ou dados remotos nesta entrega; operações de importação dependem das políticas RLS existentes para notas, tarefas, eventos, categorias e tags.
+
+### Decisões e Limites
+
+- A importação é aditiva: não atualiza nem remove dados atuais. Reimportar o mesmo arquivo pode criar duplicatas.
+- IDs do arquivo não são reutilizados; categorias são conciliadas por nome e tags são recriadas por meio do serviço de notas.
+- O escopo implementado cobre backup JSON e os formatos CSV/JSON existentes; exportação de Markdown ZIP não foi incluída.
+
+---
+
+## 2026-10-27 - ISSUE-015: Integração local de lembretes de tarefas
+
+**Fase:** Fase 4 — Colaboração e Produtividade Avançada  
+**Status:** Concluída após alinhamento do schema remoto e aprovação do teste RLS entre usuários  
+
+### O Que Foi Feito
+
+- Integrado o serviço de lembretes ao modal de tarefas, à central de notificações da Topbar e às preferências padrão em Configurações.
+- Implementados avisos in-app com polling de 30 segundos enquanto o app está aberto e ações para concluir, adiar por 15 minutos e dispensar.
+- A migration agora limita a um lembrete por tarefa, verifica RLS do proprietário da tarefa e sincroniza lembretes com mudança de prazo, conclusão ou remoção do prazo.
+- Estendidos os testes de RLS e adicionados testes unitários de cálculo/formatação de antecedência.
+- E-mail não foi habilitado: não há função de envio configurada. O cliente persiste apenas notificações in-app.
+
+### Validação
+
+- `npm test`: 52 testes passando após os ajustes de integração e perfil.
+- `npm run lint`: sem avisos novos; permanecem avisos anteriores em outros arquivos.
+- `npm run build`: aprovado; Vite reporta o aviso existente de bundle acima de 500 kB.
+- Supabase remoto: consultas somente leitura retornaram HTTP 200 para as colunas de `task_reminders` e `reminder_preferences`; leituras sem sessão autenticada retornaram `[]`.
+- O teste RLS entre dois usuários foi concluído posteriormente; o resultado confirmado pelo usuário foi `OK: todos os testes de isolamento passaram`.
+
+### Decisão e Bloqueador
+
+- As migrations foram aplicadas pelo usuário no SQL Editor; a leitura anônima vazia foi complementada pelo teste transacional de isolamento entre dois usuários.
+
+---
+
 ## 2026-10-26 - ISSUE-013: Compartilhamento de Notas e Eventos (Fase 4)
 
 **Implementador:** Antigravity AI  
