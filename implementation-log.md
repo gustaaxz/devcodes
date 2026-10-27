@@ -2,6 +2,12 @@
 
 Registro técnico de todas as implementações, decisões e outcomes.
 
+## 2026-10-27 10:32 BRT - Redesign da página de tags
+
+**Implementado:** Reestruturei `/tags` com cabeçalho e métricas resumidas, formulário de criação com paleta, filtros agrupados, cartões responsivos com contagens vinculadas a notas/tarefas/arquivos e menu por tag para favoritar, editar, mesclar e excluir. Adicionei fechamento do menu por clique externo/Escape, foco inicial acessível e estados vazios distintos para primeira utilização e busca sem resultados.
+**Decisões:** Mantive os serviços e contratos atuais; a mudança está na apresentação e nos controles da página. As cores e superfícies usam tokens de tema, e as ações destrutivas continuam protegidas pelo diálogo de confirmação existente.
+**Validação:** Revisão estática do JSX/CSS e dos estados de interação. Não rodei testes, lint ou build nesta etapa e não fiz inspeção renderizada do deploy; a alteração ainda está local.
+
 ## 2026-10-27 10:22 BRT - Polimento visual e navegação
 
 **Implementado:** Revisão dos tokens claro/escuro, tipografia Inter/JetBrains Mono, hierarquia de superfícies, contraste de estados, escala de espaçamento e sombras. Sidebar agora agrupa seções, mantém recolhimento salvo e fecha com Escape no mobile. Reforcei estados hover/focus, tamanhos de toque e layouts de dashboard, tarefas, calendário, notas, arquivos, configurações e autenticação; corrigi tokens CSS inexistentes.
