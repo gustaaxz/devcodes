@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Download, Upload } from 'lucide-react'
 import CalendarGrid from '../../components/calendar/CalendarGrid.jsx'
 import DayPanel from '../../components/calendar/DayPanel.jsx'
 import EventModal from '../../components/calendar/EventModal.jsx'
+import IcsImportModal from '../../components/calendar/IcsImportModal.jsx'
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import Spinner from '../../components/ui/Spinner.jsx'
@@ -15,6 +16,7 @@ import { useProfile } from '../../hooks/useProfile.js'
 import { loadCalendarData } from '../../services/calendar/calendarService.js'
 import { listCategories } from '../../services/categories/categoriesService.js'
 import { deleteEvent } from '../../services/events/eventsService.js'
+import { exportEventsAsIcs, importEventsFromIcs, parseIcsCalendar } from '../../services/calendar/icalService.js'
 import { addMonths, buildMonthGrid, formatMonthYear, fromDateKey, toDateKey } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
 import './Calendar.css'
@@ -49,6 +51,11 @@ export default function Calendar() {
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
+  const [icsPreview, setIcsPreview] = useState(null)
+  const [icsBusy, setIcsBusy] = useState(false)
+  const [icsError, setIcsError] = useState('')
+  const [icsNotice, setIcsNotice] = useState('')
+  const icsFileRef = useRef(null)
 
   const grid = useMemo(() => buildMonthGrid(month, weekStart), [month, weekStart])
   const rangeStart = grid[0]
@@ -109,6 +116,37 @@ export default function Calendar() {
     }
   }
 
+  async function handleIcsFileChange(event) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    setIcsError('')
+    setIcsNotice('')
+    try {
+      if (file.size > 2 * 1024 * 1024) throw new Error('O arquivo iCalendar excede 2 MB.')
+      setIcsPreview(parseIcsCalendar(await file.text()))
+    } catch (error) {
+      setIcsError(friendlyError(error, 'Não foi possível ler esse arquivo iCalendar.'))
+    }
+  }
+
+  async function handleIcsImport() {
+    if (!icsPreview) return
+    setIcsBusy(true)
+    setIcsError('')
+    try {
+      const result = await importEventsFromIcs(icsPreview, user.id)
+      const duplicates = result.skipped ? ` ${result.skipped} duplicado(s) ignorado(s).` : ''
+      setIcsNotice(`${result.imported} evento(s) importado(s).${duplicates}`)
+      setIcsPreview(null)
+      calendar.reload()
+    } catch (error) {
+      setIcsError(friendlyError(error, 'Não foi possível importar os eventos.'))
+    } finally {
+      setIcsBusy(false)
+    }
+  }
+
   if (calendar.loading && !calendar.data) {
     return <Spinner label="Carregando calendário" />
   }
@@ -119,6 +157,15 @@ export default function Calendar() {
         <div className="page-toolbar">
           <h2 className="calendar-page__month">{formatMonthYear(month)}</h2>
           <div className="page-toolbar__spacer" />
+          <div className="calendar-page__ics-actions">
+            <button type="button" className="button button--secondary button--small" onClick={() => exportEventsAsIcs().catch((error) => setIcsError(friendlyError(error, 'Não foi possível exportar o calendário.')))}>
+              <Download size={15} /> <span>Exportar .ics</span>
+            </button>
+            <button type="button" className="button button--secondary button--small" onClick={() => icsFileRef.current?.click()}>
+              <Upload size={15} /> <span>Importar .ics</span>
+            </button>
+            <input ref={icsFileRef} className="calendar-page__file-input" type="file" accept=".ics,text/calendar" onChange={handleIcsFileChange} aria-label="Selecionar arquivo iCalendar" />
+          </div>
           <button type="button" className="button button--secondary" onClick={goToToday}>
             Hoje
           </button>
@@ -139,6 +186,8 @@ export default function Calendar() {
             <ChevronRight size={20} />
           </button>
         </div>
+        {icsError && !icsPreview && <Alert variant="error">{icsError}</Alert>}
+        {icsNotice && <Alert variant="success">{icsNotice}</Alert>}
         {calendar.error && <Alert variant="error">{calendar.error}</Alert>}
         {categories.error && <Alert variant="error">{categories.error}</Alert>}
         <CalendarGrid
@@ -174,6 +223,16 @@ export default function Calendar() {
           categories={categories.data || []}
           onClose={closeModal}
           onSaved={handleSaved}
+        />
+      )}
+
+      {icsPreview && (
+        <IcsImportModal
+          events={icsPreview}
+          busy={icsBusy}
+          error={icsError}
+          onCancel={() => { setIcsPreview(null); setIcsError('') }}
+          onConfirm={handleIcsImport}
         />
       )}
 
