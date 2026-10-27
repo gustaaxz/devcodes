@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from '../ui/Modal.jsx'
 import TextField from '../ui/TextField.jsx'
 import TextAreaField from '../ui/TextAreaField.jsx'
@@ -8,9 +8,17 @@ import Spinner from '../ui/Spinner.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useDataVersion } from '../../hooks/useDataVersion.js'
 import { createTask, updateTask } from '../../services/tasks/tasksService.js'
+import {
+  getReminderForTask,
+  getReminderPreferences,
+  REMINDER_OFFSET_OPTIONS,
+  removeTaskReminder,
+  setTaskReminder
+} from '../../services/reminders/reminderService.js'
 import { toDateTimeInput } from '../../utils/dates.js'
 import { PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from '../../utils/labels.js'
 import { friendlyError } from '../../utils/errors.js'
+import './TaskModal.css'
 
 function buildInitialValues(task) {
   if (!task) {
@@ -28,11 +36,38 @@ function buildInitialValues(task) {
 
 export default function TaskModal({ task, categories, onClose, onSaved }) {
   const { user } = useAuth()
+  const userId = user.id
+  const taskId = task?.id
   const { bump } = useDataVersion()
+  const [savedTask, setSavedTask] = useState(task)
   const [values, setValues] = useState(() => buildInitialValues(task))
+  const [reminder, setReminder] = useState({ enabled: false, offsetMinutes: 15, exists: false, loading: true })
   const [titleError, setTitleError] = useState('')
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    Promise.all([
+      getReminderPreferences(userId),
+      taskId ? getReminderForTask(taskId, userId) : Promise.resolve(null)
+    ])
+      .then(([preferences, existing]) => {
+        if (!active) return
+        setReminder({
+          enabled: Boolean(existing && existing.status !== 'dismissed'),
+          offsetMinutes: existing?.offset_minutes ?? preferences.default_offset_minutes,
+          exists: Boolean(existing),
+          loading: false
+        })
+      })
+      .catch(() => {
+        if (active) setReminder((current) => ({ ...current, loading: false }))
+      })
+
+    return () => { active = false }
+  }, [taskId, userId])
 
   function setField(name, value) {
     setValues((current) => ({ ...current, [name]: value }))
@@ -64,13 +99,32 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
     }
 
     setSubmitting(true)
+    let taskWasPersisted = false
     try {
-      if (task) await updateTask(task.id, payload)
-      else await createTask(payload)
+      const persistedTask = savedTask
+        ? await updateTask(savedTask.id, payload)
+        : await createTask(payload)
+      taskWasPersisted = true
+      setSavedTask(persistedTask)
+
+      if (reminder.enabled && payload.status !== 'done') {
+        await setTaskReminder({
+          taskId: persistedTask.id,
+          userId,
+          dueAt: payload.due_at,
+          offsetMinutes: reminder.offsetMinutes
+        })
+      } else if (reminder.exists) {
+        await removeTaskReminder(persistedTask.id, userId)
+      }
+
       bump()
       onSaved()
     } catch (error) {
-      setFormError(friendlyError(error, 'Não foi possível salvar a tarefa.'))
+      const fallback = taskWasPersisted
+        ? 'A tarefa foi salva, mas não foi possível salvar o lembrete.'
+        : 'Não foi possível salvar a tarefa.'
+      setFormError(friendlyError(error, fallback))
       setSubmitting(false)
     }
   }
@@ -107,6 +161,28 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
             onChange={(e) => setField('due', e.target.value)}
           />
         </div>
+        <fieldset className="task-reminder">
+          <legend>Lembrete</legend>
+          <label className="task-reminder__toggle">
+            <input
+              type="checkbox"
+              checked={reminder.enabled}
+              disabled={reminder.loading || !values.due}
+              onChange={(event) => setReminder((current) => ({ ...current, enabled: event.target.checked }))}
+            />
+            <span>Receber lembrete antes do prazo</span>
+          </label>
+          {reminder.enabled && (
+            <SelectField
+              label="Avisar"
+              options={REMINDER_OFFSET_OPTIONS}
+              value={String(reminder.offsetMinutes)}
+              onChange={(event) => setReminder((current) => ({ ...current, offsetMinutes: Number(event.target.value) }))}
+            />
+          )}
+          {!values.due && <p className="task-reminder__hint">Adicione um prazo para configurar um lembrete.</p>}
+          {reminder.loading && <p className="task-reminder__hint">Carregando configuração do lembrete…</p>}
+        </fieldset>
         <div className="field-row">
           <SelectField
             label="Prioridade"
