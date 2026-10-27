@@ -10,6 +10,12 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 
 ## 2. Entradas de Deploys e Entregas
 
+### [2026-10-27] - Redesign da página `/tags` (implementação local)
+- **O que foi feito:** Hierarquia visual renovada com resumo das tags, formulário de criação organizado, filtros em uma barra única, contadores de uso clicáveis, ações agrupadas em menu por tag e estados vazios específicos.
+- **Acessibilidade e responsividade:** Ações por teclado, fechamento do menu por Escape/clique externo, foco levado ao menu aberto e layouts adaptados para telas menores; preservados tema claro/escuro e diálogo de confirmação para exclusão.
+- **Validação:** Revisão estática; testes, lint, build e inspeção renderizada não foram executados nesta etapa.
+- **Estado:** Alterações locais, sem commit, push ou deploy.
+
 ### [2026-10-27] - Polimento visual do sistema (implementação local)
 - **O que foi feito:** Identidade visual harmonizada entre temas, tipografia, espaçamento, superfícies, contraste e microinterações; navegação organizada e mais acessível; correções para tokens de estilo ausentes.
 - **Áreas:** Shell e menus, dashboard, tarefas, calendário, notas, biblioteca, configurações e autenticação.
