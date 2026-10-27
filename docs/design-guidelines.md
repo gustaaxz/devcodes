@@ -20,32 +20,35 @@ O **DevCodes** adota uma estética limpa, moderna e técnica, pensada para desen
 Definido centralizadamente em `src/styles/global.css`:
 
 ### 1. Cores de Destaque e Ação
-- **Accent (Primária):** `--color-accent: #3b82f6` (Blue 500)
-- **Accent Hover:** `--color-accent-hover: #2563eb` (Blue 600)
-- **Accent Soft:** `rgba(59, 130, 246, 0.14)` (fundos sutis de badges, itens ativos e foco)
+- **Accent (Primária):** `--color-accent` usa `#9aa4ff` no tema escuro e `#4f46e5` no claro, com cor de texto contrastante por tema
+- **Accent Hover:** `--color-accent-hover` aumenta o contraste no hover em cada tema
+- **Accent Soft:** `color-mix()` baseado no accent (fundos sutis de badges, itens ativos e foco)
+
+- **Accent Contrast:** `--color-accent-contrast` mantém texto legível sobre botões primários nos temas claro e escuro.
 
 ### 2. Status e Semântica
-- **Sucesso:** `--color-success: #22c55e` (Green 500)
-- **Aviso:** `--color-warning: #f59e0b` (Amber 500)
-- **Perigo / Erro:** `--color-danger: #ef4444` (Red 500)
+- **Sucesso:** `--color-success` usa `#43d9a0` no tema escuro e `#118357` no claro
+- **Aviso:** `--color-warning` usa `#ffd166` no tema escuro e `#a86300` no claro
+- **Perigo / Erro:** `--color-danger` usa `#ff8391` no tema escuro e `#c43d4e` no claro
 
 ### 3. Superfícies & Temas
 
 | Token | Dark Mode (Padrão) | Light Mode |
 | :--- | :--- | :--- |
-| `--color-bg` | `#0f1115` (fundo geral ultra escuro) | `#f5f6f8` (cinza suave) |
-| `--color-surface` | `#171a21` (cards, sidebar, modais) | `#ffffff` (branco puro) |
-| `--color-surface-hover` | `#1f232c` (hover em listas e cards) | `#eef0f4` (cinza sutil hover) |
-| `--color-border` | `#262b36` (bordas discretas) | `#e1e4ea` (borda nítida clara) |
-| `--color-text` | `#e8eaf0` (texto de alto contraste) | `#151821` (texto escuro principal) |
-| `--color-text-muted` | `#9aa3b2` (legendas e metadados) | `#5f6878` (cinza legível) |
-| `--color-overlay` | `rgba(0, 0, 0, 0.6)` | `rgba(15, 17, 21, 0.4)` |
+| `--color-bg` | `#0b1020` (fundo geral ultra escuro) | `#f4f6fb` (cinza suave) |
+| `--color-surface` | `#11192b` (cards, sidebar, modais) | `#ffffff` (branco puro) |
+| `--color-surface-raised` | `#151f34` (menus e camadas elevadas) | `#ffffff` (menus e camadas elevadas) |
+| `--color-surface-hover` | `#1a2740` (hover em listas e cards) | `#eef1fb` (cinza sutil hover) |
+| `--color-border` | `rgba(160, 176, 204, 0.16)` (bordas discretas) | `#e0e6f0` (borda nítida clara) |
+| `--color-text` | `#edf1fa` (texto de alto contraste) | `#1a2437` (texto escuro principal) |
+| `--color-text-muted` | `#a5b0c5` (legendas e metadados) | `#5c687d` (cinza legível) |
+| `--color-overlay` | `rgba(3, 7, 18, 0.72)` | `rgba(17, 25, 43, 0.42)` |
 
 ---
 
 ## Tipografia
 
-- **Família Tipográfica:** `'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif`
+- **Família Tipográfica:** `'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif`
 - **Código / Snippets:** `'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace`
 - **Pesos:**
   - 400 (Regular): Corpo de texto e descrições
@@ -59,20 +62,20 @@ Definido centralizadamente em `src/styles/global.css`:
 
 - **Escala de Espaçamento:**
   - `--space-1: 4px` | `--space-2: 8px` | `--space-3: 12px` | `--space-4: 16px`
-  - `--space-5: 20px` | `--space-6: 24px` | `--space-8: 32px`
+  - `--space-5: 20px` | `--space-6: 24px` | `--space-8: 32px` | `--space-10: 40px` | `--space-12: 48px`
 - **Arredondamento de Bordas (Border Radius):**
-  - `--radius-sm: 6px` (tags, badges, inputs menores)
-  - `--radius-md: 10px` (botões padrão, inputs, selects, cards de tarefas)
-  - `--radius-lg: 14px` (modais, painéis do dashboard, visualizador de código)
+  - `--radius-sm: 8px` (tags, badges, inputs menores)
+  - `--radius-md: 12px` (botões padrão, inputs, selects, cards de tarefas)
+  - `--radius-lg: 18px` (modais, painéis do dashboard, visualizador de código)
 - **Transições:**
-  - `--transition: 180ms ease`
+  - `--transition: 220ms cubic-bezier(0.2, 0.8, 0.2, 1)`
 
 ---
 
 ## Diretrizes de Componentes e Layout
 
 1. **Sidebar & Navegação:**
-   - Largura fixa padrão: `260px`; versão recolhida: `72px`.
+   - Largura fixa padrão: `264px`; versão recolhida: `76px`.
    - Itens ativos recebem `--color-accent-soft` com texto e ícone em `--color-accent`.
 2. **Cards e Modais:**
    - Fundo em `--color-surface` com borda fina de `1px solid var(--color-border)`.
