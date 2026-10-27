@@ -4,6 +4,16 @@ Registro técnico de todas as implementações, decisões e outcomes.
 
 ---
 
+## 2026-10-27 - Fase 5 iniciada: formatos e preview na Biblioteca (#18)
+
+**Fase:** Fase 5 — Organização e Integração
+**Status:** Em andamento; entrega parcial da melhoria #18
+**Implementado:** Catálogo de extensões ampliado para formatos Office, OpenDocument, RTF, linguagens/configurações selecionadas, dotfiles conhecidos e imagens PNG/JPEG/WebP/SVG/GIF/BMP/AVIF. Preview de PDF e imagens através de URL assinada do Supabase Storage. Validação de assinaturas para formatos binários e rejeição de SVG com scripts, handlers de evento ou referências externas.
+**Validação:** `npm test` — 55 testes aprovados; `npm run lint` — sem erros, avisos preexistentes e um aviso do visualizador corrigido; `npm run build` — aprovado, com aviso conhecido de bundle acima de 500 kB.
+**Limites desta entrega:** Tags universais, UI de gerenciamento/filtros e novas associações para tarefas ainda não foram implementadas. Não houve mudança de schema nem aplicação no Supabase nesta etapa.
+
+---
+
 ## 2026-10-27 - Planejamento da visualização de PDF e imagens (#18)
 
 **Fase:** Fase 5 — Organização e Integração
