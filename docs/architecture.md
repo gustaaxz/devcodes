@@ -60,11 +60,11 @@ devcodes/
 │   │   ├── auth/           # Formulários de login, registro, recuperação de senha
 │   │   ├── calendar/       # Grid do mês, painel do dia, modais de eventos
 │   │   ├── dashboard/      # Cards de resumo, contadores, atalhos rápidos
-│   │   ├── layout/         # Topbar, Sidebar recolhível, SearchBox, Modais de atalhos
+│   │   ├── layout/         # Topbar, NotificationCenter, Sidebar, SearchBox e modais
 │   │   ├── notes/          # NoteEditor, MarkdownPreview, NoteVersionsModal
 │   │   ├── programming-library/ # CodeViewer, UploadDropzone, FileViewerModal
-│   │   ├── settings/       # Preferências de perfil, tema, exportação de dados
-│   │   ├── tasks/          # TaskList, TaskCard, TaskModal, filtros de status
+│   │   ├── tasks/          # TaskList, TaskCard, TaskModal e configuração de lembretes
+│   │   ├── settings/       # Preferências, DataImportPanel e exportação de dados
 │   │   └── ui/             # Componentes base (Button, Modal, Input, Badge, Skeleton)
 │   ├── contexts/           # Estado global compartilhado via React Context
 │   │   ├── AuthContext.jsx         # Sessão ativa, login, logout, user
@@ -73,6 +73,7 @@ devcodes/
 │   ├── hooks/              # Custom hooks reativos
 │   │   ├── useTheme.js             # Gestão de dark/light mode persistido
 │   │   ├── useRealtime.js          # Inscrição em canais Supabase Realtime
+│   │   ├── useTaskReminders.js     # Verificação periódica de lembretes in-app
 │   │   └── useKeyboardShortcuts.js # Atalhos globais (Ctrl+K, etc.)
 │   ├── pages/              # Páginas e rotas da aplicação
 │   │   ├── DashboardPage.jsx
@@ -89,8 +90,10 @@ devcodes/
 │   │   ├── dashboard/      # dashboardService.js
 │   │   ├── export/         # exportService.js (JSON/CSV)
 │   │   ├── files/          # filesService.js (Storage + stored_files)
+│   │   ├── import/         # Validação de backup JSON/CSV e importação com RLS
 │   │   ├── notes/          # notesService.js, noteVersionsService.js
 │   │   ├── profile/        # profileService.js
+│   │   ├── reminders/      # reminderService.js
 │   │   ├── search/         # searchService.js (Busca global unificada)
 │   │   ├── supabase/       # client.js (instância singleton do createClient)
 │   │   └── tasks/          # tasksService.js
