@@ -8,7 +8,7 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída. A próxima é a **#18 — Tags e organização avançada**, incluindo ampliar os formatos de arquivo da Biblioteca de Código. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
+Fase 4 concluída. A próxima é a **#18 — Tags, organização e formatos de arquivo**. A ampliação inclui apresentações e planilhas Office/OpenDocument, imagens, código/configuração e dados; `.doc`/`.docx` já são aceitos. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
 
 ---
 
