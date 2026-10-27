@@ -44,7 +44,15 @@ Tarefas e pendências com prazos e status.
 - `status` (text, 'pending' | 'in_progress' | 'done', default 'pending')
 - `completed_at` (timestamptz)
 
-### 4. `events`
+### 4. `task_reminders` & `reminder_preferences`
+Lembretes in-app de tarefas, isolados por usuário e associados somente a tarefas próprias.
+- **`task_reminders`:** `id`, `user_id`, `task_id` (único por tarefa), `remind_at`, `offset_minutes`, `channel` (`in_app` no cliente atual) e `status` (`pending`, `notified`, `dismissed`, `snoozed`).
+- **`reminder_preferences`:** `user_id` (PK), `in_app_enabled`, `email_enabled` (reservado para futura integração), `default_offset_minutes`, `created_at` e `updated_at`.
+- RLS verifica o proprietário do lembrete e o proprietário da tarefa associada.
+- Uma trigger exclui lembretes quando a tarefa é concluída ou perde o prazo e recalcula o horário quando o prazo muda.
+- Migration local: `20261026130000_add_task_reminders.sql`; aplicação remota ainda pendente.
+
+### 5. `events`
 Eventos de calendário e reuniões agendadas.
 - `id` (uuid, PK)
 - `user_id` (uuid, ref `auth.users`)
@@ -57,7 +65,7 @@ Eventos de calendário e reuniões agendadas.
 - `status` (text, 'scheduled' | 'completed' | 'cancelled')
 - `reminder_at` (timestamptz)
 
-### 5. `notes` & `note_versions`
+### 6. `notes` & `note_versions`
 Notas técnicas em Markdown e histórico de versões.
 - **`notes`:**
   - `id` (uuid, PK)
@@ -75,7 +83,7 @@ Notas técnicas em Markdown e histórico de versões.
   - `version_number` (int)
   - `created_at` (timestamptz)
 
-### 6. `stored_files` & `programming_categories`
+### 7. `stored_files` & `programming_categories`
 Arquivos da biblioteca de códigos e categorização por linguagem/disciplina.
 - **`programming_categories`:**
   - `id` (uuid, PK)
@@ -89,7 +97,7 @@ Arquivos da biblioteca de códigos e categorização por linguagem/disciplina.
   - `file_name` (text), `file_path` (text caminho no storage)
   - `file_size` (bigint), `mime_type` (text), `language` (text)
 
-### 7. `tags` & `note_tags`
+### 8. `tags` & `note_tags`
 Sistema flexível de marcação de notas.
 - `tags`: `(id, user_id, name)` com unique `(user_id, name)`.
 - `note_tags`: tabela de junção `(note_id, tag_id)`.
