@@ -5,7 +5,10 @@ import TextAreaField from '../ui/TextAreaField.jsx'
 import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import Spinner from '../ui/Spinner.jsx'
-import { updateFileRecord } from '../../services/files/filesService.js'
+import TagInput from '../notes/TagInput.jsx'
+import { useLoad } from '../../hooks/useLoad.js'
+import { listTags } from '../../services/tags/tagService.js'
+import { setFileTags, updateFileRecord } from '../../services/files/filesService.js'
 import { friendlyError } from '../../utils/errors.js'
 import { getExtension, getFileType, validateRename } from '../../utils/files.js'
 
@@ -13,6 +16,8 @@ export default function FileEditModal({ file, categories, onClose, onSaved }) {
   const [name, setName] = useState(file.original_name)
   const [description, setDescription] = useState(file.description || '')
   const [categoryId, setCategoryId] = useState(file.category_id)
+  const [tagNames, setTagNames] = useState(() => (file.tags || []).map((tag) => tag.name))
+  const tags = useLoad(listTags, file.id)
   const [nameError, setNameError] = useState('')
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -28,13 +33,14 @@ export default function FileEditModal({ file, categories, onClose, onSaved }) {
     const type = getFileType(trimmed)
     setSubmitting(true)
     try {
-      const saved = await updateFileRecord(file.id, {
+      await updateFileRecord(file.id, {
         original_name: trimmed,
         extension: getExtension(trimmed),
         mime_type: type.mime,
         description: description.trim() || null,
         category_id: categoryId
       })
+      const saved = await setFileTags(file.id, tagNames)
       onSaved(saved)
     } catch (error) {
       setFormError(friendlyError(error, 'Não foi possível salvar as alterações.'))
@@ -64,6 +70,14 @@ export default function FileEditModal({ file, categories, onClose, onSaved }) {
           label="Descrição (opcional)"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
+        />
+        {tags.error && <Alert variant="error">{tags.error}</Alert>}
+        <TagInput
+          tags={tagNames}
+          suggestions={tags.data || []}
+          contextText={`${name} ${description}`}
+          onChange={setTagNames}
+          disabled={submitting}
         />
         <div className="modal__footer">
           <button type="button" className="button button--secondary" onClick={onClose} disabled={submitting}>
