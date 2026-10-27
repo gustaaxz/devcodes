@@ -8,7 +8,7 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída. A próxima é a **#18 — Tags, organização e formatos de arquivo**. A ampliação inclui apresentações e planilhas Office/OpenDocument, imagens, código/configuração e dados; `.doc`/`.docx` já são aceitos. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
+Fase 4 concluída. A próxima é a **#18 — Tags, organização e formatos de arquivo**. A ampliação inclui apresentações e planilhas Office/OpenDocument, imagens, código/configuração e dados; também prevê visualização interna de PDF e imagens (SVG, PNG, JPEG e outros formatos aprovados), com renderização segura. `.doc`/`.docx` já são aceitos e PDF é aceito sem preview atualmente. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
 
 ---
 
