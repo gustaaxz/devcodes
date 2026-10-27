@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Download, KeyRound, LogOut, Settings2 } from 'lucide-react'
 import CategoryManagerModal from '../../components/programming-library/CategoryManagerModal.jsx'
+import DataImportPanel from '../../components/settings/DataImportPanel.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
 import Spinner from '../../components/ui/Spinner.jsx'
@@ -11,7 +12,8 @@ import { useLoad } from '../../hooks/useLoad.js'
 import { useProfile } from '../../hooks/useProfile.js'
 import { listFiles } from '../../services/files/filesService.js'
 import { listProgrammingCategories } from '../../services/programming-categories/programmingCategoriesService.js'
-import { exportNotesAsCSV, exportNotesAsJSON_Download, exportTasksAsCSV, exportTasksAsJSON_Download, exportEventsAsCSV, exportEventsAsJSON_Download } from '../../services/export/exportService.js'
+import { getReminderPreferences, REMINDER_OFFSET_OPTIONS, saveReminderPreferences } from '../../services/reminders/reminderService.js'
+import { exportNotesAsCSV, exportNotesAsJSON_Download, exportTasksAsCSV, exportTasksAsJSON_Download, exportEventsAsCSV, exportEventsAsJSON_Download, exportFullBackupDownload } from '../../services/export/exportService.js'
 import { friendlyError } from '../../utils/errors.js'
 import './Settings.css'
 
@@ -76,6 +78,24 @@ export default function Settings() {
   const [savingName, setSavingName] = useState(false)
   const [notice, setNotice] = useState(null)
   const [managing, setManaging] = useState(false)
+  const [reminderPreferences, setReminderPreferences] = useState({
+    in_app_enabled: true,
+    email_enabled: false,
+    default_offset_minutes: 15
+  })
+  const [savingReminderPreferences, setSavingReminderPreferences] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getReminderPreferences(user.id)
+      .then((preferences) => {
+        if (active) setReminderPreferences(preferences)
+      })
+      .catch((error) => {
+        if (active) setNotice({ variant: 'error', text: friendlyError(error, 'Não foi possível carregar os lembretes.') })
+      })
+    return () => { active = false }
+  }, [user.id])
 
   async function savePreference(patch) {
     setNotice(null)
@@ -84,6 +104,20 @@ export default function Settings() {
       setNotice({ variant: 'success', text: 'Preferência salva.' })
     } catch (error) {
       setNotice({ variant: 'error', text: friendlyError(error, 'Não foi possível salvar a preferência.') })
+    }
+  }
+
+  async function saveReminderPreference(patch) {
+    setNotice(null)
+    setSavingReminderPreferences(true)
+    try {
+      const saved = await saveReminderPreferences(user.id, { ...reminderPreferences, ...patch })
+      setReminderPreferences(saved)
+      setNotice({ variant: 'success', text: 'Preferência de lembretes salva.' })
+    } catch (error) {
+      setNotice({ variant: 'error', text: friendlyError(error, 'Não foi possível salvar a preferência de lembretes.') })
+    } finally {
+      setSavingReminderPreferences(false)
     }
   }
 
@@ -155,6 +189,29 @@ export default function Settings() {
         </Row>
       </Section>
 
+      <Section title="Lembretes de tarefas" description="Receba avisos dentro do DevCodes para tarefas com prazo. Os lembretes são verificados enquanto o aplicativo está aberto.">
+        <Row label="Notificações no aplicativo" hint="Exibe um aviso na central quando o lembrete vence.">
+          <Segmented
+            label="Notificações no aplicativo"
+            value={String(reminderPreferences.in_app_enabled)}
+            options={[
+              { value: 'true', label: 'Ativadas' },
+              { value: 'false', label: 'Desativadas' }
+            ]}
+            onChange={(value) => saveReminderPreference({ in_app_enabled: value === 'true' })}
+          />
+        </Row>
+        <Row label="Antecedência padrão" hint="Usada ao ativar lembretes em novas tarefas.">
+          <SelectField
+            aria-label="Antecedência padrão dos lembretes"
+            options={REMINDER_OFFSET_OPTIONS}
+            value={String(reminderPreferences.default_offset_minutes)}
+            disabled={savingReminderPreferences}
+            onChange={(event) => saveReminderPreference({ default_offset_minutes: Number(event.target.value) })}
+          />
+        </Row>
+      </Section>
+
       <Section title="Biblioteca de Programação">
         <Row label="Exibição padrão" hint="Aplicada ao abrir a biblioteca.">
           <Segmented
@@ -193,6 +250,16 @@ export default function Settings() {
       </Section>
 
       <Section title="Exportar dados" description="Faça backup dos seus dados em CSV ou JSON.">
+        <Row label="Backup completo" hint="Um arquivo JSON portátil com anotações, tarefas, eventos, categorias e tags de anotações.">
+          <button
+            type="button"
+            className="button button--primary button--small"
+            onClick={() => exportFullBackupDownload().catch((error) => setNotice({ variant: 'error', text: friendlyError(error, 'Não foi possível exportar o backup.') }))}
+          >
+            <Download size={14} />
+            Exportar backup JSON
+          </button>
+        </Row>
         <Row label="Anotações">
           <div className="settings__export-buttons">
             <button
@@ -253,6 +320,10 @@ export default function Settings() {
             </button>
           </div>
         </Row>
+      </Section>
+
+      <Section title="Importar dados" description="Adicione dados de um backup DevCodes ou de arquivos CSV/JSON exportados pelo app.">
+        <DataImportPanel />
       </Section>
 
       <Section title="Conta">
