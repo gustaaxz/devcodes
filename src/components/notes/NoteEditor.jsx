@@ -282,8 +282,9 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
       </div>
 
       <TagInput
-        tags={note.tags.map((tag) => tag.name)}
+        tags={note.tags}
         suggestions={tagSuggestions}
+        contextText={`${draft.title} ${draft.content}`}
         onChange={handleTagsChange}
         disabled={busy}
       />
