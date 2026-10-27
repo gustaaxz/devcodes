@@ -47,9 +47,11 @@ Este documento define como a qualidade e o funcionamento contínuo do **DevCodes
 ### 3.2. Testes de Isolamento e Segurança (RLS)
 - Localizado em `supabase/tests/rls_isolation.sql`.
 - Executado dentro de uma transação SQL com rollback automático.
-- Garante que usuário A não consiga ler, atualizar ou deletar dados de usuário B nas tabelas `profiles`, `categories`, `tasks`, `events`, `notes`, `stored_files`, `note_versions`, `task_reminders` e `reminder_preferences`.
+- Garante que usuário A não consiga ler, atualizar ou deletar dados de usuário B nas tabelas privadas e associações, incluindo `task_tags`.
+- Confirma que uma tag órfã é removida após a exclusão de sua última associação e que tags favoritas permanecem disponíveis sem associações.
 - Verifica que um usuário não pode associar um lembrete à tarefa de outra pessoa.
 - Confirma que RLS está habilitado em `storage.objects` e que as quatro políticas de pasta existem. O teste não grava nem apaga linhas de Storage: esses objetos devem ser manipulados pela Storage API, e a validação runtime de arquivos deve usar essa API.
+- Para a integração Google/feed, execute `supabase/tests/google_calendar_rls.sql` depois da migration `20261027130000_calendar_integration.sql`; ele valida isolamento de configuração/logs/mapeamentos e bloqueio de acesso do cliente a credenciais, estados OAuth e metadados do feed.
 - **Critério de Aceite:** O script deve retornar `OK: todos os testes de isolamento passaram`.
 
 ### 3.3. Testes Manuais e de Interface (UI/UX)
