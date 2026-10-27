@@ -1,5 +1,6 @@
 import { setNoteTags } from '../notes/notesService.js'
 import { supabase } from '../supabase/client.js'
+import { setResourceTags } from '../tags/tagService.js'
 
 const BATCH_SIZE = 50
 const DATASETS = ['notes', 'tasks', 'events']
@@ -65,7 +66,8 @@ export async function importDataRecords(recordsByType, userId) {
     const records = recordsByType[type]
     for (let start = 0; start < records.length; start += BATCH_SIZE) {
       const batch = records.slice(start, start + BATCH_SIZE)
-      const { error } = await supabase.from(type).insert(batch.map((record) => toDatabaseRow(record, userId, categories)))
+      const rows = batch.map((record) => ({ ...toDatabaseRow(record, userId, categories), id: crypto.randomUUID() }))
+      const { error } = await supabase.from(type).insert(rows)
       if (error) {
         result.errors.push({
           dataset: type,
@@ -74,6 +76,17 @@ export async function importDataRecords(recordsByType, userId) {
         })
       } else {
         result.imported[type] += batch.length
+        if (type === 'tasks') {
+          for (let index = 0; index < batch.length; index += 1) {
+            if (batch[index].tags?.length) {
+              try {
+                await setResourceTags('task', rows[index].id, batch[index].tags)
+              } catch (tagError) {
+                result.warnings.push({ dataset: type, row: start + index + 1, message: `Tarefa importada sem tags: ${tagError.message}` })
+              }
+            }
+          }
+        }
       }
     }
   }
