@@ -4,6 +4,9 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 
 ## [Unreleased] - Fase 4 Concluída
 
+### Planned
+- **Fase 5 (#18):** adicionar ao escopo da Biblioteca de Código a visualização interna de PDFs e imagens (SVG, PNG, JPEG e outros formatos aprovados), com validação e renderização segura.
+
 ### Added
 - **Importação e backup de dados (#17)**
   - Backup JSON completo e portátil de notas, tarefas, eventos, categorias e tags de notas
