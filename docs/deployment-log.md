@@ -13,7 +13,7 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 ### [2026-10-27] - Fase 5 iniciada: Biblioteca de Código (#18, parcial)
 - **O que foi feito:** Expansão do catálogo de arquivos e preview interno de PDF e imagens com validação de conteúdo.
 - **Segurança:** SVGs são exibidos em contexto de imagem; uploads validam assinaturas e rejeitam SVG com scripts, atributos de evento e referências externas. Arquivos continuam no bucket privado acessados por URL assinada.
-- **Validação local:** 55 testes unitários passaram; lint concluiu sem erros e build aprovado com aviso de bundle existente acima de 500 kB.
+- **Validação local:** 56 testes unitários passaram; lint concluiu sem erros e build aprovado com aviso de bundle existente acima de 500 kB.
 - **Estado:** Entrega parcial local; sem alteração de schema ou deploy remoto. Tags universais seguem pendentes para concluir #18.
 
 ### [2026-10-27] - Planejamento: preview de PDF e imagens na melhoria #18
