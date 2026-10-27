@@ -4,7 +4,7 @@
 
 Este documento organiza as fases de desenvolvimento do DevCodes, conectando o roadmap de funcionalidades ao estado real de entrega.
 
-**Status Geral:** 15/26 melhorias implementadas (57%)  
+**Status Geral:** 18/26 melhorias implementadas (69%). A Fase 4 está concluída; o teste RLS da #15 passou no Supabase.  
 **Referência Detalhada:** [PENDING_FEATURES.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/PENDING_FEATURES.md)
 
 ---
@@ -30,12 +30,12 @@ Este documento organiza as fases de desenvolvimento do DevCodes, conectando o ro
 ---
 
 ### Fase 4 — Colaboração e Produtividade Avançada
-**Status:** 🟡 Em andamento (3/5 concluídas)
+**Status:** ✅ Concluída (5/5 entregues)
 - [x] #16: Sincronização em tempo real entre abas e dispositivos (Supabase Realtime)
 - [x] #14: Histórico de versões de notas (entregue)
 - [x] #13: Compartilhamento de notas e eventos (links públicos e permissões)
-- [ ] **#15:** Notificações e lembretes de tarefas in-app
-- [ ] **#17:** Exportação e importação de dados em massa (JSON / Markdown)
+- [x] **#15:** Notificações e lembretes de tarefas in-app (RLS entre usuários validado no SQL Editor)
+- [x] **#17:** Exportação e importação de dados (backup JSON, CSV/JSON por recurso)
 
 ---
 
