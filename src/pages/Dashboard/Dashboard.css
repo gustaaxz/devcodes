@@ -199,3 +199,99 @@
     align-items: flex-start;
   }
 }
+
+.dashboard {
+  gap: clamp(var(--space-5), 2.2vw, var(--space-8));
+}
+
+.dashboard__header h2 {
+  font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+  letter-spacing: -0.045em;
+}
+
+.dashboard__stats {
+  gap: var(--space-4);
+}
+
+.dashboard__stat {
+  position: relative;
+  min-height: 156px;
+  padding: var(--space-6);
+  overflow: hidden;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.dashboard__stat::after {
+  position: absolute;
+  z-index: 0;
+  right: -28px;
+  bottom: -50px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  content: '';
+  pointer-events: none;
+}
+
+.dashboard__stat > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard__stat:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.dashboard__stat strong {
+  font-size: clamp(1.75rem, 2.3vw, 2.15rem);
+  letter-spacing: -0.05em;
+}
+
+.dashboard__stat > span:last-child,
+.dashboard__row-main span {
+  font-size: 0.8125rem;
+}
+
+.dashboard__stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--color-accent) 20%, var(--color-surface-raised)), var(--color-accent-soft));
+}
+
+.dashboard__section {
+  gap: var(--space-3);
+  padding: var(--space-6);
+}
+
+.dashboard__section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.dashboard__row {
+  min-height: 56px;
+  border: 1px solid transparent;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.dashboard__row:hover {
+  border-color: var(--color-border);
+}
+
+.dashboard__shortcut {
+  min-height: 52px;
+  height: auto;
+  border-radius: 14px;
+  background: var(--color-surface-raised);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.dashboard__shortcut:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
