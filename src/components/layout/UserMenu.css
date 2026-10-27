@@ -60,3 +60,21 @@
 .user-menu__item:hover {
   background: var(--color-surface-hover);
 }
+
+.user-menu__panel {
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+.user-menu__item {
+  min-height: 42px;
+  height: auto;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.user-menu__item:hover {
+  color: var(--color-accent);
+}
