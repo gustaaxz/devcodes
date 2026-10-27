@@ -20,3 +20,23 @@
     padding: var(--space-4);
   }
 }
+
+.app-layout {
+  min-height: 100dvh;
+}
+
+.app-layout__main {
+  min-height: 100dvh;
+}
+
+.app-layout__content {
+  width: min(100%, var(--content-max-width));
+  margin-inline: auto;
+  padding: clamp(var(--space-6), 3vw, var(--space-10)) clamp(var(--space-5), 3vw, var(--space-10));
+}
+
+@media (max-width: 767px) {
+  .app-layout__content {
+    padding: var(--space-5) var(--space-4) var(--space-8);
+  }
+}
