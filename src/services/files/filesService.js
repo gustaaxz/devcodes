@@ -21,7 +21,7 @@ export async function uploadFile({ userId, categoryId, file }) {
   if (message) throw new ValidationError(message)
 
   const extension = getExtension(file.name)
-  const type = getFileType(extension)
+  const type = getFileType(file.name)
   const id = crypto.randomUUID()
   const storageKey = `${userId}/${id}/${sanitizeFileName(file.name)}`
 
@@ -89,6 +89,12 @@ export async function readFileText(record) {
   const { data, error } = await supabase.storage.from(FILES_BUCKET).download(record.storage_key)
   if (error) throw error
   return data.text()
+}
+
+export async function createPreviewUrl(record) {
+  const { data, error } = await supabase.storage.from(FILES_BUCKET).createSignedUrl(record.storage_key, 60)
+  if (error) throw error
+  return data.signedUrl
 }
 
 export async function getDownloadUrl(record) {
