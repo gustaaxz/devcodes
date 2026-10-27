@@ -9,7 +9,7 @@ Registro técnico de todas as implementações, decisões e outcomes.
 **Fase:** Fase 5 — Organização e Integração
 **Status:** Em andamento; entrega parcial da melhoria #18
 **Implementado:** Catálogo de extensões ampliado para formatos Office, OpenDocument, RTF, linguagens/configurações selecionadas, dotfiles conhecidos e imagens PNG/JPEG/WebP/SVG/GIF/BMP/AVIF. Preview de PDF e imagens através de URL assinada do Supabase Storage. Validação de assinaturas para formatos binários e rejeição de SVG com scripts, handlers de evento ou referências externas.
-**Validação:** `npm test` — 55 testes aprovados; `npm run lint` — sem erros, avisos preexistentes e um aviso do visualizador corrigido; `npm run build` — aprovado, com aviso conhecido de bundle acima de 500 kB.
+**Validação:** `npm test` — 56 testes aprovados; `npm run lint` — sem erros, avisos preexistentes; `npm run build` — aprovado, com aviso conhecido de bundle acima de 500 kB. Revisão adicional aumentou a validade da URL assinada para 10 minutos, restringiu referências SVG a fragmentos locais e cobriu nomes especiais e bloqueio de `.env`.
 **Limites desta entrega:** Tags universais, UI de gerenciamento/filtros e novas associações para tarefas ainda não foram implementadas. Não houve mudança de schema nem aplicação no Supabase nesta etapa.
 
 ---
