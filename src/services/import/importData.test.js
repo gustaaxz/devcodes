@@ -16,8 +16,8 @@ describe('parseImportData', () => {
           tags: ['React'],
           created_at: '2026-10-27T10:00:00.000Z'
         }],
-        tasks: [{ title: 'Revisar', status: 'in_progress', priority: 'high', due_at: '2026-10-28T12:00:00.000Z' }],
-        events: [{ title: 'Aula', start_at: '2026-10-29T10:00:00.000Z', end_at: '2026-10-29T11:00:00.000Z' }]
+        tasks: [{ title: 'Revisar', status: 'in_progress', priority: 'high', due_at: '2026-10-28T12:00:00.000Z', tags: ['Dev', 'Hoje'] }],
+        events: [{ title: 'Aula', start_at: '2026-10-29T10:00:00.000Z', end_at: '2026-10-29T11:00:00.000Z', ical_uid: 'aula@example.test' }]
       }
     }
 
@@ -29,6 +29,8 @@ describe('parseImportData', () => {
     expect(result.records.notes[0]).not.toHaveProperty('id')
     expect(result.records.notes[0]).not.toHaveProperty('user_id')
     expect(result.records.tasks[0].status).toBe('in_progress')
+    expect(result.records.tasks[0].tags).toEqual(['Dev', 'Hoje'])
+    expect(result.records.events[0].ical_uid).toBe('aula@example.test')
   })
 
   it('imports the existing task CSV format and parses escaped quotes and commas', () => {
