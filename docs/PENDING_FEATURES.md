@@ -57,7 +57,8 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 - Serviço `tagService.js`: CRUD de tags, associação a recursos, `searchTags()`, `getTopTags()`, `mergeTags()`
 - Ampliar os tipos aceitos pela Biblioteca de Código com catálogo centralizado, validação de MIME/assinatura, testes e suporte seguro para preview ou download:
   - Documentos e apresentações: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf`; `.doc` e `.docx` já são aceitos atualmente
-  - Imagens e recursos visuais: `.png`, `.jpg`, `.jpeg`, `.webp` e `.svg`
+  - Visualização dentro do sistema para PDFs (`.pdf`, já aceitos, mas hoje sem preview) e imagens `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp` e outros formatos de imagem adicionados ao catálogo
+  - Renderização segura de SVG e demais arquivos visuais, com validação de conteúdo e opção de baixar o original; formatos sem preview continuam disponíveis para download
   - Código, configuração e dados: `.vue`, `.svelte`, `.swift`, `.dart`, `.ipynb`, `.toml`, `.ini`, `.conf`, `.tf`, `.hcl`, `.gradle`, `.properties`, `.csv`, `.log`, `.rst` e `.adoc`
   - Arquivos de projeto sem extensão convencional: `Dockerfile`, `.gitignore`, `.dockerignore`, `.editorconfig` e `.env.example`; arquivos `.env` com possíveis segredos ficam fora da lista
 
