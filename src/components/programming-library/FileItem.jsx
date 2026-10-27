@@ -1,4 +1,4 @@
-import { Download, Eye, File, FileArchive, FileCode2, FileText, Pencil, Star, Trash2 } from 'lucide-react'
+import { Download, Eye, File, FileArchive, FileCode2, FileText, Image as ImageIcon, Pencil, Star, Trash2 } from 'lucide-react'
 import { formatShortDate } from '../../utils/dates.js'
 import { formatBytes, getFileType } from '../../utils/files.js'
 import './FileItem.css'
@@ -7,6 +7,7 @@ export function FileTypeIcon({ file, size = 22 }) {
   const type = getFileType(file.extension || file.original_name)
   const props = { size, strokeWidth: 1.75 }
   if (!type) return <File {...props} />
+  if (type.kind === 'image') return <ImageIcon {...props} />
   if (type.kind === 'text') return type.language ? <FileCode2 {...props} /> : <FileText {...props} />
   if (file.extension === 'zip') return <FileArchive {...props} />
   return <FileText {...props} />
