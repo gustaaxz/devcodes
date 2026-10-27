@@ -108,6 +108,7 @@ function normalizeRecord(type, row) {
     record.priority = priority
     record.due_at = optionalTimestamp(row.due_at, 'Prazo')
     record.completed_at = optionalTimestamp(row.completed_at, 'Data de conclusão')
+    record.tags = optionalTags(row.tags)
     return record
   }
 
@@ -125,6 +126,8 @@ function normalizeRecord(type, row) {
       throw new Error('O término não pode ocorrer antes do início.')
     }
     record.reminder_at = optionalTimestamp(row.reminder_at, 'Lembrete')
+    record.ical_uid = optionalText(row.ical_uid, 255, 'UID iCalendar')
+    if (record.ical_uid && /[\r\n]/.test(record.ical_uid)) throw new Error('UID iCalendar invÃ¡lido.')
     return record
   }
 
