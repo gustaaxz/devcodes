@@ -25,7 +25,7 @@ export async function exportTasksAsJSON() {
   const userId = await getExportUserId()
   const { data, error } = await supabase
     .from('tasks')
-    .select('*, categories(name)')
+    .select('*, categories(name), task_tags(tags(name))')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
@@ -69,7 +69,8 @@ function serializeTask(task) {
     status: task.status,
     completed_at: task.completed_at,
     created_at: task.created_at,
-    updated_at: task.updated_at
+    updated_at: task.updated_at,
+    tags: task.task_tags?.map((entry) => entry.tags?.name).filter(Boolean) ?? []
   }
 }
 
@@ -83,6 +84,7 @@ function serializeEvent(event) {
     priority: event.priority,
     status: event.status,
     reminder_at: event.reminder_at,
+    ical_uid: event.ical_uid,
     created_at: event.created_at,
     updated_at: event.updated_at
   }
@@ -96,7 +98,7 @@ function convertToCSV(data, fields) {
     fields
       .map((field) => {
         const value = field.includes('.') ? field.split('.').reduce((obj, key) => obj?.[key], item) : item[field]
-        const strValue = value === null || value === undefined ? '' : String(value)
+        const strValue = value === null || value === undefined ? '' : Array.isArray(value) ? value.join('|') : String(value)
         return /[",\r\n]/.test(strValue) ? `"${strValue.replace(/"/g, '""')}"` : strValue
       })
       .join(',')
@@ -119,7 +121,7 @@ export function downloadFile(content, filename, type = 'text/plain') {
 
 export async function exportNotesAsCSV() {
   const notes = await exportNotesAsJSON()
-  const csv = convertToCSV(notes, ['title', 'content', 'created_at', 'updated_at'])
+  const csv = convertToCSV(notes, ['title', 'content', 'tags', 'created_at', 'updated_at'])
   downloadFile(csv, `notes-${Date.now()}.csv`, 'text/csv')
 }
 
@@ -131,7 +133,7 @@ export async function exportNotesAsJSON_Download() {
 
 export async function exportTasksAsCSV() {
   const tasks = await exportTasksAsJSON()
-  const csv = convertToCSV(tasks, ['title', 'status', 'priority', 'due_at', 'created_at'])
+  const csv = convertToCSV(tasks, ['title', 'status', 'priority', 'due_at', 'tags', 'created_at'])
   downloadFile(csv, `tasks-${Date.now()}.csv`, 'text/csv')
 }
 
@@ -157,7 +159,7 @@ export async function exportFullBackup() {
   const userId = await getExportUserId()
   const [notes, tasks, events] = await Promise.all([
     supabase.from('notes').select('*, categories(name), note_tags(tags(name))').eq('user_id', userId).order('created_at', { ascending: false }),
-    supabase.from('tasks').select('*, categories(name)').eq('user_id', userId).order('created_at', { ascending: false }),
+    supabase.from('tasks').select('*, categories(name), task_tags(tags(name))').eq('user_id', userId).order('created_at', { ascending: false }),
     supabase.from('events').select('*, categories(name)').eq('user_id', userId).order('start_at', { ascending: false })
   ])
 
