@@ -71,3 +71,29 @@
   background: color-mix(in srgb, var(--tag-color, var(--color-accent)) 14%, var(--color-bg));
   color: var(--color-text);
 }
+
+.note-list__item {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.note-list__item:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.note-list__item--active {
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.note-list__snippet,
+.note-list__meta {
+  font-size: 0.8125rem;
+}
+
+.note-list__tag {
+  padding: 2px var(--space-2);
+  font-size: 0.75rem;
+}
