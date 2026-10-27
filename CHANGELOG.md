@@ -5,7 +5,20 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 ## [Unreleased] - Fase 4 Concluída
 
 ### Planned
-- **Fase 5 (#18):** adicionar ao escopo da Biblioteca de Código a visualização interna de PDFs e imagens (SVG, PNG, JPEG e outros formatos aprovados), com validação e renderização segura.
+- **Fase 5:** continuar com #20 e #21 após a validação remota de #18 e configuração/deploy de #19.
+
+### Fase 5 (#18) — entrega local em andamento
+- Conectadas tags coloridas a notas, tarefas e arquivos, com gerenciamento, favoritos, filtros por recurso, busca e mesclagem em `/tags`.
+- Adicionadas sugestões de tags existentes com base no título e conteúdo dos recursos e limpeza automática de tags órfãs, preservando tags favoritas.
+- Migration adiciona `task_tags`, cor/favorito, políticas RLS e triggers de limpeza; o usuário confirmou a aplicação remota, com teste RLS atualizado pendente.
+- Exportações e importações de notas/tarefas preservam tags.
+- Catálogo da Biblioteca ampliado e preview privado de PDF/imagens implementado com validação de conteúdo e tratamento seguro de SVG.
+
+### Fase 5 (#19) — implementação local em andamento
+- Importação de `.ics` com prévia, fuso `TZID`, duração, deduplicação por UID e exportação do calendário.
+- Feed iCalendar protegido por token aleatório com hash persistido, confirmação de compartilhamento, cópia do link e revogação/rotação.
+- Integração Google via Edge Functions com OAuth state/PKCE, refresh token criptografado no servidor, escolha de calendário, sync manual bidirecional, conflito DevCodes-primeiro, histórico e badge.
+- Sync automático via Realtime enquanto o app estiver aberto e online. Migration e teste RLS confirmados pelo usuário; secrets, deploy das funções e OAuth Google ainda dependem da configuração externa.
 
 - **Fase 5 iniciada — Biblioteca de Código (#18, entrega parcial):** ampliado o catálogo para documentos Office/OpenDocument/RTF, formatos de código e configuração, dotfiles de projeto selecionados e imagens PNG, JPEG, WebP, SVG, GIF, BMP e AVIF.
   - Adicionada validação de assinatura/conteúdo para imagens, PDFs, arquivos Office e notebooks Jupyter; SVGs com scripts, eventos e referências externas são rejeitados.
