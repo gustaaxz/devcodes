@@ -51,6 +51,12 @@ As migrations em `supabase/migrations` criam as tabelas, os índices, as políti
 | 3 | `20261022120200_storage.sql` | Bucket privado e políticas do Storage |
 | 4 | `20261022130000_defaults_and_academic_categories.sql` | `user_id` automático e categorias acadêmicas padrão |
 | 5 | `20261023120000_profile_preferences.sql` | Preferências do usuário |
+| 6 | `20261023130000_add_username_to_profiles.sql` | Username e nome completo do perfil |
+| 7 | `20261023150000_add_note_versions.sql` | Histórico de versões de notas |
+| 8 | `20261026120000_add_sharing.sql` | Compartilhamento de notas e eventos |
+| 9 | `20261026130000_add_task_reminders.sql` | Lembretes de tarefas e RLS |
+| 10 | `20261027100000_restore_signup_defaults.sql` | Restaura categorias padrão no cadastro e corrige contas sem categorias |
+| 11 | `20261027110000_align_profile_schema.sql` | Alinha projetos que ainda usam `display_name` no perfil |
 
 **Opção A: Supabase CLI**
 
@@ -81,7 +87,7 @@ Em **Storage**, confirme que o bucket `programming-files` existe e está marcado
 
 ### 3.6 Verificar o isolamento entre usuários
 
-Execute o arquivo `supabase/tests/rls_isolation.sql` no **SQL Editor**, de preferência em um projeto de desenvolvimento. O script cria dois usuários de teste dentro de uma transação, verifica as políticas e desfaz tudo ao final. Se a última consulta retornar `OK: todos os testes de isolamento passaram`, as políticas estão corretas. Qualquer falha interrompe o script com uma mensagem iniciada por `FALHA`.
+Execute o arquivo `supabase/tests/rls_isolation.sql` no **SQL Editor**, de preferência em um projeto de desenvolvimento. O script cria dois usuários de teste dentro de uma transação, verifica as políticas das tabelas da aplicação e desfaz tudo ao final. Para Storage, ele verifica RLS e a presença das políticas; operações em arquivos devem ser testadas pela Storage API. Se a última consulta retornar `OK: todos os testes de isolamento passaram`, as verificações SQL foram aprovadas. Qualquer falha interrompe o script com uma mensagem iniciada por `FALHA`.
 
 ## 4. Publicar no GitHub
 
