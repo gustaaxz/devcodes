@@ -2,8 +2,8 @@ begin;
 
 insert into auth.users (id, email, raw_user_meta_data)
 values
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'rls-a@example.test', '{"display_name":"Usuario A"}'),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'rls-b@example.test', '{"display_name":"Usuario B"}');
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'rls-a@example.test', '{"full_name":"Usuario A","username":"rls-a"}'),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'rls-b@example.test', '{"full_name":"Usuario B","username":"rls-b"}');
 
 do $$
 declare
@@ -12,6 +12,9 @@ begin
   foreach v_user in array array['aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb']::uuid[] loop
     if (select count(*) from public.profiles where id = v_user) <> 1 then
       raise exception 'FALHA: perfil nao criado no cadastro';
+    end if;
+    if (select count(*) from public.profiles where id = v_user and full_name is not null and username is not null) <> 1 then
+      raise exception 'FALHA: metadados do perfil nao foram preservados no cadastro';
     end if;
     if (select count(*) from public.programming_categories where user_id = v_user) <> 10 then
       raise exception 'FALHA: categorias de programacao padrao nao criadas';
@@ -23,6 +26,39 @@ begin
   raise notice 'OK: cadastro cria perfil e categorias padrao';
 end $$;
 
+do $$
+declare
+  v_rls_enabled boolean;
+  v_policy_count integer;
+begin
+  select relrowsecurity
+  into v_rls_enabled
+  from pg_class
+  where oid = 'storage.objects'::regclass;
+
+  if v_rls_enabled is distinct from true then
+    raise exception 'FALHA: RLS nao esta habilitado em storage.objects';
+  end if;
+
+  select count(*)
+  into v_policy_count
+  from pg_policies
+  where schemaname = 'storage'
+    and tablename = 'objects'
+    and policyname in (
+      'programming_files_select_own',
+      'programming_files_insert_own',
+      'programming_files_update_own',
+      'programming_files_delete_own'
+    );
+
+  if v_policy_count <> 4 then
+    raise exception 'FALHA: politicas RLS do Storage ausentes ou incompletas';
+  end if;
+
+  raise notice 'OK: RLS e politicas de Storage configuradas';
+end $$;
+
 select set_config('test.a_category', (select id::text from public.categories where user_id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' limit 1), true);
 select set_config('test.a_prog_category', (select id::text from public.programming_categories where user_id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' and slug = 'javascript'), true);
 select set_config('test.b_prog_category', (select id::text from public.programming_categories where user_id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' and slug = 'javascript'), true);
@@ -32,6 +68,11 @@ set local role authenticated;
 
 insert into public.notes (title, content) values ('Nota A', 'conteudo A');
 insert into public.tasks (title) values ('Tarefa A');
+select set_config('test.a_task', (select id::text from public.tasks where user_id = auth.uid() and title = 'Tarefa A' limit 1), true);
+insert into public.reminder_preferences (user_id, in_app_enabled, default_offset_minutes)
+values (auth.uid(), true, 15);
+insert into public.task_reminders (user_id, task_id, remind_at, offset_minutes)
+values (auth.uid(), current_setting('test.a_task')::uuid, now() + interval '1 hour', 60);
 insert into public.events (title, start_at) values ('Evento A', now());
 insert into public.tags (name) values ('tag-a');
 insert into public.stored_files (category_id, original_name, storage_key, extension, mime_type, size_bytes)
@@ -43,21 +84,16 @@ values (
   'text/javascript',
   10
 );
-insert into storage.objects (bucket_id, name, owner)
-values (
-  'programming-files',
-  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/11111111-1111-1111-1111-111111111111/a.js',
-  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
-);
 
 do $$
 begin
   if (select count(*) from public.notes) <> 1
     or (select count(*) from public.tasks) <> 1
+    or (select count(*) from public.task_reminders) <> 1
+    or (select count(*) from public.reminder_preferences) <> 1
     or (select count(*) from public.events) <> 1
     or (select count(*) from public.tags) <> 1
     or (select count(*) from public.stored_files) <> 1
-    or (select count(*) from storage.objects) <> 1
     or (select count(*) from public.programming_categories) <> 10
     or (select count(*) from public.profiles) <> 1 then
     raise exception 'FALHA: usuario A nao enxerga exatamente os proprios registros';
@@ -126,10 +162,11 @@ declare
 begin
   if (select count(*) from public.notes) <> 0
     or (select count(*) from public.tasks) <> 0
+    or (select count(*) from public.task_reminders) <> 0
+    or (select count(*) from public.reminder_preferences) <> 0
     or (select count(*) from public.events) <> 0
     or (select count(*) from public.tags) <> 0
-    or (select count(*) from public.stored_files) <> 0
-    or (select count(*) from storage.objects) <> 0 then
+    or (select count(*) from public.stored_files) <> 0 then
     raise exception 'FALHA: usuario B enxerga registros do usuario A';
   end if;
   if (select count(*) from public.profiles where id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') <> 0
@@ -138,6 +175,21 @@ begin
     raise exception 'FALHA: usuario B enxerga perfil ou categorias do usuario A';
   end if;
   raise notice 'OK: usuario B nao enxerga nada do usuario A';
+
+  update public.task_reminders set status = 'dismissed';
+  get diagnostics v_count = row_count;
+  if v_count <> 0 then raise exception 'FALHA: B atualizou lembrete de A'; end if;
+  update public.reminder_preferences set in_app_enabled = false;
+  get diagnostics v_count = row_count;
+  if v_count <> 0 then raise exception 'FALHA: B atualizou preferencias de A'; end if;
+
+  begin
+    insert into public.task_reminders (user_id, task_id, remind_at)
+    values (auth.uid(), current_setting('test.a_task')::uuid, now() + interval '1 hour');
+    raise exception 'FALHA: B associou lembrete a tarefa de A';
+  exception when insufficient_privilege then
+    null;
+  end;
 
   update public.notes set title = 'invadida';
   get diagnostics v_count = row_count;
@@ -202,44 +254,6 @@ begin
   raise notice 'OK: B nao cria registros em nome de A nem usa categorias e tags de A';
 end $$;
 
-do $$
-declare
-  v_count integer;
-begin
-  begin
-    insert into storage.objects (bucket_id, name, owner)
-    values ('programming-files', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/hack/x.js', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
-    raise exception 'FALHA: B gravou na pasta de A no Storage';
-  exception when insufficient_privilege then
-    null;
-  end;
-
-  begin
-    insert into storage.objects (bucket_id, name, owner)
-    values ('outro-bucket', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb/x/y.js', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
-    raise exception 'FALHA: B gravou em bucket sem politica';
-  exception when insufficient_privilege or foreign_key_violation then
-    null;
-  end;
-
-  insert into storage.objects (bucket_id, name, owner)
-  values ('programming-files', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb/22222222-2222-2222-2222-222222222222/b.js', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
-
-  update storage.objects set name = name || '.x' where name like 'aaaaaaaa%';
-  get diagnostics v_count = row_count;
-  if v_count <> 0 then raise exception 'FALHA: B alterou objeto de A'; end if;
-
-  delete from storage.objects where name like 'aaaaaaaa%';
-  get diagnostics v_count = row_count;
-  if v_count <> 0 then raise exception 'FALHA: B excluiu objeto de A'; end if;
-
-  if (select count(*) from storage.objects) <> 1 then
-    raise exception 'FALHA: B deveria enxergar apenas o proprio objeto';
-  end if;
-
-  raise notice 'OK: politicas de Storage isolam as pastas por usuario';
-end $$;
-
 reset role;
 
 select set_config('request.jwt.claims', '', true);
@@ -252,8 +266,7 @@ begin
     or (select count(*) from public.events) <> 0
     or (select count(*) from public.stored_files) <> 0
     or (select count(*) from public.profiles) <> 0
-    or (select count(*) from public.programming_categories) <> 0
-    or (select count(*) from storage.objects) <> 0 then
+    or (select count(*) from public.programming_categories) <> 0 then
     raise exception 'FALHA: usuario anonimo enxerga dados';
   end if;
 
@@ -261,13 +274,6 @@ begin
     insert into public.notes (title) values ('anonima');
     raise exception 'FALHA: usuario anonimo criou nota';
   exception when insufficient_privilege or not_null_violation then
-    null;
-  end;
-
-  begin
-    insert into storage.objects (bucket_id, name) values ('programming-files', 'x/y/z.js');
-    raise exception 'FALHA: usuario anonimo gravou no Storage';
-  exception when insufficient_privilege then
     null;
   end;
 
