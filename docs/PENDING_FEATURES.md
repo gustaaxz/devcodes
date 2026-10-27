@@ -1,7 +1,7 @@
 # Features Pendentes - DevCodes
 
-**Última atualização:** 23 de outubro de 2026  
-**Progresso:** 15/26 features implementadas (57%)
+**Última atualização:** 27 de outubro de 2026  
+**Progresso:** 18/26 features implementadas (69%)
 
 ---
 
@@ -10,70 +10,32 @@
 | Fase | Status | Pendentes |
 |------|--------|-----------|
 | Fase 1–3 | ✅ Completas | — |
-| Fase 4 | 🟡 2/5 feitas | #13, #15, #17 |
+| Fase 4 | ✅ 5/5 feitas | — |
 | Fase 5 | ⏳ 0/4 feitas | #18, #19, #20, #21 |
 | Fase 6 | ⏳ 0/5 feitas | #22, #23, #24, #25, #26 |
 
-**Total pendente: 12 features**
+**Total pendente: 9 itens conforme as fases abaixo**
 
 ---
 
-## Fase 4 — Pendentes (3 restantes)
+## Fase 4 — Concluída (5 features)
 
-### #13: Compartilhamento de Notas e Eventos
+### #15: Notificações e Lembretes de Tarefas — Concluída
 **Prioridade:** 🔴 Alta
 
-Permitir compartilhamento de notas e eventos entre usuários, com links públicos e controle de permissões.
+Sistema de lembretes in-app para tarefas próximas do vencimento. O fluxo atual é verificado enquanto o app está aberto; envio por e-mail depende de uma futura integração de servidor.
 
 **Escopo:**
-- Tabelas `note_shares`, `event_shares` e `share_access_logs` para gerenciar compartilhamentos
-- RLS: usuário compartilha apenas recursos próprios; links públicos acessíveis por qualquer um; expiração automática
-- **ShareModal** em notas e eventos com abas "Usuários" e "Link Público"
-  - Campo de email para buscar usuários
-  - Controle de permissões: Visualizar / Comentar / Editar
-  - Data de expiração opcional
-  - Lista de quem tem acesso com opção de remover
-- **Página pública** (`/shared/:share_token`): exibição read-only com info do autor e botão "Copiar para Minha Biblioteca"
-- Serviço `shareService.js`: `shareWithUser()`, `generatePublicLink()`, `revokeShare()`, `listShares()`, `getSharedWithMe()`
-- Badge "Compartilhado" visível nas listas de notas e eventos
-- Notificação ao compartilhar com outro usuário
-
----
-
-### #15: Notificações e Lembretes de Tarefas
-**Prioridade:** 🔴 Alta
-
-Sistema de lembretes para tarefas próximas do vencimento, com notificações in-app e por email.
-
-**Escopo:**
-- Tabelas `reminders` e `reminder_preferences`
+- Tabelas `task_reminders` e `reminder_preferences` confirmadas na API remota; teste `supabase/tests/rls_isolation.sql` aprovado no SQL Editor com o resultado final `OK: todos os testes de isolamento passaram`
 - Offsets configuráveis: 5 min, 15 min, 1h, 1 dia antes (ou custom)
-- Tipos de lembrete: in-app, email ou ambos
+- Canal in-app implementado; email reservado para futura integração de servidor
 - **NotificationCenter** no topbar: ícone de sino com contador, histórico de notificações
 - **ReminderToast**: toast no canto superior direito com ações (Descartar, Adiar, Marcar como Concluído)
 - **ReminderModal** no TaskModal para configurar lembretes por tarefa
 - Preferências em Settings: habilitar/desabilitar in-app e email, offset padrão
-- **Edge Function** para envio de emails com template HTML (link direto para tarefa, opção "não lembrar mais")
+- Envio por e-mail via Edge Function permanece planejado para uma integração futura; a entrega atual cobre notificações in-app
 - Hook `useReminders` para verificar lembretes periodicamente via realtime subscriptions
 - Badge nas tarefas indicando lembrete ativo (ex: "🔔 1h antes")
-
----
-
-### #17: Upload em Lote de Arquivos
-**Prioridade:** 🟡 Média
-
-Upload de múltiplos arquivos de código na Programming Library com fila gerenciada e progresso visual.
-
-**Escopo:**
-- **UploadDropzone** refatorado para aceitar múltiplos arquivos via drag-and-drop e `<input multiple>`
-- **Fila de upload** com paralelismo configurável (1–5 simultâneos, padrão 3)
-  - Pausar/retomar/cancelar individual ou em lote
-  - Recuperação de falha e retry
-- **UploadProgressBar** por arquivo: percentual, velocidade, tempo restante, status (loading/sucesso/erro)
-- **UploadQueueModal**: resumo X/Y concluídos, histórico recente
-- Validações: extensões permitidas (`.js`, `.py`, `.java`, `.ts`, `.tsx`, etc.), máx 10MB/arquivo, máx 100MB/batch, nomes duplicados, sanitização
-- Persistência da fila em localStorage para recuperar uploads interrompidos
-- Serviço `uploadService.js`: `uploadBatch()`, `validateFile()`, `retryFailed()`, `calculateChecksums()`
 
 ---
 
@@ -241,7 +203,7 @@ Múltiplos workspaces isolados por usuário com roles de permissão e colaboraç
 
 ## Ordem Sugerida de Implementação
 
-1. **Fase 4**: #13 Compartilhamento → #15 Lembretes → #17 Upload em Lote
+1. **Fase 4**: #13 Compartilhamento → #15 Lembretes → #17 Exportação e Importação de Dados
 2. **Fase 5**: #18 Tags → #20 Analytics → #21 Backup → #19 Google Calendar
 3. **Fase 6**: #23 Offline → #22 Atalhos → #24 Slack → #25 API → #26 Workspaces
 
