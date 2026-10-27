@@ -148,6 +148,22 @@
   margin-left: auto;
 }
 
+.notification-center__panel,
+.reminder-toast {
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+.notification-center__item {
+  padding-block: var(--space-4);
+}
+
+.notification-center__item-content span,
+.notification-center__item-content a {
+  font-size: 0.8125rem;
+}
+
 @media (max-width: 480px) {
   .reminder-toasts {
     right: var(--space-3);
