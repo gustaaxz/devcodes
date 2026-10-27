@@ -4,6 +4,15 @@ Registro técnico de todas as implementações, decisões e outcomes.
 
 ---
 
+## 2026-10-27 - Planejamento da visualização de PDF e imagens (#18)
+
+**Fase:** Fase 5 — Organização e Integração
+**Status:** Planejada; nenhuma implementação de código realizada nesta atualização
+**Decisão:** Incluir no escopo da melhoria #18 a visualização dentro do sistema de PDFs e imagens (SVG, PNG, JPEG/JPG, WebP e formatos adicionais aprovados). PDF já é aceito pela biblioteca, mas atualmente o visualizador oferece somente download para arquivos binários; imagens ainda não estão no catálogo aceito. O preview deverá validar conteúdo e tratar SVG com renderização segura.
+**Arquivos de planejamento:** `docs/PENDING_FEATURES.md`, `docs/implementation-plan.md`, `docs/backlog.md` e `docs/issues.md`.
+
+---
+
 ## 2026-10-27 - ISSUE-015: Correção de categorias padrão no cadastro
 
 **Fase:** Fase 4 — Colaboração e Produtividade Avançada  
