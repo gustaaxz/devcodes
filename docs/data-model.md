@@ -97,10 +97,12 @@ Arquivos da biblioteca de códigos e categorização por linguagem/disciplina.
   - `file_name` (text), `file_path` (text caminho no storage)
   - `file_size` (bigint), `mime_type` (text), `language` (text)
 
-### 8. `tags` & `note_tags`
-Sistema flexível de marcação de notas.
-- `tags`: `(id, user_id, name)` com unique `(user_id, name)`.
-- `note_tags`: tabela de junção `(note_id, tag_id)`.
+### 8. `tags`, `note_tags`, `task_tags` & `file_tags`
+Tags universais compartilhadas entre notas, tarefas e arquivos da biblioteca.
+- `tags`: `(id, user_id, name, color, is_favorite)` com unique `(user_id, name)` e cor hexadecimal validada.
+- `note_tags`, `task_tags` e `file_tags`: tabelas de junção com chaves compostas para associar tags a notas, tarefas e arquivos.
+- `task_tags` habilita RLS e verifica a propriedade da tarefa e da tag nas políticas; as outras tabelas de junção também aplicam isolamento pelo recurso pai e pela tag.
+- Migration local: `20261027120000_phase5_tags.sql`; aplicação e teste RLS remotos pendentes.
 
 ---
 
