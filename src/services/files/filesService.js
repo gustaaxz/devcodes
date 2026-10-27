@@ -1,5 +1,6 @@
 import { supabase } from '../supabase/client.js'
 import { ValidationError } from '../../utils/errors.js'
+import { setResourceTags } from '../tags/tagService.js'
 import { FILES_BUCKET, MAX_FILE_SIZE, getExtension, getFileType, sanitizeFileName, validateFile } from '../../utils/files.js'
 
 const STORAGE_CONTENT_TYPE = 'text/plain;charset=UTF-8'
@@ -8,12 +9,18 @@ function resolveStorageContentType(type) {
   return type.kind === 'text' ? STORAGE_CONTENT_TYPE : type.mime
 }
 
-export const FILE_WITH_CATEGORY = '*, programming_categories(name)'
+const FILE_SELECT = '*, file_tags(tag_id, tags(id, name, color, is_favorite))'
+export const FILE_WITH_CATEGORY = '*, programming_categories(name), file_tags(tag_id, tags(id, name, color, is_favorite))'
+
+function normalizeFile(row) {
+  const { file_tags: fileTags, ...file } = row
+  return { ...file, tags: (fileTags || []).map((entry) => entry.tags).filter(Boolean) }
+}
 
 export async function listFiles() {
-  const { data, error } = await supabase.from('stored_files').select('*').order('created_at', { ascending: false })
+  const { data, error } = await supabase.from('stored_files').select(FILE_SELECT).order('created_at', { ascending: false })
   if (error) throw error
-  return data
+  return data.map(normalizeFile)
 }
 
 export async function uploadFile({ userId, categoryId, file }) {
@@ -43,14 +50,14 @@ export async function uploadFile({ userId, categoryId, file }) {
       mime_type: type.mime,
       size_bytes: file.size
     })
-    .select('*')
+    .select(FILE_SELECT)
     .single()
 
   if (insertError) {
     await supabase.storage.from(FILES_BUCKET).remove([storageKey])
     throw insertError
   }
-  return data
+  return normalizeFile(data)
 }
 
 export async function createTextFile({ userId, categoryId, name, content }) {
@@ -73,16 +80,23 @@ export async function updateFileContent(record, content) {
     .from('stored_files')
     .update({ size_bytes: blob.size })
     .eq('id', record.id)
-    .select('*')
+    .select(FILE_SELECT)
     .single()
   if (error) throw error
-  return data
+  return normalizeFile(data)
 }
 
 export async function updateFileRecord(id, values) {
-  const { data, error } = await supabase.from('stored_files').update(values).eq('id', id).select('*').single()
+  const { data, error } = await supabase.from('stored_files').update(values).eq('id', id).select(FILE_SELECT).single()
   if (error) throw error
-  return data
+  return normalizeFile(data)
+}
+
+export async function setFileTags(fileId, names) {
+  await setResourceTags('file', fileId, names)
+  const { data, error } = await supabase.from('stored_files').select(FILE_SELECT).eq('id', fileId).single()
+  if (error) throw error
+  return normalizeFile(data)
 }
 
 export async function readFileText(record) {
@@ -135,5 +149,5 @@ export async function listRecentFiles(limit = 30) {
     .order('updated_at', { ascending: false })
     .limit(limit)
   if (error) throw error
-  return data
+  return data.map(normalizeFile)
 }
