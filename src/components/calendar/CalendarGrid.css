@@ -120,3 +120,44 @@
     display: none;
   }
 }
+
+.calendar-grid {
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-grid__weekday {
+  padding-block: var(--space-4);
+  background: color-mix(in srgb, var(--color-surface) 72%, var(--color-bg));
+  font-size: 0.75rem;
+  letter-spacing: 0.075em;
+}
+
+.calendar-day {
+  min-height: 112px;
+  padding: var(--space-3);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.calendar-day__chip {
+  padding-block: 3px;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.calendar-day__more,
+.calendar-day__indicators {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 767px) {
+  .calendar-day {
+    min-height: 68px;
+    padding: var(--space-1);
+  }
+
+  .calendar-day__chip {
+    padding: 0;
+    font-size: 0;
+    height: 6px;
+  }
+}
