@@ -41,13 +41,13 @@ Sistema de lembretes in-app para tarefas próximas do vencimento. O fluxo atual 
 
 ## Fase 5 — Organização e Integração (4 features)
 
-### #18: Tags e Organização Avançada
+### #18: Tags e Organização Avançada — em andamento
 **Prioridade:** 🔴 Alta
 
 Sistema de tags com cores customizadas para organizar notas, tarefas e código, com filtros avançados e gerenciamento centralizado.
 
 **Escopo:**
-- Tabelas: `tags` (com cor e contador de uso), `note_tags`, `task_tags`, `code_file_tags`, `favorite_tags`
+- Tabelas: `tags` (cor e favorito), `note_tags`, `task_tags`, `file_tags`; contadores de uso calculados a partir das associações
 - **TagInput** com autocomplete nas tags existentes, criação inline, chips coloridos removíveis
 - **TagColorPicker**: palette de 12 cores pré-definidas + picker customizado
 - **TagManager** em Settings: listar, renomear, trocar cor, deletar, mergir duplicadas, favoritar
@@ -55,6 +55,8 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 - Integração nos editores existentes: NoteEditor, TaskModal, FileItem, SearchBox
 - Smart Tags: sugestão automática ao criar recurso, limpeza de tags órfãs
 - Serviço `tagService.js`: CRUD de tags, associação a recursos, `searchTags()`, `getTopTags()`, `mergeTags()`
+- Implementados localmente: associações de tags às notas, tarefas e arquivos; página `/tags` com busca, filtros por recurso, contadores de uso, renomear, cores, favoritos, exclusão e mesclagem; autocomplete de tags existentes; sugestões de tags existentes encontradas no título/conteúdo; remoção automática de tags sem vínculos após desassociação ou exclusão de recurso, preservando favoritas.
+- Pendência para concluir #18: executar `supabase/tests/rls_isolation.sql` atualizado. O usuário confirmou a aplicação de `20261027120000_phase5_tags.sql`; o teste remoto ainda não foi validado.
 - Ampliar os tipos aceitos pela Biblioteca de Código com catálogo centralizado, validação de MIME/assinatura, testes e suporte seguro para preview ou download:
   - Documentos e apresentações: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf`; `.doc` e `.docx` já são aceitos atualmente
   - Visualização dentro do sistema para PDFs (`.pdf`, já aceitos, mas hoje sem preview) e imagens `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp` e outros formatos de imagem adicionados ao catálogo
@@ -65,7 +67,7 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 ---
 
 ### #19: Integração com Calendário (iCal/Google Calendar)
-**Prioridade:** 🟡 Média
+**Prioridade:** 🟡 Média — em andamento
 
 Sincronização bidirecional com Google Calendar e suporte a import/export iCalendar.
 
@@ -78,6 +80,8 @@ Sincronização bidirecional com Google Calendar e suporte a import/export iCale
 - Badge "Sincronizado com Google" nos eventos
 - **Tratamento de conflitos**: notificar usuário se modificado em ambos os lados, DevCodes prevalece por padrão
 - Edge Function para sincronização automática via webhook/realtime
+- Implementado localmente: importação com prévia e exportação `.ics`; feed iCalendar público com token aleatório armazenado como hash, botão para copiar e revogação; OAuth Google com state/PKCE; refresh token criptografado com AES-GCM; seleção de calendário gravável; sync bidirecional manual, deduplicação e política DevCodes-primeiro; histórico, badge e sync automático enquanto a SPA está aberta via Supabase Realtime.
+- Pendências para concluir #19: configurar e fazer deploy das Edge Functions/secrets conforme `docs/GOOGLE_CALENDAR_SETUP.md` e validar OAuth com uma conta Google de teste. O usuário confirmou a aplicação da migration e a aprovação de `supabase/tests/google_calendar_rls.sql`. A sincronização automática não roda com o navegador fechado; usar webhook/cron do servidor segue como melhoria.
 
 ---
 
