@@ -10,6 +10,22 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 
 ## 2. Entradas de Deploys e Entregas
 
+### [2026-10-27] - ISSUE-017: Backup e importação de dados
+- **Fase:** Fase 4 - Colaboração e Produtividade Avançada
+- **O que foi feito:** Backup JSON completo, importação de backups JSON e arquivos CSV/JSON por recurso, pré-validação e interface em Configurações.
+- **Segurança:** Exportações filtradas pelo usuário autenticado; a importação ignora IDs recebidos e define `user_id` pela sessão; usa RLS das tabelas existentes.
+- **Validação local:** 50 testes passando; lint sem avisos novos; build aprovado com aviso de bundle acima de 500 kB.
+- **Deploy:** Nenhuma migração necessária; código local validado, aguardando o processo normal de publicação do app.
+
+### [2026-10-27] - ISSUE-015: Integração e verificação do schema remoto
+- **Fase:** Fase 4 - Colaboração e Produtividade Avançada
+- **O que foi feito:** Interface de configuração, central de notificações e ações in-app integradas ao serviço de lembretes; RLS, gatilho de sincronização e teste de isolamento adicionados à migration local.
+- **Estado do Supabase remoto:** Após a aplicação pelo usuário, as colunas de `task_reminders` e `reminder_preferences` retornaram HTTP 200 via API; leituras anônimas retornaram listas vazias.
+- **Correções aplicadas:** migrations de restauração das categorias e alinhamento do perfil executadas pelo usuário no Supabase.
+- **Validação remota:** `supabase/tests/rls_isolation.sql` retornou `OK: todos os testes de isolamento passaram` no SQL Editor.
+- **Validação local:** 52 testes passando; lint sem avisos novos; build aprovado com aviso de bundle acima de 500 kB.
+- **Storage:** o SQL confirma RLS ativo e quatro políticas configuradas; operações em arquivos usam a Storage API para respeitar a proteção contra mutações SQL diretas.
+
 ### [2026-10-26] - Entrega: Fase 4 - Compartilhamento de Notas e Eventos (#13)
 - **Fase:** Fase 4 - Colaboração e Produtividade Avançada
 - **O que foi feito:**
