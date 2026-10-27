@@ -8,8 +8,10 @@ import SelectField from '../../components/ui/SelectField.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useDataVersion } from '../../hooks/useDataVersion.js'
+import { useLoad } from '../../hooks/useLoad.js'
 import { useRealtimeSync } from '../../hooks/useRealtimeSync.js'
 import { createNote } from '../../services/notes/notesService.js'
+import { listTags } from '../../services/tags/tagService.js'
 import { toDateKey } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
 
@@ -26,6 +28,7 @@ function compareNotes(view) {
 export default function NotesWorkspace({ initialNotes, categories }) {
   const { user } = useAuth()
   const { bump } = useDataVersion()
+  const allTags = useLoad(listTags, user.id)
   const [params, setParams] = useSearchParams()
   const [notes, setNotes] = useState(initialNotes)
   const [selectedId, setSelectedId] = useState(null)
@@ -97,7 +100,7 @@ export default function NotesWorkspace({ initialNotes, categories }) {
       setNotes((current) =>
         current.some((n) => n.id === inserted.id)
           ? current
-          : [inserted, ...current]
+          : [{ ...inserted, tags: [] }, ...current]
       )
     }
   )
@@ -265,7 +268,7 @@ export default function NotesWorkspace({ initialNotes, categories }) {
             key={selected.id}
             note={selected}
             categories={categories}
-            tagSuggestions={tagOptions}
+            tagSuggestions={allTags.data || tagOptions}
             onChanged={handleChanged}
             onDeleted={handleDeleted}
             onDuplicated={handleDuplicated}
