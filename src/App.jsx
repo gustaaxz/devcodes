@@ -17,9 +17,12 @@ import RecentFiles from './pages/RecentFiles/index.jsx'
 import Favorites from './pages/Favorites/index.jsx'
 import Settings from './pages/Settings/index.jsx'
 import SharedResource from './pages/SharedResource/index.jsx'
+import Tags from './pages/Tags/index.jsx'
+import { useGoogleCalendarAutoSync } from './hooks/useGoogleCalendarAutoSync.js'
 
 export default function App() {
-  const { status } = useAuth()
+  const { status, user } = useAuth()
+  useGoogleCalendarAutoSync(user?.id)
 
   if (status === 'unconfigured') return <ConfigurationNotice />
 
@@ -42,6 +45,7 @@ export default function App() {
           <Route path="biblioteca" element={<ProgrammingLibrary />} />
           <Route path="arquivos-recentes" element={<RecentFiles />} />
           <Route path="favoritos" element={<Favorites />} />
+          <Route path="tags" element={<Tags />} />
           <Route path="configuracoes" element={<Settings />} />
         </Route>
       </Route>
