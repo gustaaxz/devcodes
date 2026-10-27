@@ -2,6 +2,12 @@
 
 Registro técnico de todas as implementações, decisões e outcomes.
 
+## 2026-10-27 10:22 BRT - Polimento visual e navegação
+
+**Implementado:** Revisão dos tokens claro/escuro, tipografia Inter/JetBrains Mono, hierarquia de superfícies, contraste de estados, escala de espaçamento e sombras. Sidebar agora agrupa seções, mantém recolhimento salvo e fecha com Escape no mobile. Reforcei estados hover/focus, tamanhos de toque e layouts de dashboard, tarefas, calendário, notas, arquivos, configurações e autenticação; corrigi tokens CSS inexistentes.
+**Decisões:** Um accent indigo com contraste adaptado por tema mantém destaque sem saturar as superfícies; tipografia de sistema carregada uma única vez no HTML; espaçamento via tokens compartilhados.
+**Validação:** Não executei testes automatizados nem build; a superfície de navegador não estava disponível para inspeção renderizada nesta sessão.
+
 ## 2026-10-27 10:03 BRT - Fase 5 #19: teste remoto aprovado
 
 **Confirmação do usuário:** Migration `20261027130000_calendar_integration.sql` aplicada e teste `supabase/tests/google_calendar_rls.sql` executado com sucesso.
