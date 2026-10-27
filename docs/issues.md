@@ -8,7 +8,7 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída. A próxima é a **#18 — Tags, organização e formatos de arquivo**. A ampliação inclui apresentações e planilhas Office/OpenDocument, imagens, código/configuração e dados; também prevê visualização interna de PDF e imagens (SVG, PNG, JPEG e outros formatos aprovados), com renderização segura. `.doc`/`.docx` já são aceitos e PDF é aceito sem preview atualmente. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
+Fase 4 concluída e Fase 5 iniciada pela **#18 — Tags, organização e formatos de arquivo**. A primeira entrega parcial ampliou o catálogo da Biblioteca e adicionou preview interno de PDF e imagens (SVG, PNG, JPEG e formatos adicionais), com validação de conteúdo e renderização segura. Tags universais e gerenciamento ainda fazem parte do escopo pendente da #18. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
 
 ---
 
