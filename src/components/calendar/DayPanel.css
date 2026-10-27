@@ -116,3 +116,20 @@
 .day-panel__link:hover {
   background: var(--color-surface-hover);
 }
+
+.day-panel {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.day-panel__item {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+}
+
+.day-panel__empty,
+.day-panel__content p,
+.day-panel__meta {
+  font-size: 0.875rem;
+}
