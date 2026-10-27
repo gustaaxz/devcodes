@@ -22,7 +22,7 @@ No DevCodes, a segurança de dados **não depende da lógica do frontend**. Toda
 ## Políticas Padrão por Entidade
 
 ### 1. Políticas de Isolamento por Usuário
-Para tabelas privadas (`profiles`, `tasks`, `events`, `notes`, `note_versions`, `stored_files`, `categories`, `tags`):
+Para tabelas privadas (`profiles`, `tasks`, `events`, `notes`, `note_versions`, `stored_files`, `categories`, `tags`, `task_reminders`, `reminder_preferences`):
 ```sql
 CREATE POLICY "Users can manage own data"
 ON public.<tabela>
@@ -51,3 +51,5 @@ Arquivos enviados para o bucket de código são isolados em pastas prefixadas pe
 1. **Nunca usar service_role key no client:** Utilizar exclusivamente a `anon key`.
 2. **Filtragem explícita:** Mesmo com RLS, sempre passe `user_id = auth.uid()` nas queries do Supabase client para indexação e clareza de intenção.
 3. **Auditoria de migrações:** Sempre validar o arquivo `supabase/tests/rls_isolation.sql` ao introduzir novas entidades.
+4. **Lembretes:** `task_reminders` verifica tanto o `user_id` da linha quanto a propriedade da tarefa referenciada; os lembretes do cliente atual são somente in-app.
+5. **Importação:** IDs e `user_id` fornecidos no arquivo são descartados. Todo novo registro recebe o `user_id` da sessão e continua sujeito às RLS existentes; o processo adiciona registros e não apaga/substitui dados.
