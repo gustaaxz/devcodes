@@ -41,6 +41,15 @@ export default function TaskCard({ task, now, showStatusSelect = false, onToggle
             <Badge variant={dueState === 'overdue' ? 'danger' : 'warning'}>{DUE_LABELS[dueState]}</Badge>
           )}
         </div>
+        {task.tags?.length > 0 && (
+          <div className="task-card__tags" aria-label="Tags da tarefa">
+            {task.tags.map((tag) => (
+              <span key={tag.id} className="task-card__tag" style={{ '--tag-color': tag.color || 'var(--color-accent)' }}>
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
         {showStatusSelect && (
           <select
             className="task-card__status"
