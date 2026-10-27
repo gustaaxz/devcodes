@@ -46,6 +46,7 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
   const [viewerId, setViewerId] = useState(null)
   const [search, setSearch] = useState('')
   const [extensionFilter, setExtensionFilter] = useState('')
+  const [tagFilter, setTagFilter] = useState(() => params.get('tag') || '')
   const [favoritesOnly, setFavoritesOnly] = useState(false)
   const [sort, setSort] = useState(preferences.library.sort)
   const [layout, setLayout] = useState(preferences.library.layout)
@@ -60,8 +61,10 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
 
   const fileParam = params.get('arquivo')
   const tabParam = params.get('aba')
+  const tagParam = params.get('tag')
   const requestedFile = files.find((file) => file.id === fileParam) || null
   const requestedCategory = categories.find((category) => category.slug === tabParam) || null
+  const taggedFile = tagParam ? files.find((file) => file.tags?.some((tag) => tag.name === tagParam)) : null
 
   function clearParams() {
     if (fileParam || tabParam) setParams({}, { replace: true })
@@ -77,7 +80,13 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
     }
   }, [])
 
-  const effectiveActiveId = requestedFile ? requestedFile.category_id : requestedCategory ? requestedCategory.id : activeId
+  const effectiveActiveId = requestedFile
+    ? requestedFile.category_id
+    : requestedCategory
+      ? requestedCategory.id
+      : taggedFile
+        ? taggedFile.category_id
+        : activeId
   const active = categories.find((category) => category.id === effectiveActiveId) || categories[0] || null
 
   const counts = useMemo(() => {
@@ -87,8 +96,10 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
   }, [files])
 
   const categoryFiles = useMemo(
-    () => (active ? files.filter((file) => file.category_id === active.id) : []),
-    [files, active]
+    () => tagFilter
+      ? files.filter((file) => file.tags?.some((tag) => tag.name === tagFilter))
+      : active ? files.filter((file) => file.category_id === active.id) : [],
+    [files, active, tagFilter]
   )
 
   const extensionOptions = useMemo(
@@ -99,10 +110,17 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
     [categoryFiles]
   )
 
+  const tagOptions = useMemo(
+    () => [...new Set(categoryFiles.flatMap((file) => (file.tags || []).map((tag) => tag.name)))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+      .map((name) => ({ value: name, label: name })),
+    [categoryFiles]
+  )
+
   const visibleFiles = useMemo(() => {
     const term = search.trim().toLowerCase()
     return categoryFiles
       .filter((file) => !extensionFilter || file.extension === extensionFilter)
+      .filter((file) => !tagFilter || file.tags?.some((tag) => tag.name === tagFilter))
       .filter((file) => !favoritesOnly || file.is_favorite)
       .filter(
         (file) =>
@@ -111,13 +129,14 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
           (file.description || '').toLowerCase().includes(term)
       )
       .sort(SORTERS[sort])
-  }, [categoryFiles, search, extensionFilter, favoritesOnly, sort])
+  }, [categoryFiles, search, extensionFilter, tagFilter, favoritesOnly, sort])
 
   function selectCategory(id) {
     clearParams()
     setActiveId(id)
     setSearch('')
     setExtensionFilter('')
+    setTagFilter('')
     setFavoritesOnly(false)
   }
 
@@ -229,7 +248,7 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
 
       <div className="page-toolbar">
         <div className="library__title">
-          <h2>{active.name}</h2>
+          <h2>{tagFilter ? `Tag: ${tagFilter}` : active.name}</h2>
           <span>{categoryFiles.length} arquivo(s)</span>
         </div>
         <div className="page-toolbar__spacer" />
@@ -266,6 +285,13 @@ export default function LibraryWorkspace({ initialCategories, initialFiles }) {
           options={extensionOptions}
           value={extensionFilter}
           onChange={(event) => setExtensionFilter(event.target.value)}
+        />
+        <SelectField
+          aria-label="Filtrar por tag"
+          placeholder="Todas as tags"
+          options={tagOptions}
+          value={tagFilter}
+          onChange={(event) => setTagFilter(event.target.value)}
         />
         <SelectField
           aria-label="Ordenar arquivos"
