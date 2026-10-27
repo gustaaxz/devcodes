@@ -36,7 +36,7 @@ export default function NoteList({ notes, selectedId, onSelect }) {
                   : formatShortDate(new Date(note.updated_at))}
               </span>
               {note.tags.slice(0, 2).map((tag) => (
-                <span key={tag.id} className="note-list__tag">
+                <span key={tag.id} className="note-list__tag" style={{ '--tag-color': tag.color || 'var(--color-accent)' }}>
                   {tag.name}
                 </span>
               ))}
