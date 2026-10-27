@@ -8,7 +8,7 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída e Fase 5 iniciada pela **#18 — Tags, organização e formatos de arquivo**. A primeira entrega parcial ampliou o catálogo da Biblioteca e adicionou preview interno de PDF e imagens (SVG, PNG, JPEG e formatos adicionais), com validação de conteúdo e renderização segura. Tags universais e gerenciamento ainda fazem parte do escopo pendente da #18. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
+Fase 4 concluída; Fase 5 em andamento na **#18 e #19**. A #18 tem catálogo/preview de arquivos e tags universais no código; a migration foi aplicada pelo usuário e falta executar o teste RLS atualizado. A #19 tem import/export iCalendar, feed público revogável e integração Google via Edge Functions no código; migration aplicada pelo usuário; o teste RLS passou; faltam secrets/deploy das funções e validação OAuth com conta Google. Roadmap: `docs/PENDING_FEATURES.md`.
 
 ---
 
