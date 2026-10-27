@@ -43,3 +43,22 @@
   z-index: 50;
   width: 280px;
 }
+
+.quick-create__panel {
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+.quick-create__panel button {
+  min-height: 42px;
+  height: auto;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.quick-create__panel button:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
+}
