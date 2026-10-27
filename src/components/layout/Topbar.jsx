@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Menu, Moon, Search, Sun, X } from 'lucide-react'
 import QuickCreateMenu from './QuickCreateMenu.jsx'
 import SearchBox from './SearchBox.jsx'
+import NotificationCenter from './NotificationCenter.jsx'
 import UserMenu from './UserMenu.jsx'
 import { useProfile } from '../../hooks/useProfile.js'
 import './Topbar.css'
 
-export default function Topbar({ title, isMobile, onOpenMobileMenu }) {
+export default function Topbar({ title, isMobile, onOpenMobileMenu, reminderState }) {
   const { preferences, updatePreferences } = useProfile()
   const [mobileSearch, setMobileSearch] = useState(false)
   const theme = preferences.theme
@@ -41,6 +42,7 @@ export default function Topbar({ title, isMobile, onOpenMobileMenu }) {
             </button>
           )}
           <QuickCreateMenu compact={isMobile} />
+          <NotificationCenter {...reminderState} />
           <button
             type="button"
             className="icon-button"
