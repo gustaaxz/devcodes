@@ -29,6 +29,15 @@ export default function FileItem({ file, layout, onView, onDownload, onEdit, onD
             {formatShortDate(new Date(file.created_at))}
           </span>
           {file.description && <span className="file-item__description">{file.description}</span>}
+          {file.tags?.length > 0 && (
+            <span className="file-item__tags" aria-label="Tags do arquivo">
+              {file.tags.slice(0, 4).map((tag) => (
+                <span key={tag.id} className="file-item__tag" style={{ '--tag-color': tag.color || 'var(--color-accent)' }}>
+                  {tag.name}
+                </span>
+              ))}
+            </span>
+          )}
         </span>
       </button>
       <div className="file-item__actions">
