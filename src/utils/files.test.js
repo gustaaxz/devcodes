@@ -29,6 +29,13 @@ describe('nomes e extensoes', () => {
     expect(getFileType('programa.exe')).toBeNull()
   })
 
+  it('trata nomes especiais como nomes completos e deixa .env bloqueado', () => {
+    expect(getExtension('.env.example')).toBe('.env.example')
+    expect(getExtension('Dockerfile')).toBe('')
+    expect(getFileType('.env')).toBeNull()
+    expect(getFileType('.env.example').kind).toBe('text')
+  })
+
   it('gera nomes de armazenamento seguros', () => {
     expect(sanitizeFileName('Relatório Final (v2).js')).toBe('Relatorio-Final-v2.js')
     expect(sanitizeFileName('../../etc/passwd')).toBe('etcpasswd')
@@ -101,6 +108,8 @@ describe('validacao de upload', () => {
     expect(await validateFile(makeFile(['<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0" /></svg>'], 'a.svg'))).toBe('')
     expect(await validateFile(makeFile(['<svg><script>alert(1)</script></svg>'], 'a.svg'))).toMatch(/SVG/)
     expect(await validateFile(makeFile(['<svg><image href="https://example.com/a.png" /></svg>'], 'a.svg'))).toMatch(/SVG/)
+    expect(await validateFile(makeFile(['<svg><image href="/private/image.png" /></svg>'], 'a.svg'))).toMatch(/SVG/)
+    expect(await validateFile(makeFile(['<svg><style>@import "https://example.com/a.css";</style></svg>'], 'a.svg'))).toMatch(/SVG/)
   })
 
   it('valida formatos Office e OpenDocument compactados', async () => {
