@@ -6,39 +6,18 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ---
 
-## Próximas Issues em Foco (Fase 4)
+## Próximas Issues em Foco
 
-### ISSUE-015 - Notificações e Lembretes de Tarefas
-**Tipo:** Feature  
-**Status:** Planejada  
-**Fase:** Fase 4  
-
-**Objetivo:** Alertar o usuário sobre tarefas com vencimento próximo via central de notificações in-app e toasts interativos.
-
-**Critérios de aceite:**
-- Tabela `reminders` e `reminder_preferences`.
-- Ícone de sino com contador (`NotificationCenter`) na Topbar.
-- `ReminderToast` com ações rápidas de concluir ou adiar tarefa.
-
----
-
-### ISSUE-017 - Exportação e Importação de Dados
-**Tipo:** Feature  
-**Status:** Planejada  
-**Fase:** Fase 4  
-
-**Objetivo:** Garantir a portabilidade dos dados do usuário, permitindo download em massa de notas (Markdown/ZIP) e tarefas (JSON/CSV), além de importação.
-
-**Critérios de aceite:**
-- Modal de exportação na tela de configurações (`Settings`).
-- Exportação segura sem dados sensíveis de credenciais.
+Fase 4 concluída. As próximas features estão listadas em `docs/PENDING_FEATURES.md` e `docs/implementation-plan.md`.
 
 ---
 
 ## Issues Concluídas Recentemente
 
+- **ISSUE-015 - Notificações e Lembretes de Tarefas:** Concluída com central/toast in-app, preferências, lembretes por tarefa e teste de isolamento RLS aprovado no Supabase.
 - **ISSUE-013 - Compartilhamento de Notas e Eventos:** Concluída com tabelas `note_shares`, `event_shares`, `share_access_logs`, modal `ShareModal`, rota pública `/shared/:share_token`, `shareService.js` e testes unitários.
 
 - **ISSUE-016 - Sincronização em Tempo Real:** Concluída via Supabase Realtime Channels e hooks reativos.
 - **ISSUE-014 - Histórico de Versões de Notas:** Concluída com tabela `note_versions` e `NoteVersionsModal`.
 - **ISSUE-012 - Atalhos de Teclado Globais:** Concluída com hook `useKeyboardShortcuts` e modal de ajuda.
+- **ISSUE-017 - Exportação e Importação de Dados:** Concluída com backup JSON portátil, exportações CSV/JSON por recurso e importação validada de backups e arquivos exportados.
