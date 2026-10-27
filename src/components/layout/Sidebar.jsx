@@ -1,3 +1,4 @@
+import { Fragment, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Code2, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react'
 import { navigationItems } from '../../utils/navigation.js'
@@ -6,6 +7,17 @@ import './Sidebar.css'
 export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleCollapse, onCloseMobile }) {
   const navigate = useNavigate()
   const isCollapsed = collapsed && !isMobile
+  useEffect(() => {
+    if (!isMobile || !mobileOpen) return undefined
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') onCloseMobile()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isMobile, mobileOpen, onCloseMobile])
+
   const classes = [
     'sidebar',
     isCollapsed ? 'sidebar--collapsed' : '',
@@ -17,7 +29,14 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleColla
 
   return (
     <>
-      {isMobile && mobileOpen && <div className="sidebar-overlay" onClick={onCloseMobile} />}
+      {isMobile && mobileOpen && (
+        <button
+          type="button"
+          className="sidebar-overlay"
+          onClick={onCloseMobile}
+          aria-label="Fechar menu de navegação"
+        />
+      )}
       <aside className={classes} aria-label="Navegação principal">
         <div className="sidebar__header">
           <button
@@ -39,20 +58,26 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleColla
           )}
         </div>
 
-        <nav className="sidebar__nav">
-          {navigationItems.map(({ path, label, icon: Icon }) => (
-            <NavLink
-              key={path}
-              to={path}
-              end={path === '/'}
-              title={isCollapsed ? label : undefined}
-              onClick={isMobile ? onCloseMobile : undefined}
-              className={({ isActive }) => `sidebar__link${isActive ? ' sidebar__link--active' : ''}`}
-            >
-              <Icon size={18} strokeWidth={1.9} />
-              {!isCollapsed && <span>{label}</span>}
-            </NavLink>
-          ))}
+        <nav className="sidebar__nav" id="primary-navigation" aria-label="Seções">
+          {navigationItems.map(({ path, label, icon: Icon, section }, index) => {
+            const showSection = !isCollapsed && (index === 0 || section !== navigationItems[index - 1].section)
+
+            return (
+              <Fragment key={path}>
+                {showSection && <span className="sidebar__section-label">{section}</span>}
+                <NavLink
+                  to={path}
+                  end={path === '/'}
+                  title={isCollapsed ? label : undefined}
+                  onClick={isMobile ? onCloseMobile : undefined}
+                  className={({ isActive }) => `sidebar__link${isActive ? ' sidebar__link--active' : ''}`}
+                >
+                  <Icon size={19} strokeWidth={1.9} />
+                  {!isCollapsed && <span>{label}</span>}
+                </NavLink>
+              </Fragment>
+            )
+          })}
         </nav>
 
         {!isMobile && (
@@ -62,6 +87,9 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen, onToggleColla
               className="sidebar__link sidebar__collapse"
               onClick={onToggleCollapse}
               title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+              aria-expanded={!isCollapsed}
+              aria-controls="primary-navigation"
+              aria-label={isCollapsed ? 'Expandir navegação' : 'Recolher navegação'}
             >
               {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
               {!isCollapsed && <span>Recolher</span>}
