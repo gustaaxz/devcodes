@@ -7,6 +7,10 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 ### Planned
 - **Fase 5 (#18):** adicionar ao escopo da Biblioteca de Código a visualização interna de PDFs e imagens (SVG, PNG, JPEG e outros formatos aprovados), com validação e renderização segura.
 
+- **Fase 5 iniciada — Biblioteca de Código (#18, entrega parcial):** ampliado o catálogo para documentos Office/OpenDocument/RTF, formatos de código e configuração, dotfiles de projeto selecionados e imagens PNG, JPEG, WebP, SVG, GIF, BMP e AVIF.
+  - Adicionada validação de assinatura/conteúdo para imagens, PDFs, arquivos Office e notebooks Jupyter; SVGs com scripts, eventos e referências externas são rejeitados.
+  - Adicionado preview interno de PDFs e imagens usando URL assinada do Storage; imagens SVG são exibidas como imagem, sem inserção de marcação SVG no DOM.
+
 ### Added
 - **Importação e backup de dados (#17)**
   - Backup JSON completo e portátil de notas, tarefas, eventos, categorias e tags de notas
