@@ -41,7 +41,11 @@ Este documento organiza as fases de desenvolvimento do DevCodes, conectando o ro
 
 ### Fase 5 — Organização e Integração
 **Status:** ⏳ Planejada (0/4 concluídas)
-- [ ] **#18:** Tags e organização avançada, incluindo ampliação dos tipos de arquivo aceitos pela Biblioteca de Código
+- [ ] **#18:** Tags e organização avançada, incluindo ampliação segura dos tipos de arquivo aceitos pela Biblioteca de Código
+  - Documentos: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf` (`.doc`/`.docx` já são aceitos)
+  - Imagens: `.png`, `.jpg`, `.jpeg`, `.webp` e `.svg`
+  - Código, configuração e dados: `.vue`, `.svelte`, `.swift`, `.dart`, `.ipynb`, `.toml`, `.ini`, `.conf`, `.tf`, `.hcl`, `.gradle`, `.properties`, `.csv`, `.log`, `.rst` e `.adoc`
+  - Dotfiles de projeto selecionados (`Dockerfile`, `.gitignore`, `.dockerignore`, `.editorconfig`, `.env.example`), com validação de MIME/conteúdo e testes; `.env` permanece bloqueado
 - [ ] **#19:** Sincronização com Google Calendar e iCalendar
 - [ ] **#20:** Análise de produtividade com métricas e gráficos no Dashboard
 - [ ] **#21:** Backup automático e histórico de sincronização
