@@ -10,6 +10,11 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 
 ## 2. Entradas de Deploys e Entregas
 
+### [2026-10-27] - Polimento visual do sistema (implementação local)
+- **O que foi feito:** Identidade visual harmonizada entre temas, tipografia, espaçamento, superfícies, contraste e microinterações; navegação organizada e mais acessível; correções para tokens de estilo ausentes.
+- **Áreas:** Shell e menus, dashboard, tarefas, calendário, notas, biblioteca, configurações e autenticação.
+- **Estado:** Alterações locais; não houve deploy nesta etapa.
+
 ### [2026-10-27] - Fase 5 #19: Google Calendar e iCalendar (código local)
 - **O que foi feito:** Import/export `.ics`, feed iCalendar público revogável e integração Google por Edge Functions com OAuth PKCE, sync bidirecional e histórico.
 - **Segurança:** Refresh token criptografado no servidor; estados OAuth e metadados de feed isolados; URL de feed usa token aleatório e hash persistido.
