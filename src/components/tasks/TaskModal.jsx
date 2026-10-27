@@ -5,9 +5,12 @@ import TextAreaField from '../ui/TextAreaField.jsx'
 import SelectField from '../ui/SelectField.jsx'
 import Alert from '../ui/Alert.jsx'
 import Spinner from '../ui/Spinner.jsx'
+import TagInput from '../notes/TagInput.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useDataVersion } from '../../hooks/useDataVersion.js'
-import { createTask, updateTask } from '../../services/tasks/tasksService.js'
+import { useLoad } from '../../hooks/useLoad.js'
+import { createTask, setTaskTags, updateTask } from '../../services/tasks/tasksService.js'
+import { listTags } from '../../services/tags/tagService.js'
 import {
   getReminderForTask,
   getReminderPreferences,
@@ -41,6 +44,8 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
   const { bump } = useDataVersion()
   const [savedTask, setSavedTask] = useState(task)
   const [values, setValues] = useState(() => buildInitialValues(task))
+  const [tagNames, setTagNames] = useState(() => (task?.tags || []).map((tag) => tag.name))
+  const tags = useLoad(listTags, userId)
   const [reminder, setReminder] = useState({ enabled: false, offsetMinutes: 15, exists: false, loading: true })
   const [titleError, setTitleError] = useState('')
   const [formError, setFormError] = useState('')
@@ -105,7 +110,8 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
         ? await updateTask(savedTask.id, payload)
         : await createTask(payload)
       taskWasPersisted = true
-      setSavedTask(persistedTask)
+      const savedWithTags = await setTaskTags(persistedTask.id, tagNames)
+      setSavedTask(savedWithTags)
 
       if (reminder.enabled && payload.status !== 'done') {
         await setTaskReminder({
@@ -122,7 +128,7 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
       onSaved()
     } catch (error) {
       const fallback = taskWasPersisted
-        ? 'A tarefa foi salva, mas não foi possível salvar o lembrete.'
+        ? 'A tarefa foi salva, mas não foi possível salvar suas tags ou o lembrete.'
         : 'Não foi possível salvar a tarefa.'
       setFormError(friendlyError(error, fallback))
       setSubmitting(false)
@@ -145,6 +151,14 @@ export default function TaskModal({ task, categories, onClose, onSaved }) {
           label="Descrição"
           value={values.description}
           onChange={(e) => setField('description', e.target.value)}
+        />
+        {tags.error && <Alert variant="error">{tags.error}</Alert>}
+        <TagInput
+          tags={tagNames}
+          suggestions={tags.data || []}
+          contextText={`${values.title} ${values.description}`}
+          onChange={setTagNames}
+          disabled={submitting}
         />
         <div className="field-row">
           <SelectField
