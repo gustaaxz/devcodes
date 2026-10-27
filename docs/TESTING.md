@@ -25,6 +25,8 @@ Este documento define como a qualidade e o funcionamento contínuo do **DevCodes
 - **Escopo:**
   - Utilitários em `src/utils/` (datas, formatação de bytes, validação de arquivos).
   - Regras puras de ordenação e filtros em `src/services/`.
+  - Parser de importação: validação de backup, CSV com aspas/quebras de linha e rejeição de linhas inválidas.
+  - Serviço de perfil: consulta e gravação do campo `full_name` consumido pelo contexto de perfil.
   - Tratamento de exceções e mapeamento de dados.
 - **Exemplo com Vitest:**
   ```javascript
@@ -45,7 +47,9 @@ Este documento define como a qualidade e o funcionamento contínuo do **DevCodes
 ### 3.2. Testes de Isolamento e Segurança (RLS)
 - Localizado em `supabase/tests/rls_isolation.sql`.
 - Executado dentro de uma transação SQL com rollback automático.
-- Garante que usuário A não consiga ler, atualizar ou deletar dados de usuário B nas tabelas `profiles`, `categories`, `tasks`, `events`, `notes`, `stored_files` e `note_versions`.
+- Garante que usuário A não consiga ler, atualizar ou deletar dados de usuário B nas tabelas `profiles`, `categories`, `tasks`, `events`, `notes`, `stored_files`, `note_versions`, `task_reminders` e `reminder_preferences`.
+- Verifica que um usuário não pode associar um lembrete à tarefa de outra pessoa.
+- Confirma que RLS está habilitado em `storage.objects` e que as quatro políticas de pasta existem. O teste não grava nem apaga linhas de Storage: esses objetos devem ser manipulados pela Storage API, e a validação runtime de arquivos deve usar essa API.
 - **Critério de Aceite:** O script deve retornar `OK: todos os testes de isolamento passaram`.
 
 ### 3.3. Testes Manuais e de Interface (UI/UX)
