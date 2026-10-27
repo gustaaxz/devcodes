@@ -8,7 +8,7 @@ Este documento é a fonte canônica local de tarefas e issues ativas e planejada
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída. As próximas features estão listadas em `docs/PENDING_FEATURES.md` e `docs/implementation-plan.md`.
+Fase 4 concluída. A próxima é a **#18 — Tags e organização avançada**, incluindo ampliar os formatos de arquivo da Biblioteca de Código. O roadmap detalhado está em `docs/PENDING_FEATURES.md`.
 
 ---
 
