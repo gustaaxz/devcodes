@@ -2,6 +2,39 @@
 
 Registro técnico de todas as implementações, decisões e outcomes.
 
+## 2026-10-27 10:03 BRT - Fase 5 #19: teste remoto aprovado
+
+**Confirmação do usuário:** Migration `20261027130000_calendar_integration.sql` aplicada e teste `supabase/tests/google_calendar_rls.sql` executado com sucesso.
+**Pendências:** Configurar secrets e fazer deploy das Edge Functions; validar OAuth com uma conta Google. Auto sync com o navegador fechado segue pendente.
+
+---
+
+## 2026-10-27 09:30 BRT - Fase 5 #18: tags e organização (entrega local em andamento)
+
+**Fase:** Fase 5 - Organização e Integração  
+**Status:** Código local implementado; aguarda aplicação/validação da migration no Supabase remoto.  
+**Implementado:** Tags em notas, tarefas e arquivos; gerenciamento em `/tags`; autocomplete e sugestões por título/conteúdo; exportação/importação de tags de notas e tarefas; limpeza automática de tags órfãs em exclusões de associações, inclusive cascatas de exclusão de recursos, preservando favoritas. Migration inclui `task_tags`, cores/favoritos, RLS e triggers protegidos para limpeza.
+**Validação local:** `npm test` - 60 testes passando; `npm run lint` - 0 erros e 11 avisos preexistentes; `npm run build` - aprovado, com aviso de bundle acima de 500 kB.
+**Validação remota pendente:** Migration `supabase/migrations/20261027120000_phase5_tags.sql` aplicada pelo usuário; executar `supabase/tests/rls_isolation.sql` atualizado. O teste agora confere isolamento de `task_tags`, remoção de tag órfã após exclusão da tarefa e preservação de tags favoritas. Nenhum resultado remoto foi presumido.
+
+## 2026-10-27 09:45 BRT - Fase 5 #18: atualização da validação remota
+
+**Status:** O usuário confirmou que `20261027120000_phase5_tags.sql` foi aplicada com sucesso. O teste `supabase/tests/rls_isolation.sql` atualizado, que verifica `task_tags` e limpeza de tags órfãs, ainda aguarda execução/resultado.
+
+## 2026-10-27 09:46 BRT - Fase 5 #19: Google Calendar e iCalendar
+
+**Status:** Implementação local em andamento; migration aplicada pelo usuário. Secrets/deploy de Edge Functions e validação OAuth ainda dependem de configuração Supabase/Google.
+**Implementado:** Import/export `.ics` (prévia, timezone, duração, UID e deduplicação); feed público com token aleatório, hash no banco, confirmação, rotação e revogação; OAuth com state/PKCE; refresh token criptografado com AES-GCM; seleção de calendário; sync bidirecional manual com deduplicação, tombstones e conflitos DevCodes-primeiro; logs e badge; auto sync Realtime enquanto o app fica aberto/online.
+**Segurança:** Credenciais/estados OAuth/feed sem grants para clientes; Edge Functions usam service role no servidor; chaves ficam em Supabase Secrets. Configuração detalhada em `docs/GOOGLE_CALENDAR_SETUP.md`.
+**Validação local:** `npm test` - 68 testes passando; `npm run lint` - 0 erros e 11 avisos preexistentes; `npx oxlint supabase/functions` - sem erros; `npm run build` - aprovado, com aviso do bundle acima de 500 kB.
+**Validação remota:** Migration aplicada e teste `supabase/tests/google_calendar_rls.sql` aprovado, conforme confirmação do usuário. Configurar secrets, fazer deploy das três Edge Functions e validar com uma conta Google. Auto sync não roda com o app fechado.
+
+## 2026-10-27 09:47 BRT - Fase 5 #19: migration confirmada
+
+**Status:** O usuário confirmou a aplicação bem-sucedida de `20261027130000_calendar_integration.sql` no Supabase.
+**Bloqueio de validação:** O acesso à janela Firefox do SQL Editor expirou antes de abrir; o teste `supabase/tests/google_calendar_rls.sql` não foi executado. Não há CLI nem conector Supabase disponível nesta sessão.
+**Pendências:** Configurar secrets e deployar as Edge Functions; executar o teste RLS e validar OAuth com conta Google.
+
 ---
 
 ## 2026-10-27 - Fase 5 iniciada: formatos e preview na Biblioteca (#18)
