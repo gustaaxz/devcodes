@@ -2,9 +2,23 @@
 
 Todas as mudanças notáveis do DevCodes são documentadas aqui.
 
-## [Unreleased] - Phase 4 em Progresso
+## [Unreleased] - Fase 4 Concluída
 
 ### Added
+- **Importação e backup de dados (#17)**
+  - Backup JSON completo e portátil de notas, tarefas, eventos, categorias e tags de notas
+  - Importação com prévia e validação de JSON/CSV, preservando categorias por nome e tags de notas
+  - IDs do arquivo são ignorados; registros são atribuídos ao usuário autenticado e adicionados sem substituir dados existentes
+- **Lembretes de tarefas (#15)**
+  - Configuração por tarefa e antecedência padrão nas Configurações
+  - Central de notificações na Topbar e toast in-app com ações de concluir, adiar e dispensar
+  - Migration com RLS, vínculo à tarefa proprietária e sincronização com prazo/status
+  - Tabelas e colunas da migration confirmadas via API do Supabase remoto
+  - Corrigido o trigger de cadastro e alinhado o schema remoto `display_name`/`full_name`
+  - Teste `supabase/tests/rls_isolation.sql` aprovado no SQL Editor com o marcador `OK: todos os testes de isolamento passaram`
+  - Serviço de perfil alinhado ao campo `full_name` com testes unitários
+  - Teste RLS ajustado para respeitar a proteção do Supabase Storage contra mutações SQL diretas; operações de arquivos permanecem na Storage API
+  - Notificações por e-mail não foram habilitadas
 - **Compartilhamento de Notas e Eventos (#13)**
   - Tabelas `note_shares`, `event_shares` e `share_access_logs` com isolamento e permissões via RLS
   - Componente modal `ShareModal` com abas para compartilhamento por email de usuário e geração de links públicos
