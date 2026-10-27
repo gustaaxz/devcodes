@@ -11,6 +11,7 @@ Todas as mudanças notáveis do DevCodes são documentadas aqui.
 - Unificados os temas claro/escuro, tipografia Inter, escala de espaçamento, superfícies, sombras e estados de foco/hover.
 - Navegação agrupada com estado ativo destacado, recolhimento persistido, fechamento por Escape no mobile e áreas de toque mais confortáveis.
 - Corrigidos tokens de cor ausentes e ajustadas legibilidade e responsividade do dashboard, tarefas, calendário, notas, arquivos e configurações.
+- Reorganizada a página `/tags` com resumo visual, criação guiada, busca e filtros mais claros, cartões de uso e menu acessível para favoritar, editar, mesclar e excluir.
 
 ### Fase 5 (#18) — entrega local em andamento
 - Conectadas tags coloridas a notas, tarefas e arquivos, com gerenciamento, favoritos, filtros por recurso, busca e mesclagem em `/tags`.
