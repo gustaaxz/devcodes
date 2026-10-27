@@ -1,5 +1,8 @@
 # Changelog
 
+### Documentação
+- README reescrito com requisitos e passos mínimos para clonar, configurar Supabase, aplicar migrations e iniciar o app localmente.
+
 ### Correcao de auditoria da Fase 6
 - Corrigida a trigger para ignorar deletes disparados por cascata durante a exclusao de uma conta, evitando inserir logs que referenciem um usuario removido.
 - O usuario confirmou a aplicacao da migration corretiva e aprovou `supabase/tests/phase6_audit_rls.sql`; o fixture remove a tarefa B antes da conta para nao acionar a trigger legada `change_log` durante a cascata.

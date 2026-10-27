@@ -1,5 +1,8 @@
 # Implementation Log
 
+## 2026-10-27 - README minimalista
+- Reorganizado o guia inicial para cobrir requisitos, clone, instalação, configuração do `.env`, migrations Supabase e execução local. Não foram feitas alterações de código.
+
 ## 2026-10-27 - Ajuste do fixture apos a segunda execucao remota
 - **Confirmacao:** O usuario aplicou `20261027170000_phase6_audit_cascade_fix.sql`; a nova execucao do teste avancou ate a exclusao da conta B.
 - **Causa da falha seguinte:** A trigger legada `capture_change_log()` registra exclusoes de tarefas e falha quando a tarefa e removida pela cascata da conta.

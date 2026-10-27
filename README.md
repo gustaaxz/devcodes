@@ -1,56 +1,57 @@
 # DevCodes
 
-Plataforma web pessoal para organização acadêmica e biblioteca de programação. Reúne calendário, tarefas, anotações e arquivos de código em um único ambiente, com autenticação, persistência real e isolamento de dados por usuário.
+Aplicação web para organizar calendário, tarefas, anotações e arquivos de código. Usa React, Vite e Supabase.
 
-## Funcionalidades
+## Requisitos
 
-- **Dashboard** com indicadores reais, compromissos do dia, prazos, anotações e arquivos recentes, e criação rápida.
-- **Calendário** mensal com eventos, tarefas com prazo e anotações vinculadas a datas.
-- **Tarefas** com filtros, destaque de atrasos e visualização em lista e em quadro.
-- **Anotações** gerais e por data, com busca, categorias, tags, favoritos, fixação, duplicação e salvamento automático.
-- **Biblioteca de Programação**, módulo independente das anotações: categorias dinâmicas, upload por botão e drag and drop, armazenamento privado, visualizador de código com realce de sintaxe e criação e edição de arquivos de texto.
-- **Pesquisa global**, **Favoritos**, **Arquivos recentes** e **Configurações** persistidas.
+- Git
+- Node.js 20.19 ou superior e npm
+- Um projeto Supabase
 
-A descrição completa está em [docs/FEATURES.md](docs/FEATURES.md).
+## Baixar e executar
 
-## Tecnologias
+1. Clone o repositório e entre na pasta:
 
-React, Vite, JavaScript, React Router, CSS, Lucide React, Prism, Supabase (Auth, PostgreSQL, Storage e RLS) e Vercel.
+   ```bash
+   git clone https://github.com/gustaaxz/devcodes.git
+   cd devcodes
+   ```
 
-## Início rápido
+2. Instale as dependências:
 
-Requisitos: Node.js 20.19 ou superior, NPM e um projeto Supabase.
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
-cp .env.example .env
-npm run dev
-```
+3. Crie o arquivo de ambiente a partir do exemplo:
 
-Preencha o `.env` com a URL e a chave pública do seu projeto Supabase. Sem essas variáveis, a aplicação exibe o aviso "Supabase não configurado".
+   ```powershell
+   Copy-Item .env.example .env
+   ```
 
-## Scripts
+   No macOS ou Linux, use `cp .env.example .env`.
 
-| Comando | Finalidade |
-|---|---|
-| `npm run dev` | Servidor de desenvolvimento |
-| `npm run build` | Build de produção em `dist/` |
-| `npm run preview` | Servidor local do build de produção |
-| `npm run lint` | Análise estática do código |
-| `npm test` | Testes automatizados |
+4. No `.env`, preencha a URL do projeto Supabase e a chave pública (`anon` ou `publishable`):
 
-## Documentação
+   ```env
+   VITE_SUPABASE_URL=https://SEU_PROJECT_REF.supabase.co
+   VITE_SUPABASE_ANON_KEY=SUA_CHAVE_PUBLICA
+   ```
 
-| Documento | Conteúdo |
-|---|---|
-| [docs/SETUP.md](docs/SETUP.md) | Configuração do Supabase, publicação no GitHub e na Vercel, atualização e solução de problemas |
-| [docs/FEATURES.md](docs/FEATURES.md) | Funcionalidades, modelo de dados, segurança e estrutura do projeto |
-| [docs/TESTING.md](docs/TESTING.md) | Testes automatizados, teste de RLS e checklist de aceitação |
-| [docs/LIMITATIONS.md](docs/LIMITATIONS.md) | Limitações conhecidas e itens não verificados |
+5. Para um projeto Supabase novo, aplique as migrations da pasta `supabase/migrations` na ordem dos nomes. Com a CLI do Supabase:
 
-## Segurança
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref SEU_PROJECT_REF
+   npx supabase db push
+   ```
 
-- Nenhuma chave administrativa é usada no navegador. Somente a chave pública do Supabase é exposta.
-- O arquivo `.env` está no `.gitignore`.
-- Todas as tabelas usam Row Level Security e o bucket de arquivos é privado.
-- O conteúdo dos arquivos enviados nunca é executado.
+6. Inicie a aplicação:
+
+   ```bash
+   npm run dev
+   ```
+
+7. Abra <http://localhost:5173> no navegador.
+
+Sem as variáveis do Supabase ou as migrations aplicadas, o app não consegue acessar os dados e serviços da plataforma. Nunca coloque uma chave `service_role` no `.env` do frontend.
