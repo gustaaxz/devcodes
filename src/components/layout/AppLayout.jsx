@@ -18,11 +18,27 @@ function AppFrame() {
   const { status } = useProfile()
   const reminderState = useTaskReminders()
   const isMobile = useMediaQuery('(max-width: 767px)')
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return window.localStorage.getItem('devcodes.sidebar-collapsed') === 'true'
+    } catch {
+      return false
+    }
+  })
   const [mobileOpen, setMobileOpen] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
+
+  function toggleSidebar() {
+    const nextValue = !collapsed
+    setCollapsed(nextValue)
+    try {
+      window.localStorage.setItem('devcodes.sidebar-collapsed', String(nextValue))
+    } catch {
+      // Sidebar state remains available for the current session.
+    }
+  }
 
   useKeyboardShortcuts({
     openSearch: () => {
@@ -50,7 +66,7 @@ function AppFrame() {
         collapsed={collapsed}
         isMobile={isMobile}
         mobileOpen={isMobile && mobileOpen}
-        onToggleCollapse={() => setCollapsed((value) => !value)}
+        onToggleCollapse={toggleSidebar}
         onCloseMobile={() => setMobileOpen(false)}
       />
       <div className="app-layout__main">
