@@ -92,7 +92,7 @@ export async function readFileText(record) {
 }
 
 export async function createPreviewUrl(record) {
-  const { data, error } = await supabase.storage.from(FILES_BUCKET).createSignedUrl(record.storage_key, 60)
+  const { data, error } = await supabase.storage.from(FILES_BUCKET).createSignedUrl(record.storage_key, 600)
   if (error) throw error
   return data.signedUrl
 }
