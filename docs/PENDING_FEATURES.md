@@ -55,6 +55,7 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 - Integração nos editores existentes: NoteEditor, TaskModal, FileItem, SearchBox
 - Smart Tags: sugestão automática ao criar recurso, limpeza de tags órfãs
 - Serviço `tagService.js`: CRUD de tags, associação a recursos, `searchTags()`, `getTopTags()`, `mergeTags()`
+- Ampliar os tipos de arquivo aceitos pela Biblioteca de Código, com catálogo centralizado de extensões, validação de tipo/conteúdo e testes para os novos formatos
 
 ---
 
