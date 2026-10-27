@@ -74,6 +74,38 @@
   text-decoration: underline;
 }
 
+.auth {
+  background:
+    radial-gradient(620px 440px at 50% 32%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 72%),
+    transparent;
+}
+
+.auth__card {
+  max-width: 440px;
+  padding: clamp(var(--space-6), 6vw, var(--space-10));
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.auth__logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  background: linear-gradient(140deg, #7c87ff 0%, #5965f2 52%, #4850d5 100%);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-accent) 34%, transparent);
+}
+
+.auth__heading h1 {
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  letter-spacing: -0.045em;
+}
+
+.auth__heading p {
+  margin-top: var(--space-2);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 480px) {
   .auth__card {
     padding: var(--space-6);
