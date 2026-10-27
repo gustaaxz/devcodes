@@ -22,7 +22,7 @@ No DevCodes, a segurança de dados **não depende da lógica do frontend**. Toda
 ## Políticas Padrão por Entidade
 
 ### 1. Políticas de Isolamento por Usuário
-Para tabelas privadas (`profiles`, `tasks`, `events`, `notes`, `note_versions`, `stored_files`, `categories`, `tags`, `task_reminders`, `reminder_preferences`):
+Para tabelas privadas com `user_id` (`profiles`, `tasks`, `events`, `notes`, `note_versions`, `stored_files`, `categories`, `tags`, `task_reminders`, `reminder_preferences`):
 ```sql
 CREATE POLICY "Users can manage own data"
 ON public.<tabela>
@@ -30,6 +30,12 @@ FOR ALL
 USING (auth.uid() = user_id)
 WITH CHECK (auth.uid() = user_id);
 ```
+
+Tabelas de associação sem `user_id` próprio (`note_tags`, `task_tags`, `file_tags`) aplicam RLS verificando a propriedade do recurso e da tag relacionada. `task_tags` também valida ambos os lados na política de inserção.
+
+A migration `20261027120000_phase5_tags.sql` instala um trigger `SECURITY DEFINER` com `search_path` fixo para remover tags sem associações após exclusões em qualquer tabela de vínculo. A função não pode ser chamada diretamente por `anon` ou `authenticated`, remove somente tags não favoritas e verifica vínculos em todas as três tabelas.
+
+Na integração Google (#19), refresh tokens são criptografados com AES-GCM no Edge Function; a chave fica em Supabase Function Secrets. `google_calendar_credentials` e `google_calendar_oauth_states` têm RLS ligado, sem policies para usuários e sem grants a `anon`/`authenticated`. Os estados OAuth expiram em 10 minutos, são vinculados ao usuário autenticado e consumidos uma vez. O feed iCalendar público armazena somente o SHA-256 de um token aleatório; seu link concede leitura dos títulos, descrições e horários até revogação/rotação.
 
 ### 2. Políticas de Storage (Bucket `code-files`)
 Arquivos enviados para o bucket de código são isolados em pastas prefixadas pelo `user_id`:
