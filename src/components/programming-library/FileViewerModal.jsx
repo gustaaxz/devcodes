@@ -7,16 +7,18 @@ import Spinner from '../ui/Spinner.jsx'
 import CodeViewer from './CodeViewer.jsx'
 import { FileTypeIcon } from './FileItem.jsx'
 import { useLoad } from '../../hooks/useLoad.js'
-import { readFileText, updateFileContent } from '../../services/files/filesService.js'
+import { createPreviewUrl, readFileText, updateFileContent } from '../../services/files/filesService.js'
 import { formatDateTime } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
-import { MAX_HIGHLIGHT_SIZE, MAX_VIEW_SIZE, formatBytes, getFileType, isTextFile } from '../../utils/files.js'
+import { MAX_HIGHLIGHT_SIZE, MAX_PREVIEW_SIZE, MAX_VIEW_SIZE, formatBytes, getFileType, isPreviewableFile, isTextFile } from '../../utils/files.js'
 import './FileViewerModal.css'
 
 export default function FileViewerModal({ file, categoryName, onClose, onDownload, onContentSaved }) {
   const type = getFileType(file.extension || file.original_name)
   const viewable = isTextFile(file) && file.size_bytes <= MAX_VIEW_SIZE
+  const previewable = isPreviewableFile(file) && file.size_bytes <= MAX_PREVIEW_SIZE
   const content = useLoad(() => (viewable ? readFileText(file) : Promise.resolve(null)), `${file.id}-${file.updated_at}`)
+  const preview = useLoad(() => (previewable ? createPreviewUrl(file) : Promise.resolve('')), `${file.id}-preview-${file.updated_at}`)
   const [override, setOverride] = useState(null)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
@@ -25,6 +27,7 @@ export default function FileViewerModal({ file, categoryName, onClose, onDownloa
   const [copied, setCopied] = useState(false)
 
   const code = override ?? content.data
+  const previewUrl = preview.data
 
   async function handleCopy() {
     try {
@@ -90,6 +93,17 @@ export default function FileViewerModal({ file, categoryName, onClose, onDownloa
 
         {viewable && content.loading && !code && <Spinner label="Carregando arquivo" />}
         {viewable && content.error && code === null && <Alert variant="error">{content.error}</Alert>}
+        {previewable && preview.loading && <Spinner label="Carregando pré-visualização" />}
+        {previewable && preview.error && <Alert variant="error">{preview.error}</Alert>}
+
+        {previewUrl && type?.mime === 'application/pdf' && (
+          <iframe className="viewer__preview viewer__preview--pdf" src={previewUrl} title={`Pré-visualização de ${file.original_name}`} />
+        )}
+        {previewUrl && type?.kind === 'image' && (
+          <div className="viewer__preview viewer__preview--image">
+            <img src={previewUrl} alt={`Pré-visualização de ${file.original_name}`} />
+          </div>
+        )}
 
         {code !== null && !editing && (
           <CodeViewer
@@ -119,7 +133,7 @@ export default function FileViewerModal({ file, categoryName, onClose, onDownloa
           </div>
         )}
 
-        {!viewable && (
+        {!viewable && !previewable && (
           <div className="viewer__unavailable">
             <FileTypeIcon file={file} size={32} />
             <p>
@@ -127,6 +141,12 @@ export default function FileViewerModal({ file, categoryName, onClose, onDownloa
                 ? `Arquivo maior que ${formatBytes(MAX_VIEW_SIZE)}. Baixe o original para abri-lo.`
                 : 'Este formato não possui visualização. Utilize o download para abrir o arquivo.'}
             </p>
+          </div>
+        )}
+        {isPreviewableFile(file) && !previewable && (
+          <div className="viewer__unavailable">
+            <FileTypeIcon file={file} size={32} />
+            <p>O arquivo excede o limite de {formatBytes(MAX_PREVIEW_SIZE)} para pré-visualização. Baixe o original para abri-lo.</p>
           </div>
         )}
 
