@@ -23,6 +23,9 @@ describe('nomes e extensoes', () => {
   it('identifica o tipo do arquivo', () => {
     expect(getFileType('a.py').language).toBe('python')
     expect(getFileType('manual.pdf').kind).toBe('binary')
+    expect(getFileType('Dockerfile').label).toBe('Dockerfile')
+    expect(getFileType('.env.example').label).toBe('Environment Example')
+    expect(getFileType('foto.webp').kind).toBe('image')
     expect(getFileType('programa.exe')).toBeNull()
   })
 
@@ -86,5 +89,24 @@ describe('validacao de upload', () => {
     expect(await validateFile(makeFile(['nao e zip'], 'a.zip'))).not.toBe('')
     expect(await validateFile(makeFile([new Uint8Array([0x50, 0x4b, 3, 4])], 'a.zip'))).toBe('')
     expect(await validateFile(makeFile([new Uint8Array([0xd0, 0xcf, 0x11, 0xe0])], 'a.doc'))).toBe('')
+  })
+
+  it('valida as assinaturas dos formatos de imagem aceitos', async () => {
+    expect(await validateFile(makeFile([new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])], 'a.png'))).toBe('')
+    expect(await validateFile(makeFile([new Uint8Array([0xff, 0xd8, 0xff, 0xe0])], 'a.jpeg'))).toBe('')
+    expect(await validateFile(makeFile(['conteudo falso'], 'a.png'))).toMatch(/imagem/)
+  })
+
+  it('aceita SVG local seguro e rejeita SVG ativo ou com referencia externa', async () => {
+    expect(await validateFile(makeFile(['<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0" /></svg>'], 'a.svg'))).toBe('')
+    expect(await validateFile(makeFile(['<svg><script>alert(1)</script></svg>'], 'a.svg'))).toMatch(/SVG/)
+    expect(await validateFile(makeFile(['<svg><image href="https://example.com/a.png" /></svg>'], 'a.svg'))).toMatch(/SVG/)
+  })
+
+  it('valida formatos Office e OpenDocument compactados', async () => {
+    const zipHeader = new Uint8Array([0x50, 0x4b, 0x03, 0x04])
+    expect(await validateFile(makeFile([zipHeader], 'slides.pptx'))).toBe('')
+    expect(await validateFile(makeFile([zipHeader], 'workbook.xlsx'))).toBe('')
+    expect(await validateFile(makeFile(['texto falso'], 'slides.pptx'))).not.toBe('')
   })
 })
