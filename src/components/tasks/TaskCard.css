@@ -122,3 +122,25 @@
   display: flex;
   flex-shrink: 0;
 }
+
+.task-card {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.task-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.task-card__description,
+.task-card__due {
+  font-size: 0.8125rem;
+}
+
+.task-card__tag {
+  padding: 3px var(--space-2);
+  font-size: 0.75rem;
+}
