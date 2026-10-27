@@ -39,12 +39,12 @@ Este documento organiza as fases de desenvolvimento do DevCodes, conectando o ro
 
 ---
 
-### Fase 5 — Integrações & Experiência Avançada
+### Fase 5 — Organização e Integração
 **Status:** ⏳ Planejada (0/4 concluídas)
-- [ ] **#18:** Integração com GitHub Gists (importar/exportar snippets)
-- [ ] **#19:** Modo Pomodoro integrado às tarefas
-- [ ] **#20:** Estatísticas avançadas de produtividade no Dashboard (gráficos de entrega)
-- [ ] **#21:** Suporte offline básico com cache local e Service Worker
+- [ ] **#18:** Tags e organização avançada, incluindo ampliação dos tipos de arquivo aceitos pela Biblioteca de Código
+- [ ] **#19:** Sincronização com Google Calendar e iCalendar
+- [ ] **#20:** Análise de produtividade com métricas e gráficos no Dashboard
+- [ ] **#21:** Backup automático e histórico de sincronização
 
 ---
 
