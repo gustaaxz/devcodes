@@ -12,7 +12,7 @@ Para itens em desenvolvimento imediato, consulte [docs/issues.md](file:///c:/Use
 
 | Item | Origem | Valor Esperado | Complexidade | Observações |
 | :--- | :--- | :--- | :---: | :--- |
-| **Tags Universais e Organização Avançada** | Melhoria #18 | Cruzar tags coloridas entre notas, tarefas e códigos na biblioteca. | Média | Tabela `tags` e `note_tags` já existem; falta interface unificada. |
+| **Tags Universais, Organização e Formatos de Arquivo** | Melhoria #18 | Cruzar tags coloridas entre notas, tarefas e códigos e ampliar os formatos aceitos pela biblioteca. | Média | Tabela `tags` e `note_tags` já existem; falta interface unificada e catálogo centralizado de extensões com validação e testes. |
 | **Integração com Google Calendar & iCal** | Melhoria #19 | Sincronização bidirecional de eventos e exportação em formato `.ics`. | Alta | Exige OAuth Google e gestão de conflitos de horário. |
 | **Dashboard de Análise de Produtividade** | Melhoria #20 | Métricas de entrega, streaks de estudo diário e gráficos por categoria. | Média | Biblioteca de gráficos (`recharts` ou similar). |
 | **Backup Automático Diário** | Melhoria #21 | Exportação periódica compactada em ZIP com dados do usuário. | Média | Pode utilizar Supabase Edge Function ou export local em segundo plano. |
