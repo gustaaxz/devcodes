@@ -10,6 +10,11 @@ Para o registro detalhado de implementação com timestamps e decisões técnica
 
 ## 2. Entradas de Deploys e Entregas
 
+### [2026-10-27] - Planejamento: preview de PDF e imagens na melhoria #18
+- **Fase:** Fase 5 - Organização e Integração
+- **Registro:** Escopo planejado para preview interno de PDF e imagens (SVG, PNG, JPEG/JPG, WebP e formatos adicionais aprovados), com validação de conteúdo e renderização segura.
+- **Estado da implementação:** Somente documentação/roadmap atualizados; nenhum código ou deploy realizado. PDF já é aceito atualmente sem preview e imagens ainda não são aceitas.
+
 ### [2026-10-27] - ISSUE-017: Backup e importação de dados
 - **Fase:** Fase 4 - Colaboração e Produtividade Avançada
 - **O que foi feito:** Backup JSON completo, importação de backups JSON e arquivos CSV/JSON por recurso, pré-validação e interface em Configurações.
