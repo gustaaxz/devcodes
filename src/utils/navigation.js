@@ -6,7 +6,8 @@ import {
   Code2,
   Clock,
   Star,
-  Settings
+  Settings,
+  Tags as TagsIcon
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -17,6 +18,7 @@ export const navigationItems = [
   { path: '/biblioteca', label: 'Biblioteca de Programação', icon: Code2 },
   { path: '/arquivos-recentes', label: 'Arquivos recentes', icon: Clock },
   { path: '/favoritos', label: 'Favoritos', icon: Star },
+  { path: '/tags', label: 'Tags', icon: TagsIcon },
   { path: '/configuracoes', label: 'Configurações', icon: Settings }
 ]
 
