@@ -20,6 +20,7 @@
 - Próximas validações: teste RLS remoto atualizado para #18 e revisão visual de `/analytics` para #20.
 
 ### Documentação
+- README reorganizado como guia de entrada, com funcionalidades, instalação, configuração Supabase, comandos, segurança e links para os guias detalhados.
 - README reescrito com requisitos e passos mínimos para clonar, configurar Supabase, aplicar migrations e iniciar o app localmente.
 
 ### Correcao de auditoria da Fase 6

@@ -1,5 +1,11 @@
 # Implementation Log
 
+## 2026-10-28 - README ampliado
+
+- README passou a apresentar os módulos, requisitos, configuração local/Supabase, comandos de desenvolvimento e verificação, estrutura do repositório e cuidados com credenciais.
+- Incluídos links para os guias especializados, para manter no README apenas o fluxo inicial e informações de referência.
+- Verificação: links internos conferidos e `git diff --check` sem erros.
+
 ## 2026-10-28 - Auditoria da conta recolhida por padrão
 
 - A auditoria aparece como subguia expansível na tela de configurações; o usuário escolhe quando visualizar os registros.
