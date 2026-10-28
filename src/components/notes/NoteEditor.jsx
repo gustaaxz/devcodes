@@ -232,7 +232,7 @@ export default function NoteEditor({ note, categories, tagSuggestions, onChanged
         </button>
         <button
           type="button"
-          className={`icon-button${note.is_favorite ? ' icon-button--active' : ''}`}
+          className={`icon-button${note.is_favorite ? ' favorite-star--active' : ''}`}
           onClick={() => toggleFlag('is_favorite')}
           aria-label={note.is_favorite ? 'Remover dos favoritos' : 'Favoritar'}
           aria-pressed={note.is_favorite}

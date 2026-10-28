@@ -1,5 +1,23 @@
 # Changelog
 
+## [Unreleased] - 2026-10-28
+
+### Melhorias
+- Estrelas dos favoritos de notas e arquivos ficam amarelas e preenchidas quando ativadas.
+- Documentado o fluxo existente de criação/atribuição, exibição e filtro de tags em arquivos da Biblioteca.
+- Anotações mostram prévias maiores e abrem o editor ao serem selecionadas; `.ics` é aceito na Biblioteca.
+- Removida a integração Google e o feed iCalendar, mantendo importação/exportação local `.ics`.
+- Corrigidas interações hover de opções ativas, ações de lembrete e acesso ao menu mobile.
+- Adicionado drag-and-drop entre colunas de tarefas e footer com guia rápido e link de sugestões.
+
+### Roadmap atualizado
+- Removida a antiga Fase 6 (#22–#26) do roadmap atual; os registros históricos de implementação foram preservados.
+- O roadmap ativo termina na Fase 5 (#1–#21); o ciclo atual também inclui a lista de ajustes de UX solicitada em 2026-10-28.
+
+### Escopo atual do projeto
+- O ciclo atual cobre todos os pedidos de favoritos, tags, `.ics`, anotações, lembretes, quadro de tarefas, menu mobile, estados hover e footer.
+- Próximas validações: teste RLS remoto atualizado para #18 e revisão visual de `/analytics` para #20.
+
 ### Documentação
 - README reescrito com requisitos e passos mínimos para clonar, configurar Supabase, aplicar migrations e iniciar o app localmente.
 

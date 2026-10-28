@@ -1,4 +1,4 @@
-import { createAdminClient, corsHeaders, getAuthenticatedUserId, jsonResponse } from '../_shared/googleCalendar.ts'
+import { createAdminClient, corsHeaders, getAuthenticatedUserId, jsonResponse } from '../_shared/supabase.ts'
 
 const BUCKET = 'user-backups'
 
@@ -15,7 +15,7 @@ async function checksum(bytes: Uint8Array) {
 async function createUserBackup(admin: ReturnType<typeof createAdminClient>, userId: string, retentionDays: number) {
   const tables = [
     'categories', 'programming_categories', 'tags', 'notes', 'note_versions', 'tasks', 'task_reminders',
-    'reminder_preferences', 'events', 'calendar_sync_logs', 'event_google_mapping', 'stored_files'
+    'reminder_preferences', 'events', 'stored_files'
   ]
   const entries = await Promise.all(tables.map(async (table) => {
     const { data, error } = await admin.from(table).select('*').eq('user_id', userId)

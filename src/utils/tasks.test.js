@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { compareTasks, getDueState } from './tasks.js'
+import { compareTasks, getDueState, moveTaskToStatus } from './tasks.js'
 
 const now = new Date(2026, 9, 22, 12, 0)
 const hours = (value) => new Date(now.getTime() + value * 3600000).toISOString()
@@ -20,5 +20,14 @@ describe('prazos de tarefas', () => {
     expect(sorted.map((item) => item.status)).toEqual(['in_progress', 'pending', 'pending', 'pending', 'done'])
     expect(sorted[1].due_at).toBe(hours(5))
     expect(sorted[3].due_at).toBeNull()
+  })
+})
+
+describe('movimentação no quadro', () => {
+  it('move somente a tarefa solta para a coluna de destino sem mutar a lista original', () => {
+    const tasks = [{ id: 'a', status: 'pending' }, { id: 'b', status: 'done' }]
+    const moved = moveTaskToStatus(tasks, 'a', 'in_progress')
+    expect(moved).toEqual([{ id: 'a', status: 'in_progress' }, { id: 'b', status: 'done' }])
+    expect(tasks[0].status).toBe('pending')
   })
 })

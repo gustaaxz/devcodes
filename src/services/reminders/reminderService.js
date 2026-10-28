@@ -150,12 +150,13 @@ export async function listDueReminders(userId, now = new Date().toISOString()) {
   return data || []
 }
 
-export async function markReminderNotified(reminderId, userId) {
+export async function markReminderNotified(reminderId, userId, expectedRemindAt) {
   const { data, error } = await supabase
     .from('task_reminders')
     .update({ status: 'notified' })
     .eq('id', reminderId)
     .eq('user_id', userId)
+    .eq('remind_at', expectedRemindAt)
     .in('status', ['pending', 'snoozed'])
     .select('*')
     .maybeSingle()

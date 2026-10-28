@@ -51,9 +51,12 @@
 .note-list__snippet {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .note-list__meta {
@@ -86,6 +89,10 @@
 
 .note-list__item--active {
   box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.note-list__item--active:hover {
+  border-color: var(--color-accent);
 }
 
 .note-list__snippet,

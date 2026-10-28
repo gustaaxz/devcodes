@@ -73,7 +73,7 @@ export default function Favorites() {
                 </Link>
                 <button
                   type="button"
-                  className="icon-button icon-button--active"
+                  className="icon-button favorite-star--active"
                   onClick={() => removeNote(note)}
                   aria-label="Remover dos favoritos"
                 >

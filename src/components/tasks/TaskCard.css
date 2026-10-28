@@ -120,7 +120,22 @@
 
 .task-card__actions {
   display: flex;
+  align-items: center;
+  gap: var(--space-1);
   flex-shrink: 0;
+}
+
+.task-card--draggable {
+  cursor: grab;
+}
+
+.task-card--draggable:active {
+  cursor: grabbing;
+}
+
+.task-card__drag-handle {
+  color: color-mix(in srgb, var(--color-text-muted) 52%, transparent);
+  cursor: grab;
 }
 
 .task-card {

@@ -22,6 +22,7 @@ export const FILE_TYPES = {
   scss: textType('SCSS', 'scss', 'text/x-scss'),
   json: textType('JSON', 'json', 'application/json'),
   md: textType('Markdown', 'markdown', 'text/markdown'),
+  ics: textType('iCalendar', null, 'text/calendar'),
   txt: textType('Texto', null),
   java: textType('Java', 'java', 'text/x-java-source'),
   py: textType('Python', 'python', 'text/x-python'),

@@ -32,6 +32,12 @@ export function useLoad(loader, key = '') {
   }, [key, version])
 
   const reload = useCallback(() => setVersion((value) => value + 1), [])
+  const setData = useCallback((nextData) => {
+    setState((current) => ({
+      ...current,
+      data: typeof nextData === 'function' ? nextData(current.data) : nextData
+    }))
+  }, [])
 
-  return { ...state, reload }
+  return { ...state, reload, setData }
 }

@@ -618,6 +618,12 @@ const ENGLISH_TEXT = {
   'search.detail.file': 'File · {size}'
 }
 
+ENGLISH_TEXT['Enviar sugestões'] = 'Send feedback'
+ENGLISH_TEXT['Guia rápido'] = 'Quick guide'
+ENGLISH_TEXT.Configurações = 'Settings'
+ENGLISH_TEXT['Links úteis'] = 'Useful links'
+ENGLISH_TEXT['Organize seus estudos, tarefas e projetos em um só lugar.'] = 'Organize your studies, tasks, and projects in one place.'
+
 export function translate(locale, key, values = {}) {
   const template = MESSAGES[locale]?.[key] ?? (locale === 'en-US' ? ENGLISH_TEXT[key] : undefined) ?? MESSAGES['pt-BR'][key] ?? key
   return template.replace(/\{(\w+)\}/g, (_, name) => values[name] ?? `{${name}}`)

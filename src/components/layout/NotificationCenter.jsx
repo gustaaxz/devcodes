@@ -16,14 +16,18 @@ export default function NotificationCenter({
 }) {
   const [open, setOpen] = useState(false)
   const [actionError, setActionError] = useState('')
+  const [pendingId, setPendingId] = useState(null)
   const unread = reminders.filter((reminder) => reminder.status === 'notified').length
 
-  async function runAction(action) {
+  async function runAction(action, reminderId) {
     setActionError('')
+    setPendingId(reminderId)
     try {
       await action()
     } catch (actionError) {
       setActionError(friendlyError(actionError, 'Não foi possível atualizar o lembrete.'))
+    } finally {
+      setPendingId(null)
     }
   }
 
@@ -65,10 +69,10 @@ export default function NotificationCenter({
                       </Link>
                     </div>
                     <div className="notification-center__item-actions">
-                      <button type="button" className="icon-button" aria-label="Adiar 15 minutos" onClick={() => runAction(() => onSnooze(reminder.id))}>
+                      <button type="button" className="icon-button" aria-label="Adiar 15 minutos" disabled={pendingId === reminder.id} onClick={() => runAction(() => onSnooze(reminder.id), reminder.id)}>
                         <Clock3 size={15} />
                       </button>
-                      <button type="button" className="icon-button" aria-label="Dispensar lembrete" onClick={() => runAction(() => onDismiss(reminder.id))}>
+                      <button type="button" className="icon-button" aria-label="Dispensar lembrete" disabled={pendingId === reminder.id} onClick={() => runAction(() => onDismiss(reminder.id), reminder.id)}>
                         <X size={15} />
                       </button>
                     </div>
@@ -89,13 +93,13 @@ export default function NotificationCenter({
                 <span>{reminder.tasks?.title || 'Tarefa com prazo próximo'}</span>
               </div>
               <div className="reminder-toast__actions">
-                <button type="button" className="button button--secondary button--small" onClick={() => runAction(() => onSnooze(reminder.id))}>
+                <button type="button" className="button button--secondary button--small" disabled={pendingId === reminder.id} onClick={() => runAction(() => onSnooze(reminder.id), reminder.id)}>
                   <Clock3 size={14} /> Adiar 15 min
                 </button>
-                <button type="button" className="button button--primary button--small" onClick={() => runAction(() => onComplete(reminder))}>
+                <button type="button" className="button button--primary button--small" disabled={pendingId === reminder.id} onClick={() => runAction(() => onComplete(reminder), reminder.id)}>
                   <Check size={14} /> Concluir
                 </button>
-                <button type="button" className="icon-button" aria-label="Dispensar lembrete" onClick={() => runAction(() => onDismiss(reminder.id))}>
+                <button type="button" className="icon-button" aria-label="Dispensar lembrete" disabled={pendingId === reminder.id} onClick={() => runAction(() => onDismiss(reminder.id), reminder.id)}>
                   <X size={15} />
                 </button>
               </div>

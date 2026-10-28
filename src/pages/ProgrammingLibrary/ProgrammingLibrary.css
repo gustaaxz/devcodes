@@ -53,6 +53,7 @@
 }
 
 .library__favorites--active {
+  --pressed-color: var(--color-warning);
   border-color: var(--color-warning);
   color: var(--color-warning);
 }

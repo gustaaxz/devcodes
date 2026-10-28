@@ -5,7 +5,6 @@ import CategoryManagerModal from '../../components/programming-library/CategoryM
 import DataImportPanel from '../../components/settings/DataImportPanel.jsx'
 import BackupManager from '../../components/settings/BackupManager.jsx'
 import AuditLogPanel from '../../components/settings/AuditLogPanel.jsx'
-import GoogleCalendarIntegration from '../../components/settings/GoogleCalendarIntegration.jsx'
 import MfaSettings from '../../components/settings/MfaSettings.jsx'
 import Alert from '../../components/ui/Alert.jsx'
 import SelectField from '../../components/ui/SelectField.jsx'
@@ -208,8 +207,6 @@ export default function Settings() {
           />
         </Row>
       </Section>
-
-      <GoogleCalendarIntegration userId={user.id} />
 
       <Section title="Lembretes de tarefas" description="Receba avisos dentro do DevCodes para tarefas com prazo. Os lembretes são verificados enquanto o aplicativo está aberto.">
         <Row label="Notificações no aplicativo" hint="Exibe um aviso na central quando o lembrete vence.">

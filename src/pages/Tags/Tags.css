@@ -339,6 +339,7 @@
 }
 
 .tags-page__favorite-filter--active {
+  --pressed-color: var(--color-warning);
   border-color: color-mix(in srgb, var(--color-warning) 55%, var(--color-border));
   background: color-mix(in srgb, var(--color-warning) 12%, var(--color-surface));
   color: var(--color-warning);
@@ -508,6 +509,12 @@
 
 .tags-page__menu-trigger:hover,
 .tags-page__menu-trigger--active {
+  border-color: var(--color-border);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.tags-page__menu-trigger--active:hover {
   border-color: var(--color-border);
   background: var(--color-surface-hover);
   color: var(--color-text);

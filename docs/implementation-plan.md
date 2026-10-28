@@ -4,15 +4,13 @@
 
 Este documento organiza as fases de desenvolvimento do DevCodes, conectando o roadmap de funcionalidades ao estado real de entrega.
 
-**Status Geral:** 19/26 melhorias validadas no ambiente remoto. A Fase 5 mantém validações/publicações externas pendentes; a implementação local da Fase 6 está concluída (5/5), com #23 validada remotamente.
+**Roadmap atual:** Fases 1–5, melhorias #1–#21. A antiga Fase 6 (#22–#26) foi removida do roadmap; seu histórico de implementação permanece nos registros de entrega.
+**Escopo ativo atualizado em 2026-10-28:** implementar toda a lista de melhorias de interface e comportamento solicitada pelo usuário, sem limitar o trabalho às issues #18 e #20.
 **ReferÃªncia Detalhada:** [PENDING_FEATURES.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/PENDING_FEATURES.md)
 
 ---
 
 ## SequÃªncia de ImplementaÃ§Ã£o
-
-### Atualizacao remota da Fase 6
-O usuario aplicou as migrations inicial e corretiva e confirmou que `supabase/tests/phase6_audit_rls.sql` retornou sucesso. A validacao remota de #23 esta concluida; falta configurar/verificar MFA TOTP.
 
 ### Fases 1 a 3 â€” FundaÃ§Ã£o, UX & Recursos Essenciais (ConcluÃ­das)
 **Status:** âœ… ConcluÃ­da (13 melhorias entregues)
@@ -43,26 +41,17 @@ O usuario aplicou as migrations inicial e corretiva e confirmou que `supabase/te
 ---
 
 ### Fase 5 â€” OrganizaÃ§Ã£o e IntegraÃ§Ã£o
-**Status:** Implementada localmente (4/4); validação e publicação remota pendentes
+**Status:** ciclo ativo contempla os pedidos de organização, calendário local e ajustes gerais de UX descritos na issue atual.
 - [ ] **#18 (em andamento):** Tags e organizaÃ§Ã£o avanÃ§ada, incluindo ampliaÃ§Ã£o segura dos tipos de arquivo aceitos pela Biblioteca de CÃ³digo. ImplementaÃ§Ã£o local: associaÃ§Ãµes de tags em notas/tarefas/arquivos, gerenciamento central, sugestÃµes por conteÃºdo e limpeza automÃ¡tica; catÃ¡lago/preview da biblioteca ampliados. Migration de tags aplicada pelo usuário; falta executar o teste RLS atualizado no Supabase remoto.
   - Documentos: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf` (`.doc`/`.docx` jÃ¡ sÃ£o aceitos)
   - Preview interno de PDF e imagens (SVG, PNG, JPEG, WebP, GIF, BMP e AVIF) implementado com URL assinada; os SVGs são exibidos como imagem e submetidos a validação contra scripts e referências externas.
   - Formatos sem preview continuam disponíveis para download; arquivos `.env` seguem bloqueados.
   - CÃ³digo, configuraÃ§Ã£o e dados: `.vue`, `.svelte`, `.swift`, `.dart`, `.ipynb`, `.toml`, `.ini`, `.conf`, `.tf`, `.hcl`, `.gradle`, `.properties`, `.csv`, `.log`, `.rst` e `.adoc`
   - Dotfiles de projeto selecionados (`Dockerfile`, `.gitignore`, `.dockerignore`, `.editorconfig`, `.env.example`), com validaÃ§Ã£o de MIME/conteÃºdo e testes; `.env` permanece bloqueado
-- [ ] **#19 (em andamento):** Sincronização com Google Calendar e iCalendar. Import/export `.ics`, feed protegido por token, OAuth/PKCE server-side, sync bidirecional manual/Realtime e logs estão no código; migration aplicada pelo usuário; teste RLS confirmado como aprovado pelo usuário; faltam configurar/deployar Edge Functions e secrets e validar OAuth com conta Google. Auto sync com browser fechado segue pendente.
+- [x] **#19:** Removidos do app sincronização Google Calendar e feed iCalendar; importação/exportação local `.ics` permanecem. Migration de remoção do schema remoto criada; aguarda aplicação no Supabase.
 - [x] **#20:** Análise de produtividade com métricas e gráficos em `/analytics` (código local; validação visual pendente)
-- [x] **#21:** Backup manual/automático, histórico e auditoria (código local; job pg_cron ID 1 criado; migration/função/secrets e execução ainda precisam de validação)
-
----
-
-### Fase 6 â€” SeguranÃ§a, Qualidade e Polimento
-**Status:** Implementação local concluída (5/5); migration e teste RLS da auditoria aprovados pelo usuário. Falta habilitar/verificar MFA no projeto Supabase.
-- [x] **#22:** MFA TOTP via Supabase Auth, com cadastro/remoção em Configurações e desafio ao entrar em sessões que exigem AAL2. Habilitar MFA e verificação TOTP nas configurações de Auth antes de publicar.
-- [x] **#23:** Trilha de auditoria para perfis, tarefas, notas, eventos, arquivos, categorias, tags e compartilhamentos. Migration independente aplicada e teste `supabase/tests/phase6_audit_rls.sql` aprovado pelo usuário no Supabase remoto.
-- [x] **#24:** Internacionalização PT-BR/EN-US para texto JSX, atributos acessíveis, mensagens e datas; idioma persistido nas preferências do perfil. `npm run i18n:check` valida a cobertura de textos JSX.
-- [x] **#25:** Testes E2E Playwright cobrindo login, navegação autenticada, troca de idioma, desafio e cadastro TOTP, validação de tarefa, cadastro/recuperação de conta e rotas públicas, com Supabase mockado.
-- [x] **#26:** Tour de boas-vindas pelo painel, tarefas, anotações, biblioteca e analytics; conclusão salva nas preferências do perfil.
+- [x] **#21 (fora do escopo atual):** Backup manual/automático, histórico e auditoria implementados localmente; o job pg_cron foi criado. Validações operacionais pendentes não fazem parte do foco atual.
+- [x] **Solicitações de UX (2026-10-28):** estrela amarela; tags em arquivos e `.ics` na Biblioteca; prévias de anotações; hover dos estados selecionados; ações de lembrete; drag-and-drop entre colunas; overlay do menu mobile; footer com links úteis.
 
 ---
 

@@ -113,7 +113,7 @@ export default function BackupManager() {
       </li>)}</ul> : <p className="backup-manager__hint">Nenhum backup criado ainda.</p>}
       <h3>Histórico de sincronização</h3>
       {data.history.length ? <ul className="backup-manager__history">{data.history.map((entry) => <li key={entry.id}>
-        <span>{entry.sync_type === 'backup' ? 'Backup' : entry.sync_type === 'google_calendar' ? 'Google Calendar' : entry.sync_type}</span>
+        <span>{entry.sync_type === 'backup' ? 'Backup' : entry.sync_type}</span>
         <strong data-status={entry.status}>{entry.status === 'success' ? 'Concluída' : entry.status === 'running' ? 'Em andamento' : entry.status === 'partial' ? 'Parcial' : 'Falhou'}</strong>
         <time>{new Date(entry.started_at).toLocaleString('pt-BR')}</time>
         {entry.details?.message && <small>{entry.details.message}</small>}

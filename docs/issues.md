@@ -2,16 +2,13 @@
 
 ## Por que este arquivo existe
 
-### Atualizacao remota da Fase 6
-O usuario confirmou o sucesso de `supabase/tests/phase6_audit_rls.sql` apos aplicar a migration corretiva e ajustar a ordem de limpeza do fixture. A validacao de auditoria terminou; falta habilitar/verificar MFA TOTP no Supabase Auth.
-
-Este documento é a fonte canônica local de tarefas e issues ativas e planejadas do DevCodes, acompanhando o ciclo de vida das 26 melhorias do projeto.
+Este documento é a fonte canônica local de tarefas e issues ativas e planejadas do DevCodes. O roadmap atual cobre as Fases 1–5 (#1–#21); a antiga Fase 6 foi removida do roadmap.
 
 ---
 
 ## Próximas Issues em Foco
 
-Fase 4 concluída. A Fase 5 mantém validações/publicações remotas pendentes conforme o roadmap. A Fase 6 está implementada localmente (5/5): MFA TOTP (#22), auditoria independente (#23), i18n PT-BR/EN-US (#24), Playwright E2E (#25) e onboarding (#26). O usuário confirmou a aplicação das migrations de auditoria e a aprovação de `supabase/tests/phase6_audit_rls.sql`; falta habilitar/verificar MFA TOTP no Supabase. Roadmap canônico: `docs/implementation-plan.md`.
+**Escopo desta entrega:** favoritos amarelos, tags em arquivos, suporte a `.ics` sem sincronização Google, anotações com prévia e expansão, hover de estados ativos, correção das ações de lembrete, drag-and-drop no quadro, navegação mobile e footer. Roadmap canônico: `docs/implementation-plan.md`.
 
 ---
 

@@ -19,3 +19,7 @@ export function compareTasks(a, b) {
   if (b.due_at) return 1
   return new Date(b.created_at) - new Date(a.created_at)
 }
+
+export function moveTaskToStatus(tasks, taskId, status) {
+  return (tasks || []).map((task) => task.id === taskId ? { ...task, status } : task)
+}

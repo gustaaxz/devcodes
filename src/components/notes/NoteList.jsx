@@ -3,11 +3,7 @@ import { formatShortDate, fromDateKey } from '../../utils/dates.js'
 import './NoteList.css'
 
 function buildSnippet(content) {
-  return content
-    .replace(/[#*_-]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 90)
+  return content.replace(/\s+/g, ' ').trim()
 }
 
 export default function NoteList({ notes, selectedId, onSelect }) {

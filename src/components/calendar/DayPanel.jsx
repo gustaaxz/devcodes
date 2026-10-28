@@ -38,7 +38,6 @@ export default function DayPanel({ dateKey, events, tasks, notes, onCreateEvent,
                 {event.description && <p>{event.description}</p>}
                 <div className="day-panel__badges">
                   {event.categories && <Badge color={event.categories.color}>{event.categories.name}</Badge>}
-                  {event.google_synced && <Badge variant="accent">Sincronizado com Google</Badge>}
                   {event.is_shared && <Badge variant="accent">Compartilhado</Badge>}
                   <Badge variant={event.priority}>{getLabel(PRIORITY_OPTIONS, event.priority)}</Badge>
                   <Badge>{getLabel(EVENT_STATUS_OPTIONS, event.status)}</Badge>

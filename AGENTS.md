@@ -8,7 +8,7 @@
 
 **Solução:** DevCodes unifica calendário, tarefas, anotações e código em uma plataforma web única com sincronização em tempo real via Supabase.
 
-**Status:** 18/26 melhorias implementadas (69%). Fase 4 concluída; teste de isolamento RLS da #15 aprovado no Supabase.
+**Status:** Roadmap atual cobre as Fases 1–5 (#1–#21). O ciclo de trabalho vigente inclui os ajustes solicitados pelo usuário para favoritos, tags e arquivos `.ics`, anotações, lembretes, quadro de tarefas, menu mobile, hover e footer. A integração com Google Calendar/iCalendar foi removida da aplicação. Consulte `docs/implementation-plan.md` para o estado das entregas.
 
 ---
 
@@ -64,7 +64,7 @@
 | `docs/backlog.md` | Ideias futuras e melhorias planejadas |
 | `docs/decision-log.md` | Histórico de decisões importantes (ADRs) |
 | `docs/TESTING.md` | Estratégia e tipos de testes |
-| `docs/implementation-plan.md` | Roadmap das 26 melhorias (Fases 1 a 6) |
+| `docs/implementation-plan.md` | Roadmap atual das melhorias #1–#21 (Fases 1 a 5) |
 | `implementation-log.md` | Log técnico com timestamps e outcomes |
 | `docs/deployment-log.md` | Registro de deploys e histórico de entregas |
 | `CHANGELOG.md` | Versões e mudanças públicas |

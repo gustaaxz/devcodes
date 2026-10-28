@@ -111,6 +111,18 @@ a {
   color: var(--color-text);
 }
 
+.favorite-star--active {
+  color: #facc15;
+}
+
+.favorite-star--active:hover {
+  color: #facc15;
+}
+
+.favorite-star--active svg {
+  fill: currentColor;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -157,6 +169,12 @@ a {
 
 .button--secondary:hover {
   border-color: var(--color-accent);
+}
+
+.button--secondary[aria-pressed='true']:hover {
+  border-color: color-mix(in srgb, var(--pressed-color, var(--color-accent)) 55%, var(--color-border));
+  background: color-mix(in srgb, var(--pressed-color, var(--color-accent)) 12%, var(--color-surface));
+  color: var(--pressed-color, var(--color-accent));
 }
 
 .button--danger {
@@ -240,6 +258,11 @@ a {
 
 .segmented__item--active {
   background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.segmented__item--active:hover {
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface));
   color: var(--color-accent);
 }
 

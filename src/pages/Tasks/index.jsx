@@ -18,7 +18,7 @@ import { deleteTask, listTasks, setTaskStatus } from '../../services/tasks/tasks
 import { isSameDay } from '../../utils/dates.js'
 import { friendlyError } from '../../utils/errors.js'
 import { PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from '../../utils/labels.js'
-import { compareTasks, getDueState } from '../../utils/tasks.js'
+import { compareTasks, getDueState, moveTaskToStatus } from '../../utils/tasks.js'
 import './Tasks.css'
 
 const DUE_FILTER_OPTIONS = [
@@ -53,23 +53,25 @@ export default function Tasks() {
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [busy, setBusy] = useState(false)
   const [actionError, setActionError] = useState('')
+  const [draggedTaskId, setDraggedTaskId] = useState(null)
+  const [dragOverStatus, setDragOverStatus] = useState('')
 
   // Setup realtime sync for tasks
   useRealtimeSync(
     'tasks',
     { filter: `user_id=eq.${user.id}` },
     (updated) => {
-      tasks.data = (tasks.data || []).map((task) =>
+      tasks.setData((current) => (current || []).map((task) =>
         task.id === updated.id ? { ...task, ...updated } : task
-      )
+      ))
     },
     (deleted) => {
-      tasks.data = (tasks.data || []).filter((task) => task.id !== deleted.id)
+      tasks.setData((current) => (current || []).filter((task) => task.id !== deleted.id))
     },
     (inserted) => {
-      if (!tasks.data?.some((t) => t.id === inserted.id)) {
-        tasks.data = [{ ...inserted, tags: [] }, ...(tasks.data || [])]
-      }
+      tasks.setData((current) => current?.some((task) => task.id === inserted.id)
+        ? current
+        : [{ ...inserted, tags: [] }, ...(current || [])])
     }
   )
 
@@ -105,19 +107,34 @@ export default function Tasks() {
     setActionError('')
     const previousTasks = tasks.data
     // Atualização otimista
-    tasks.data = (tasks.data || []).map((t) => (t.id === task.id ? { ...t, status } : t))
+    tasks.setData((current) => moveTaskToStatus(current, task.id, status))
     try {
       await setTaskStatus(task.id, status)
       tasks.reload()
     } catch (error) {
       // Revert ao status anterior se falhar
-      tasks.data = previousTasks
+      tasks.setData(previousTasks)
       setActionError(friendlyError(error, 'Não foi possível atualizar a tarefa.'))
     }
   }
 
   function toggleDone(task) {
     return changeStatus(task, task.status === 'done' ? 'pending' : 'done')
+  }
+
+  function handleTaskDragStart(event, task) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', task.id)
+    setDraggedTaskId(task.id)
+  }
+
+  function handleTaskDrop(event, status) {
+    event.preventDefault()
+    const taskId = event.dataTransfer.getData('text/plain') || draggedTaskId
+    const task = (tasks.data || []).find((item) => item.id === taskId)
+    setDraggedTaskId(null)
+    setDragOverStatus('')
+    if (task && task.status !== status) changeStatus(task, status)
   }
 
   async function confirmDelete() {
@@ -253,13 +270,27 @@ export default function Tasks() {
           {TASK_STATUS_OPTIONS.map((column) => {
             const columnTasks = filtered.filter((task) => task.status === column.value)
             return (
-              <section key={column.value} className="tasks-page__column">
+              <section
+                key={column.value}
+                className={`tasks-page__column${dragOverStatus === column.value ? ' tasks-page__column--drop-target' : ''}`}
+                onDragOver={(event) => { event.preventDefault(); setDragOverStatus(column.value) }}
+                onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setDragOverStatus('') }}
+                onDrop={(event) => handleTaskDrop(event, column.value)}
+              >
                 <h3>
                   {column.label}
                   <span>{columnTasks.length}</span>
                 </h3>
                 {columnTasks.map((task) => (
-                  <TaskCard key={task.id} task={task} showStatusSelect {...cardHandlers} />
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    showStatusSelect
+                    draggable
+                    onDragStart={handleTaskDragStart}
+                    onDragEnd={() => { setDraggedTaskId(null); setDragOverStatus('') }}
+                    {...cardHandlers}
+                  />
                 ))}
               </section>
             )

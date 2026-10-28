@@ -2,25 +2,22 @@
 
 ## 1. Visão Geral
 
-Este documento registra oportunidades, melhorias e hipóteses em incubação que estão fora do ciclo ativo de sprints (Fases 1 a 4). 
+Este documento registra oportunidades futuras. O ciclo ativo está descrito em `docs/issues.md` e `docs/implementation-plan.md` e inclui as melhorias solicitadas em 2026-10-28.
 
 Para itens em desenvolvimento imediato, consulte [docs/issues.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/issues.md) e [docs/implementation-plan.md](file:///c:/Users/gustavo_hatschbach/Desktop/devcodes/docs/implementation-plan.md).
 
 ---
 
-## 2. Itens Priorizados para Futuras Fases (Fases 5 e 6)
+## 2. Melhorias e estado em relação ao escopo atual
+
+Os itens abaixo são referências futuras ou funcionalidades já implementadas.
 
 | Item | Origem | Valor Esperado | Complexidade | Observações |
 | :--- | :--- | :--- | :---: | :--- |
-| **Tags Universais, Organização e Formatos de Arquivo** | Melhoria #18 | Cruzar tags coloridas entre notas, tarefas e códigos; ampliar formatos para documentos (`.pptx`, `.xlsx`, OpenDocument), imagens, código, configuração e dados; visualizar PDFs e imagens dentro do sistema. | Média | `.doc`/`.docx` já existem; PDF é aceito, mas ainda não tem preview. Planejar preview interno para PDF, SVG, PNG, JPEG e outros formatos de imagem, com validação de conteúdo e renderização segura. Arquivos `.env` ficam bloqueados. |
-| **Integração com Google Calendar & iCal** | Melhoria #19 | Sincronização bidirecional de eventos e exportação em formato `.ics`. | Alta | Exige OAuth Google e gestão de conflitos de horário. |
-| **Dashboard de Análise de Produtividade** | Melhoria #20 | Métricas de entrega, streaks de estudo diário e gráficos por categoria. | Média | Biblioteca de gráficos (`recharts` ou similar). |
+| **Tags Universais, Organização e Formatos de Arquivo** | Melhoria #18 — foco ativo | Tags cruzadas entre notas, tarefas e arquivos; formatos ampliados e preview seguro. Implementação local registrada; falta executar o teste RLS atualizado no Supabase remoto. Arquivos `.env` continuam bloqueados. | Média | Ver `docs/implementation-plan.md` para o escopo entregue e a validação pendente. |
+| **Importação e exportação local de calendário** | Melhoria #19 | Intercâmbio de eventos por arquivos `.ics`, sem sincronização externa. | Média | Disponível no calendário DevCodes; `.ics` também é aceito na Biblioteca. |
+| **Dashboard de Análise de Produtividade** | Melhoria #20 — foco ativo | Dashboard `/analytics` implementado localmente com métricas agregadas. Falta validação visual. | Média | Ver `docs/implementation-plan.md`. |
 | **Backup Automático Diário** | Melhoria #21 | Exportação periódica compactada em ZIP com dados do usuário. | Média | Pode utilizar Supabase Edge Function ou export local em segundo plano. |
-| **Autenticação em Dois Fatores (2FA/MFA)** | Melhoria #22 | Camada adicional de proteção via TOTP (Google Authenticator). | Média | Suportado nativamente pelo Supabase Auth. |
-| **Auditoria e Logs de Atividades** | Melhoria #23 | Histórico detalhado de logins, alterações e exclusões com rollback. | Média | Tabela `audit_logs` com trigger dedicado. |
-| **Internacionalização (i18n)** | Melhoria #24 | Suporte completo a Português (PT-BR) e Inglês (EN-US). | Média | Centralização de strings em dicionários JSON. |
-| **Testes End-to-End (E2E)** | Melhoria #25 | Bateria automatizada de testes de regressão de ponta a ponta com Playwright. | Alta | Rodar em pipeline CI/CD na Vercel/GitHub Actions. |
-| **Tour Interativo de Onboarding** | Melhoria #26 | Guia passo a passo para novos usuários após primeiro login. | Baixa | Componente de tour com tooltips explicativos. |
 
 ---
 

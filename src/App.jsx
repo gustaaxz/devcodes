@@ -19,12 +19,9 @@ import Settings from './pages/Settings/index.jsx'
 import SharedResource from './pages/SharedResource/index.jsx'
 import Tags from './pages/Tags/index.jsx'
 import Analytics from './pages/Analytics/index.jsx'
-import { useGoogleCalendarAutoSync } from './hooks/useGoogleCalendarAutoSync.js'
 
 export default function App() {
-  const { status, user } = useAuth()
-  useGoogleCalendarAutoSync(user?.id)
-
+  const { status } = useAuth()
   if (status === 'unconfigured') return <ConfigurationNotice />
 
   return (

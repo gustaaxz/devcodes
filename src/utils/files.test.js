@@ -26,6 +26,7 @@ describe('nomes e extensoes', () => {
     expect(getFileType('Dockerfile').label).toBe('Dockerfile')
     expect(getFileType('.env.example').label).toBe('Environment Example')
     expect(getFileType('foto.webp').kind).toBe('image')
+    expect(getFileType('agenda.ics')).toMatchObject({ kind: 'text', label: 'iCalendar', mime: 'text/calendar' })
     expect(getFileType('programa.exe')).toBeNull()
   })
 
@@ -71,6 +72,11 @@ describe('validacao de renomeacao', () => {
 describe('validacao de upload', () => {
   it('aceita codigo de texto valido', async () => {
     expect(await validateFile(makeFile(['const a = 1'], 'a.js'))).toBe('')
+  })
+
+  it('aceita arquivos iCalendar .ics como texto', async () => {
+    const calendar = 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR'
+    expect(await validateFile(makeFile([calendar], 'agenda.ics'))).toBe('')
   })
 
   it('rejeita extensao nao permitida', async () => {

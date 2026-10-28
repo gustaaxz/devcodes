@@ -44,7 +44,7 @@ A migration `20261027120000_phase5_tags.sql` instala um trigger `SECURITY DEFINE
 
 A trilha de auditoria da Fase 6 usa `public.audit_log`, isolada por usuário com RLS. O cliente autenticado tem apenas `SELECT`; triggers `SECURITY DEFINER` registram operação e nomes dos campos alterados sem copiar conteúdo de notas, descrições ou arquivos. A migration `20261027160000_phase6_audit_log.sql` pode ser aplicada independentemente das migrations de backup. Depois de aplicá-la, rode `supabase/tests/phase6_audit_rls.sql` para verificar o isolamento e o bloqueio de escrita pelo cliente.
 
-Na integração Google (#19), refresh tokens são criptografados com AES-GCM no Edge Function; a chave fica em Supabase Function Secrets. `google_calendar_credentials` e `google_calendar_oauth_states` têm RLS ligado, sem policies para usuários e sem grants a `anon`/`authenticated`. Os estados OAuth expiram em 10 minutos, são vinculados ao usuário autenticado e consumidos uma vez. O feed iCalendar público armazena somente o SHA-256 de um token aleatório; seu link concede leitura dos títulos, descrições e horários até revogação/rotação.
+O código da integração Google/iCalendar foi removido em 2026-10-28. A migration `20261028100000_remove_calendar_integrations.sql` exclui as tabelas de integração e credenciais quando aplicada; até essa aplicação, dados antigos permanecem no banco. Se as Edge Functions antigas ou seus secrets tiverem sido publicados/configurados manualmente fora deste repositório, remova-os no projeto Supabase. A coluna `events.ical_uid` continua sendo usada somente para importação/exportação local `.ics`.
 
 ### 2. Políticas de Storage (Bucket `code-files`)
 Arquivos enviados para o bucket de código são isolados em pastas prefixadas pelo `user_id`:

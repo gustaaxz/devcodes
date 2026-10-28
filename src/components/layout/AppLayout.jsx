@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar.jsx'
 import Topbar from './Topbar.jsx'
+import AppFooter from './AppFooter.jsx'
 import FullScreenMessage from './FullScreenMessage.jsx'
 import ShortcutsModal from '../ui/ShortcutsModal.jsx'
 import OnboardingTour from './OnboardingTour.jsx'
@@ -99,6 +100,7 @@ function AppFrame() {
         <main className="app-layout__content">
           <Outlet />
         </main>
+        <AppFooter onOpenGuide={() => setShowShortcuts(true)} />
       </div>
       {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
       {showOnboarding && <OnboardingTour locale={preferences.locale} onComplete={completeOnboarding} />}

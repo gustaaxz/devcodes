@@ -1,4 +1,4 @@
-import { CalendarClock, Check, Pencil, Trash2 } from 'lucide-react'
+import { CalendarClock, Check, GripVertical, Pencil, Trash2 } from 'lucide-react'
 import { useLocale } from '../../hooks/useLocale.js'
 import Badge from '../ui/Badge.jsx'
 import { formatDateTime } from '../../utils/dates.js'
@@ -12,14 +12,19 @@ const DUE_LABELS = {
   soon: 'Vence em breve'
 }
 
-export default function TaskCard({ task, now, showStatusSelect = false, onToggleDone, onEdit, onDelete, onStatusChange }) {
+export default function TaskCard({ task, now, showStatusSelect = false, draggable = false, onDragStart, onDragEnd, onToggleDone, onEdit, onDelete, onStatusChange }) {
   const locale = useLocale()
   const dueState = getDueState(task, now)
   const done = task.status === 'done'
   const priorityLabel = translateText(locale, getLabel(PRIORITY_OPTIONS, task.priority))
 
   return (
-    <article className={`task-card task-card--${dueState}`}>
+    <article
+      className={`task-card task-card--${dueState}${draggable ? ' task-card--draggable' : ''}`}
+      draggable={draggable}
+      onDragStart={onDragStart ? (event) => onDragStart(event, task) : undefined}
+      onDragEnd={onDragEnd}
+    >
       <button
         type="button"
         className={`task-card__check${done ? ' task-card__check--done' : ''}`}
@@ -71,6 +76,7 @@ export default function TaskCard({ task, now, showStatusSelect = false, onToggle
       </div>
 
       <div className="task-card__actions">
+        {draggable && <GripVertical className="task-card__drag-handle" size={18} aria-hidden="true" />}
         <button type="button" className="icon-button" onClick={() => onEdit(task)} aria-label="Editar tarefa">
           <Pencil size={16} />
         </button>

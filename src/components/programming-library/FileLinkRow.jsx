@@ -26,7 +26,7 @@ export default function FileLinkRow({ file, dateField = 'updated_at', onToggleFa
         {onToggleFavorite && (
           <button
             type="button"
-            className={`icon-button${file.is_favorite ? ' icon-button--active' : ''}`}
+            className={`icon-button${file.is_favorite ? ' favorite-star--active' : ''}`}
             onClick={() => onToggleFavorite(file)}
             aria-label={file.is_favorite ? 'Remover dos favoritos' : 'Favoritar'}
             aria-pressed={file.is_favorite}

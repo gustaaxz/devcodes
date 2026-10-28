@@ -1,5 +1,33 @@
 # Implementation Log
 
+## 2026-10-28 - Melhorias solicitadas de UX e comportamento
+
+- Favoritos: estrela ativa amarela e preenchida para notas e arquivos. Tags em arquivos seguem disponíveis pelo modal de edição, com visualização e filtro; `.ics` passou a integrar os formatos aceitos da Biblioteca.
+- Integrações: removidas do app as telas, serviços, funções Supabase locais e sincronização automática Google/iCalendar. Mantidos importação e exportação local de `.ics`. Criadas migration e validação SQL para remover as tabelas externas; aplicação remota está pendente.
+- Anotações: prévia da lista ampliada para três linhas; selecionar uma nota abre o editor completo; o botão **Nova anotação** permanece como ação explícita de criação.
+- Tarefas: quadro permite arrastar cartões entre colunas, com alvo destacado e alça de pontos cinza; o status é salvo pelo serviço existente, com atualização otimista e reversão em erro.
+- Lembretes: ações removem o toast imediatamente, restauram em erro, bloqueiam cliques repetidos e condicionam a notificação ao horário original para evitar corrida com o adiamento.
+- Layout: overlay mobile fica atrás da sidebar; estados hover preservam a indicação de seleção; footer apresenta copyright, guia rápido, configurações e link para sugestões.
+- Validação local: `npm test`, `npm run lint` e `npm run build` concluídos. O linter reporta avisos preexistentes em arquivos fora desta entrega; build mantém aviso conhecido de chunk acima de 500 kB.
+
+# 2026-10-28 - Ajustes de favoritos e tags de arquivos (#18)
+
+**Status:** Ajustes locais concluídos; validação RLS remota de #18 continua pendente.
+
+- A classe visual de favorito ativo agora destaca e preenche a estrela em amarelo. Aplicada nas estrelas de arquivos da Biblioteca, arquivos recentes/favoritos e notas.
+- Confirmado o fluxo já existente de tags em arquivos: o modal **Editar detalhes do arquivo** permite digitar tags novas ou escolher sugestões; os chips são mostrados na Biblioteca e o filtro por tag está disponível.
+- Atribuição persiste pela camada `filesService`/`tagService`; as associações `file_tags` seguem protegidas pelas políticas RLS existentes. Nenhuma migration ou dado remoto foi alterado.
+- O usuário ampliou o escopo para incluir a lista completa de melhorias de UX solicitadas; não há restrição de trabalho às issues #18/#20.
+
+## 2026-10-28 - Fase 6 removida do roadmap
+- **Decisão:** A pedido do usuário, remover a antiga Fase 6 (#22–#26) do roadmap ativo. O plano atual cobre as Fases 1–5 (#1–#21).
+- **Histórico:** Entregas e validações já registradas para #22–#26 permanecem no changelog e neste log, sem trabalho futuro planejado para esses itens.
+
+## 2026-10-28 - Escopo de trabalho atualizado
+- **Decisão:** O usuário definiu que o trabalho futuro deve se limitar às melhorias #18 (tags e organização) e #20 (análise de produtividade).
+- **Próximas ações:** executar o teste RLS atualizado da #18 no Supabase e validar visualmente `/analytics` para a #20.
+- **Demais melhorias:** permanecem documentadas com seus estados atuais, mas fora do escopo ativo deste ciclo.
+
 ## 2026-10-27 - README minimalista
 - Reorganizado o guia inicial para cobrir requisitos, clone, instalação, configuração do `.env`, migrations Supabase e execução local. Não foram feitas alterações de código.
 

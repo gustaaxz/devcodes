@@ -42,6 +42,10 @@
   color: var(--color-accent);
 }
 
+.category-tabs__tab--active:hover {
+  color: var(--color-accent);
+}
+
 .category-tabs__count {
   min-width: 20px;
   padding: 0 var(--space-2);

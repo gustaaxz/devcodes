@@ -1,7 +1,9 @@
 ﻿# Features Pendentes - DevCodes
 
-**Última atualização:** 27 de outubro de 2026  
-**Progresso:** 19/26 validadas remotamente (73%); a implementação local da Fase 6 está completa (5/5), aguardando configuração de MFA TOTP no Supabase.
+**Última atualização:** 28 de outubro de 2026  
+**Roadmap atual:** Fases 1–5, melhorias #1–#21. A antiga Fase 6 (#22–#26) foi removida do roadmap; seu histórico permanece nos registros de entrega.
+
+**Escopo ativo atualizado em 2026-10-28:** os pedidos de UX e comportamento registrados em `docs/issues.md`; o ciclo não está limitado às issues #18 e #20.
 
 ---
 
@@ -11,8 +13,7 @@
 |------|--------|-----------|
 | Fase 1–3 | ✅ Completas | — |
 | Fase 4 | ✅ 5/5 feitas | — |
-| Fase 5 | 🔄 Implementada localmente (4/4); validação/publicação pendentes | #18 RLS, #19 OAuth/deploy, #20/#21 validação |
-| Fase 6 | ✅ Implementada localmente (5/5); auditoria validada remotamente | Habilitar/verificar MFA TOTP |
+| Fase 5 | 🔄 Em atualização | #18/#20 seguem com validações próprias; pedidos adicionais de UX estão sendo implementados |
 
 **Pendências de validação/publicação remota:** consulte os itens marcados em cada fase abaixo.
 
@@ -56,6 +57,7 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 - Smart Tags: sugestão automática ao criar recurso, limpeza de tags órfãs
 - Serviço `tagService.js`: CRUD de tags, associação a recursos, `searchTags()`, `getTopTags()`, `mergeTags()`
 - Implementados localmente: associações de tags às notas, tarefas e arquivos; página `/tags` com busca, filtros por recurso, contadores de uso, renomear, cores, favoritos, exclusão e mesclagem; autocomplete de tags existentes; sugestões de tags existentes encontradas no título/conteúdo; remoção automática de tags sem vínculos após desassociação ou exclusão de recurso, preservando favoritas.
+- Tags de arquivos podem ser criadas ou selecionadas em **Editar detalhes do arquivo**; aparecem nos itens da biblioteca e podem ser filtradas. Estrelas de favoritos de notas e arquivos usam destaque amarelo, com preenchimento para os itens ativos.
 - Pendência para concluir #18: executar `supabase/tests/rls_isolation.sql` atualizado. O usuário confirmou a aplicação de `20261027120000_phase5_tags.sql`; o teste remoto ainda não foi validado.
 - Ampliar os tipos aceitos pela Biblioteca de Código com catálogo centralizado, validação de MIME/assinatura, testes e suporte seguro para preview ou download:
   - Documentos e apresentações: `.ppt`, `.pptx`, `.xls`, `.xlsx`, `.odt`, `.ods`, `.odp` e `.rtf`; `.doc` e `.docx` já são aceitos atualmente
@@ -66,22 +68,12 @@ Sistema de tags com cores customizadas para organizar notas, tarefas e código, 
 
 ---
 
-### #19: Integração com Calendário (iCal/Google Calendar)
-**Prioridade:** 🟡 Média — em andamento
+### #19: Integração Google Calendar/iCalendar — removida da aplicação
+**Status:** Removida localmente em 2026-10-28
 
-Sincronização bidirecional com Google Calendar e suporte a import/export iCalendar.
+Integração OAuth, sincronização Google e feed iCalendar foram removidos da interface e do runtime da aplicação. A importação e exportação local de arquivos `.ics` continuam disponíveis no calendário, e `.ics` também é aceito como arquivo de texto na Biblioteca.
 
-**Escopo:**
-- Tabelas: `google_calendar_integration`, `calendar_sync_logs`, `event_google_mapping`
-- **Google OAuth** com scope `calendar.events`, refresh automático de tokens
-- **Serviço Google Calendar**: `syncToGoogle()`, `syncFromGoogle()`, `deleteFromGoogle()`, seleção de calendário destino
-- **Serviço iCal**: export como `.ics`, import de `.ics`, feed público iCal
-- **GoogleCalendarIntegration** em Settings: conectar/desconectar, escolher calendário, toggle de sync automático, log de sincronizações
-- Badge "Sincronizado com Google" nos eventos
-- **Tratamento de conflitos**: notificar usuário se modificado em ambos os lados, DevCodes prevalece por padrão
-- Edge Function para sincronização automática via webhook/realtime
-- Implementado localmente: importação com prévia e exportação `.ics`; feed iCalendar público com token aleatório armazenado como hash, botão para copiar e revogação; OAuth Google com state/PKCE; refresh token criptografado com AES-GCM; seleção de calendário gravável; sync bidirecional manual, deduplicação e política DevCodes-primeiro; histórico, badge e sync automático enquanto a SPA está aberta via Supabase Realtime.
-- Pendências para concluir #19: configurar e fazer deploy das Edge Functions/secrets conforme `docs/GOOGLE_CALENDAR_SETUP.md` e validar OAuth com uma conta Google de teste. O usuário confirmou a aplicação da migration e a aprovação de `supabase/tests/google_calendar_rls.sql`. A sincronização automática não roda com o navegador fechado; usar webhook/cron do servidor segue como melhoria.
+As fontes locais das Edge Functions foram removidas. A migration `20261028100000_remove_calendar_integrations.sql` remove as tabelas de integração quando aplicada no Supabase; `events.ical_uid` permanece para deduplicar importações locais. A migration remota ainda precisa ser aplicada.
 
 ---
 
@@ -104,7 +96,7 @@ Dashboard de analytics com gráficos interativos, KPIs, streaks e insights perso
 
 ---
 
-### #21: Backup Automático e Histórico de Sincronização
+### #21: Backup Automático e Histórico de Sincronização — fora do escopo atual
 **Prioridade:** 🟡 Média
 
 Backup automático diário com restauração, auditoria de mudanças e histórico de sincronizações.
@@ -122,37 +114,12 @@ Backup automático diário com restauração, auditoria de mudanças e históric
 
 ---
 
-## Fase 6 — Segurança, qualidade e polimento (5 melhorias)
+## Próximas ações do escopo atual
 
-### #22: MFA TOTP via Supabase Auth — implementada localmente
-- Cadastro e remoção de autenticador TOTP nas Configurações.
-- Desafio de segundo fator para sessões AAL1 quando a conta tem um fator verificado.
-- Pendência remota: habilitar MFA TOTP e verificação de fatores nas configurações de Auth do Supabase.
+1. **#18:** executar `supabase/tests/rls_isolation.sql` atualizado no Supabase remoto.
+2. **#20:** validar visualmente a página `/analytics`.
 
-### #23: Auditoria — implementada localmente
-- Migration corretiva aplicada pelo usuario; `supabase/tests/phase6_audit_rls.sql` retornou sucesso apos ajustar a limpeza do fixture para evitar a trigger legada `change_log`.
-- Migration independente `20261027160000_phase6_audit_log.sql`, com RLS, escrita por triggers e leitura somente dos próprios registros.
-- Registra operação e nomes dos campos alterados sem duplicar texto ou conteúdo dos registros.
-- Aplicação remota e teste RLS confirmados pelo usuário; validação #23 concluída.
-
-### #24: Internacionalização PT-BR/EN-US — implementada localmente
-- Idioma persistido nas preferências do perfil; textos JSX, atributos acessíveis, navegação, controles e datas seguem o idioma selecionado.
-- `npm run i18n:check` verifica se textos JSX têm tradução EN-US.
-
-### #25: Testes E2E com Playwright — implementados localmente
-- 10 testes cobrem navegação autenticada, idioma, MFA, formulário de tarefa, login, cadastro, recuperação e rotas públicas.
-- Supabase é mockado; os testes não precisam de credenciais nem alteram um projeto remoto.
-
-### #26: Tour de onboarding — implementado localmente
-- Tour de cinco etapas pelo painel, tarefas, anotações, biblioteca e analytics; conclusão persistida nas preferências do perfil.
-
-## Ordem Sugerida de Implementação
-
-1. **Fase 4**: #13 Compartilhamento → #15 Lembretes → #17 Exportação e Importação de Dados
-2. **Fase 5**: #18 Tags → #20 Analytics → #21 Backup → #19 Google Calendar
-3. **Fase 6**: #22 MFA → #23 Auditoria → #24 i18n → #25 Playwright → #26 Onboarding
-
-**Validação externa restante da Fase 6:** habilitar/verificar MFA TOTP nas configurações de Auth do Supabase.
+Não iniciar trabalho nas demais melhorias neste ciclo.
 
 
 ## Atualização da implementação local — 27/10/2026
