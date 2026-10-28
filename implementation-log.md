@@ -1,5 +1,12 @@
 # Implementation Log
 
+## 2026-10-28 - Auditoria da conta recolhida por padrão
+
+- A auditoria aparece como subguia expansível na tela de configurações; o usuário escolhe quando visualizar os registros.
+- A consulta do histórico só é montada depois da abertura, evitando expor a lista ou carregá-la sem solicitação.
+- Incluídos rótulos acessíveis de expandir/recolher e tradução do botão para inglês.
+- `npm run lint` executado; sem erros, com avisos preexistentes em arquivos não relacionados.
+
 ## 2026-10-28 - Melhorias solicitadas de UX e comportamento
 
 - Favoritos: estrela ativa amarela e preenchida para notas e arquivos. Tags em arquivos seguem disponíveis pelo modal de edição, com visualização e filtro; `.ics` passou a integrar os formatos aceitos da Biblioteca.

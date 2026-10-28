@@ -3,6 +3,7 @@
 ## [Unreleased] - 2026-10-28
 
 ### Melhorias
+- Auditoria da conta inicia recolhida e só carrega os registros após clicar em “Visualizar auditoria da conta”.
 - Estrelas dos favoritos de notas e arquivos ficam amarelas e preenchidas quando ativadas.
 - Documentado o fluxo existente de criação/atribuição, exibição e filtro de tags em arquivos da Biblioteca.
 - Anotações mostram prévias maiores e abrem o editor ao serem selecionadas; `.ics` é aceito na Biblioteca.

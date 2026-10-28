@@ -536,6 +536,8 @@ const ENGLISH_TEXT = {
   'Compartilhamento de anotações': 'Note sharing',
   'Compartilhamento de eventos': 'Event sharing',
   'Auditoria da conta': 'Account audit log',
+  'Visualizar auditoria da conta': 'View account audit log',
+  'Ocultar auditoria da conta': 'Hide account audit log',
   'Consulte alterações recentes sem expor o conteúdo dos registros.': 'Review recent changes without exposing record contents.',
   Baixa: 'Low',
   Média: 'Medium',
