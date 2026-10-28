@@ -1,5 +1,12 @@
 # Implementation Log
 
+## 2026-10-28 - Biblioteca aceita formatos de arquivo arbitrários
+
+- Removido o filtro por extensão do seletor e a validação de lista permitida; nomes sem extensão e formatos não reconhecidos são aceitos.
+- Formatos desconhecidos usam `application/octet-stream`, não são pré-visualizados e permanecem disponíveis para download. As validações de formatos conhecidos continuam ativas para preservar pré-visualizações seguras.
+- Migration `20261028110000_allow_any_library_file_type.sql` remove a restrição de MIME configurada no bucket privado. O limite existente de 10 MB e as policies de Storage/RLS permanecem.
+- Atualizados testes existentes, guia de funcionalidades, padrão de validação de arquivos e guia de setup (agora direciona para todas as migrations pendentes). Não executei a suíte de testes nesta etapa.
+
 ## 2026-10-28 - README ampliado
 
 - README passou a apresentar os módulos, requisitos, configuração local/Supabase, comandos de desenvolvimento e verificação, estrutura do repositório e cuidados com credenciais.

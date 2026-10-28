@@ -3,6 +3,7 @@
 ## [Unreleased] - 2026-10-28
 
 ### Melhorias
+- Biblioteca aceita arquivos de qualquer extensão e tipo até 10 MB, com armazenamento genérico seguro para formatos sem pré-visualização.
 - Auditoria da conta inicia recolhida e só carrega os registros após clicar em “Visualizar auditoria da conta”.
 - Estrelas dos favoritos de notas e arquivos ficam amarelas e preenchidas quando ativadas.
 - Documentado o fluxo existente de criação/atribuição, exibição e filtro de tags em arquivos da Biblioteca.

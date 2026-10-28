@@ -95,7 +95,7 @@ Este documento define os padrões obrigatórios de codificação para o projeto 
 
 1. **Nunca exponha credenciais:** Utilize exclusivamente `import.meta.env.VITE_SUPABASE_ANON_KEY`. A `service_role` jamais deve ser mencionada no frontend.
 2. **Sanitização de Markdown:** Qualquer texto renderizado como HTML deve passar por sanitização para evitar ataques de Cross-Site Scripting (XSS).
-3. **Validação de Entrada:** Valide campos obrigatórios, comprimentos máximos de string e tipos de arquivos (tamanho máximo de 10 MB e extensões permitidas) antes de submeter ao Supabase.
+3. **Validação de Entrada:** Valide campos obrigatórios e comprimentos máximos. A Biblioteca aceita qualquer extensão e tipo de arquivo até 10 MB; formatos reconhecidos podem aplicar verificações de conteúdo para proteger suas pré-visualizações.
 
 ---
 

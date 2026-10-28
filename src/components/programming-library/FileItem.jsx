@@ -6,7 +6,7 @@ import './FileItem.css'
 export function FileTypeIcon({ file, size = 22 }) {
   const type = getFileType(file.extension || file.original_name)
   const props = { size, strokeWidth: 1.75 }
-  if (!type) return <File {...props} />
+  if (!type || type.mime === 'application/octet-stream') return <File {...props} />
   if (type.kind === 'image') return <ImageIcon {...props} />
   if (type.kind === 'text') return type.language ? <FileCode2 {...props} /> : <FileText {...props} />
   if (file.extension === 'zip') return <FileArchive {...props} />

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, Loader2, UploadCloud, X } from 'lucide-react'
 import { uploadFile } from '../../services/files/filesService.js'
-import { ACCEPT_ATTRIBUTE, MAX_FILE_SIZE, formatBytes } from '../../utils/files.js'
+import { MAX_FILE_SIZE, formatBytes } from '../../utils/files.js'
 import { friendlyError } from '../../utils/errors.js'
 import './UploadDropzone.css'
 
@@ -88,6 +88,7 @@ export default function UploadDropzone({ userId, categoryId, categoryName, onUpl
         <p>
           Arraste arquivos para enviar a <strong>{categoryName}</strong>
         </p>
+        <span>Todos os formatos de arquivo são aceitos.</span>
         <span>Limite de {formatBytes(MAX_FILE_SIZE)} por arquivo</span>
         <button
           type="button"
@@ -97,7 +98,7 @@ export default function UploadDropzone({ userId, categoryId, categoryName, onUpl
         >
           Selecionar arquivos
         </button>
-        <input ref={inputRef} type="file" multiple accept={ACCEPT_ATTRIBUTE} hidden onChange={handleInputChange} />
+        <input ref={inputRef} type="file" multiple hidden onChange={handleInputChange} />
       </div>
 
       {items.length > 0 && (

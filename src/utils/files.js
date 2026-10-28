@@ -85,9 +85,6 @@ const SPECIAL_FILE_TYPES = {
   '.env.example': textType('Environment Example', 'bash')
 }
 
-export const ACCEPTED_EXTENSIONS = Object.keys(FILE_TYPES)
-export const ACCEPT_ATTRIBUTE = [...ACCEPTED_EXTENSIONS.map((extension) => `.${extension}`), 'text/plain', ...Object.keys(SPECIAL_FILE_TYPES)].join(',')
-
 export function getExtension(name) {
   const normalized = name.toLowerCase()
   if (['.gitignore', '.dockerignore', '.editorconfig', '.env.example'].includes(normalized)) return normalized
@@ -100,7 +97,7 @@ export function getFileType(nameOrExtension) {
   const normalized = nameOrExtension.toLowerCase()
   if (SPECIAL_FILE_TYPES[normalized]) return SPECIAL_FILE_TYPES[normalized]
   const extension = nameOrExtension.includes('.') ? getExtension(nameOrExtension) : normalized
-  return FILE_TYPES[extension] || null
+  return FILE_TYPES[extension] || binaryType(extension ? `Arquivo ${extension.toUpperCase()}` : 'Arquivo')
 }
 
 export function isTextFile(file) {
@@ -179,7 +176,6 @@ export async function validateFile(file) {
   const name = file.name.toLowerCase()
   const extension = getExtension(name)
   const type = getFileType(name)
-  if (!type) return 'Extensão não permitida.'
   if (file.size === 0) return 'O arquivo está vazio.'
   if (file.size > MAX_FILE_SIZE) return `O arquivo excede o limite de ${formatBytes(MAX_FILE_SIZE)}.`
 
@@ -222,7 +218,6 @@ export function validateRename(currentName, nextName) {
   if (/[\\/]/.test(trimmed)) return 'O nome não pode conter barras.'
   const nextType = getFileType(trimmed)
   const currentType = getFileType(currentName)
-  if (!nextType) return 'Extensão não permitida.'
   if (currentType && nextType.kind !== currentType.kind) {
     return 'A nova extensão deve ser do mesmo tipo de arquivo.'
   }

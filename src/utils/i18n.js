@@ -96,6 +96,7 @@ const ENGLISH_TEXT = {
   'Análise de produtividade': 'Productivity analytics',
   Aparência: 'Appearance',
   'Arquivo de backup (máx. 10 MB)': 'Backup file (max. 10 MB)',
+  'Todos os formatos de arquivo são aceitos.': 'All file formats are accepted.',
   Arquivos: 'Files',
   'Arquivos adicionados:': 'Files added:',
   'Arquivos da biblioteca (': 'Library files (',

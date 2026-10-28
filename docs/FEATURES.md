@@ -26,7 +26,7 @@ Módulo independente das anotações, com tabelas próprias e conteúdo no Supab
 - **Criação e edição**: arquivos de texto podem ser criados e editados na própria biblioteca.
 - **Exclusão**: remove primeiro o objeto do Storage e depois o registro, de modo que uma falha parcial pode ser repetida.
 
-Extensões aceitas: `js`, `mjs`, `cjs`, `jsx`, `ts`, `tsx`, `html`, `htm`, `xml`, `css`, `scss`, `json`, `md`, `txt`, `java`, `py`, `sql`, `sh`, `yml`, `yaml`, `c`, `h`, `cpp`, `cs`, `go`, `rs`, `php`, `rb`, `kt`, `pdf`, `doc`, `docx` e `zip`. O conteúdo enviado nunca é executado. Arquivos de texto são gravados com tipo `text/plain`, o que impede que um HTML enviado seja servido como página.
+Todos os tipos e extensões de arquivo são aceitos na Biblioteca, incluindo arquivos sem extensão, com limite de 10 MB por arquivo. Formatos reconhecidos mantêm validações e pré-visualizações específicas; os demais são armazenados como binários genéricos e podem ser baixados, mas não pré-visualizados. O conteúdo enviado nunca é executado. Arquivos de texto são gravados com tipo `text/plain`, e arquivos sem tipo conhecido usam `application/octet-stream`.
 
 ### Pesquisa global, Favoritos e Arquivos recentes
 - A pesquisa localiza anotações, tarefas, eventos, arquivos (somente metadados), categorias e tags, separados por tipo, e abre o registro correspondente.

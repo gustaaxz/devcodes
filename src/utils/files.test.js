@@ -27,13 +27,13 @@ describe('nomes e extensoes', () => {
     expect(getFileType('.env.example').label).toBe('Environment Example')
     expect(getFileType('foto.webp').kind).toBe('image')
     expect(getFileType('agenda.ics')).toMatchObject({ kind: 'text', label: 'iCalendar', mime: 'text/calendar' })
-    expect(getFileType('programa.exe')).toBeNull()
+    expect(getFileType('programa.exe')).toMatchObject({ kind: 'binary', mime: 'application/octet-stream' })
   })
 
-  it('trata nomes especiais como nomes completos e deixa .env bloqueado', () => {
+  it('trata nomes especiais e arquivos sem tipo conhecido como arquivos genéricos', () => {
     expect(getExtension('.env.example')).toBe('.env.example')
     expect(getExtension('Dockerfile')).toBe('')
-    expect(getFileType('.env')).toBeNull()
+    expect(getFileType('.env')).toMatchObject({ kind: 'binary', mime: 'application/octet-stream' })
     expect(getFileType('.env.example').kind).toBe('text')
   })
 
@@ -60,7 +60,7 @@ describe('nomes e extensoes', () => {
 })
 
 describe('validacao de renomeacao', () => {
-  it('exige o mesmo tipo de arquivo e extensao permitida', () => {
+  it('mantem o tipo do arquivo ao renomear', () => {
     expect(validateRename('a.js', 'b.ts')).toBe('')
     expect(validateRename('a.js', 'b.pdf')).not.toBe('')
     expect(validateRename('a.js', 'b.exe')).not.toBe('')
@@ -79,8 +79,9 @@ describe('validacao de upload', () => {
     expect(await validateFile(makeFile([calendar], 'agenda.ics'))).toBe('')
   })
 
-  it('rejeita extensao nao permitida', async () => {
-    expect(await validateFile(makeFile(['x'], 'virus.exe'))).toBe('Extensão não permitida.')
+  it('aceita qualquer extensao como arquivo binario quando o formato nao e conhecido', async () => {
+    expect(await validateFile(makeFile([new Uint8Array([0, 255, 1])], 'virus.exe'))).toBe('')
+    expect(await validateFile(makeFile([new Uint8Array([0, 255, 1])], 'arquivo-sem-extensao'))).toBe('')
   })
 
   it('rejeita arquivo vazio', async () => {

@@ -42,36 +42,21 @@ Nunca utilize a chave `service_role` ou qualquer chave secreta no front-end. As 
 
 ### 3.3 Aplicar as migrations
 
-As migrations em `supabase/migrations` criam as tabelas, os índices, as políticas RLS, o bucket privado e os gatilhos. Aplique-as na ordem dos nomes dos arquivos.
-
-| Ordem | Arquivo | Conteúdo |
-|---|---|---|
-| 1 | `20261022120000_core_schema.sql` | Tabelas, restrições, índices e gatilho de cadastro |
-| 2 | `20261022120100_rls_policies.sql` | Políticas RLS das tabelas |
-| 3 | `20261022120200_storage.sql` | Bucket privado e políticas do Storage |
-| 4 | `20261022130000_defaults_and_academic_categories.sql` | `user_id` automático e categorias acadêmicas padrão |
-| 5 | `20261023120000_profile_preferences.sql` | Preferências do usuário |
-| 6 | `20261023130000_add_username_to_profiles.sql` | Username e nome completo do perfil |
-| 7 | `20261023150000_add_note_versions.sql` | Histórico de versões de notas |
-| 8 | `20261026120000_add_sharing.sql` | Compartilhamento de notas e eventos |
-| 9 | `20261026130000_add_task_reminders.sql` | Lembretes de tarefas e RLS |
-| 10 | `20261027100000_restore_signup_defaults.sql` | Restaura categorias padrão no cadastro e corrige contas sem categorias |
-| 11 | `20261027110000_align_profile_schema.sql` | Alinha projetos que ainda usam `display_name` no perfil |
+As migrations em `supabase/migrations` criam e atualizam tabelas, políticas RLS, Storage e funções. O Supabase CLI acompanha quais já foram aplicadas e envia as pendentes em ordem. Para um projeto existente, prefira a CLI para não executar migrations antigas novamente.
 
 **Opção A: Supabase CLI**
 
 ```bash
 npx supabase login
-npx supabase init
 npx supabase link --project-ref SEU_PROJECT_REF
 npx supabase db push
 ```
 
-O CLI solicita a senha do banco no `supabase link` ou no `db push`. O comando `supabase init` só é necessário se o arquivo `supabase/config.toml` ainda não existir. Ele não altera as migrations. O `SEU_PROJECT_REF` aparece na URL do projeto.
+O CLI solicita a senha do banco no `supabase link` ou no `db push`. O arquivo `supabase/config.toml` já está versionado no repositório. O `SEU_PROJECT_REF` aparece na URL do projeto.
 
 **Opção B: SQL Editor**
 
-No painel, abra **SQL Editor** e execute o conteúdo de cada arquivo, na ordem da tabela.
+No painel, abra **SQL Editor** e, em um projeto novo, execute todos os arquivos `.sql` de `supabase/migrations` em ordem lexicográfica pelo nome. Em um projeto existente, confira o histórico de migrations e execute somente as pendentes; não reaplique arquivos já executados.
 
 ### 3.4 Configurar a autenticação
 
